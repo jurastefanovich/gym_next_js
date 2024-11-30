@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { TextField, Button, Typography, Link, Container } from "@mui/material";
 import { LockOutlined } from "@mui/icons-material";
 import { styled } from "@mui/system";
@@ -7,13 +7,17 @@ import { Text } from "../_features/enums/Colors";
 
 const Root = styled("div")({
   display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
   height: "100vh",
-  backgroundImage: "url('/login.jpg')", 
+  backgroundImage: "url('/login.jpg')",
   backgroundSize: "cover",
   backgroundPosition: "center",
   backgroundAttachment: "fixed",
+  ["@media (min-width: 1200px)"]: {
+    flexDirection: "row",
+  },
+  ["@media (max-width: 900px)"]: {
+    flexDirection: "column",
+  },
 });
 
 const FormContainer = styled(Container)(({ theme }) => ({
@@ -32,13 +36,19 @@ const FormContainer = styled(Container)(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
     position: "absolute",
     top: "50%",
-    right: "5%",
+    right: "0",
     transform: "translateY(-50%)",
     maxWidth: "400px",
+    width: "auto",
   },
   [theme.breakpoints.down("md")]: {
-    width: "80%",
-    maxWidth: "400px",
+    width: "100%",
+    maxWidth: "none",
+    margin: "auto",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
   },
 }));
 
@@ -71,12 +81,12 @@ const LinkContainer = styled("div")({
 });
 
 export default function SignUp() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [birthdate, setBirthdate] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+  const [username, setUsername] = React.useState("");
+  const [birthdate, setBirthdate] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
