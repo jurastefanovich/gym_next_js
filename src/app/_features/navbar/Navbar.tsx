@@ -36,6 +36,9 @@ export default function Navbar() {
     router.push(path);
   }
 
+
+  
+
   const handleDrawerToggle = () => {
     setOpenDrawer(!openDrawer);
   };
