@@ -1,0 +1,244 @@
+[
+  {
+    "id": "service_1",
+    "title": "Nutrition Counseling",
+    "description": "Personalized nutrition advice.",
+    "price": 50,
+    "schedule": {
+      "days": ["Monday", "Wednesday", "Friday"],
+      "hours": "9:00 AM - 5:00 PM"
+    },
+    "trainers": [
+      {
+        "id": "trainer_1",
+        "first_name": "Emily",
+        "last_name": "Jones"
+      },
+      {
+        "id": "trainer_2",
+        "first_name": "Michael",
+        "last_name": "Smith"
+      }
+    ],
+    "details": "Work with certified nutritionists to develop a personalized diet plan to achieve your fitness goals, including weight loss, muscle gain, and overall health improvements."
+  },
+  {
+    "id": "service_2",
+    "title": "Personal Training",
+    "description": "Tailored one-on-one sessions.",
+    "price": 70,
+    "schedule": {
+      "days": ["Monday", "Tuesday", "Thursday", "Saturday"],
+      "hours": "6:00 AM - 8:00 PM"
+    },
+    "trainers": [
+      {
+        "id": "trainer_3",
+        "first_name": "Sarah",
+        "last_name": "Williams"
+      },
+      {
+        "id": "trainer_4",
+        "first_name": "John",
+        "last_name": "Davis"
+      }
+    ],
+    "details": "Personalized training sessions aimed at improving strength, endurance, flexibility, and more. Our certified trainers will work with you to reach your individual fitness goals."
+  },
+  {
+    "id": "service_3",
+    "title": "Group Training",
+    "description": "Motivating group fitness classes.",
+    "price": 20,
+    "schedule": {
+      "days": ["Monday", "Wednesday", "Friday", "Saturday"],
+      "hours": "7:00 AM - 8:00 PM"
+    },
+    "trainers": [
+      {
+        "id": "trainer_5",
+        "first_name": "Rachel",
+        "last_name": "Brown"
+      },
+      {
+        "id": "trainer_6",
+        "first_name": "David",
+        "last_name": "Martinez"
+      }
+    ],
+    "details": "Join high-energy group fitness classes that include a variety of workouts like HIIT, yoga, and strength training. Perfect for all fitness levels in a fun, motivating environment."
+  },
+  {
+    "id": "service_4",
+    "title": "Yoga Classes",
+    "description": "Relax and strengthen with yoga.",
+    "price": 15,
+    "schedule": {
+      "days": ["Tuesday", "Thursday", "Saturday"],
+      "hours": "8:00 AM - 9:00 AM"
+    },
+    "trainers": [
+      {
+        "id": "trainer_7",
+        "first_name": "Laura",
+        "last_name": "Green"
+      },
+      {
+        "id": "trainer_8",
+        "first_name": "Robert",
+        "last_name": "Adams"
+      }
+    ],
+    "details": "Our yoga classes focus on improving flexibility, mindfulness, and stress relief. Suitable for all levels from beginner to advanced."
+  },
+  {
+    "id": "service_5",
+    "title": "Spin Classes",
+    "description": "High-energy cycling classes.",
+    "price": 18,
+    "schedule": {
+      "days": ["Monday", "Wednesday", "Friday"],
+      "hours": "6:00 AM - 7:00 AM"
+    },
+    "trainers": [
+      {
+        "id": "trainer_9",
+        "first_name": "Jessica",
+        "last_name": "Taylor"
+      },
+      {
+        "id": "trainer_10",
+        "first_name": "Brian",
+        "last_name": "Clark"
+      }
+    ],
+    "details": "High-intensity cycling sessions that build endurance and burn fat, suitable for all levels of cyclists."
+  },
+  {
+    "id": "service_6",
+    "title": "Zumba Classes",
+    "description": "Dance your way to fitness.",
+    "price": 16,
+    "schedule": {
+      "days": ["Monday", "Thursday"],
+      "hours": "6:30 PM - 7:30 PM"
+    },
+    "trainers": [
+      {
+        "id": "trainer_11",
+        "first_name": "Nina",
+        "last_name": "White"
+      },
+      {
+        "id": "trainer_12",
+        "first_name": "Luis",
+        "last_name": "Hernandez"
+      }
+    ],
+    "details": "Zumba combines dance and fitness, offering a fun and energetic workout set to Latin and international music."
+  },
+  {
+    "id": "service_7",
+    "title": "CrossFit Training",
+    "description": "High-intensity mixed workouts.",
+    "price": 25,
+    "schedule": {
+      "days": ["Tuesday", "Thursday", "Saturday"],
+      "hours": "10:00 AM - 11:00 AM"
+    },
+    "trainers": [
+      {
+        "id": "trainer_13",
+        "first_name": "Mark",
+        "last_name": "Wilson"
+      },
+      {
+        "id": "trainer_14",
+        "first_name": "Angela",
+        "last_name": "Taylor"
+      }
+    ],
+    "details": "CrossFit combines weightlifting, gymnastics, and cardio into high-intensity workouts that improve strength, stamina, and athleticism."
+  },
+  {
+    "id": "service_8",
+    "title": "Massage Therapy",
+    "description": "Relax with professional massages.",
+    "price": 60,
+    "schedule": {
+      "days": ["Monday", "Wednesday", "Friday"],
+      "hours": "9:00 AM - 6:00 PM"
+    },
+    "trainers": [
+      {
+        "id": "trainer_15",
+        "first_name": "Sophie",
+        "last_name": "King"
+      },
+      {
+        "id": "trainer_16",
+        "first_name": "James",
+        "last_name": "Lewis"
+      }
+    ],
+    "details": "Relax your muscles and reduce stress with deep tissue, Swedish, or sports massages offered by our certified therapists."
+  },
+  {
+    "id": "service_9",
+    "title": "Sauna & Steam Room",
+    "description": "Relax and detoxify in sauna & steam room.",
+    "price": 15,
+    "schedule": {
+      "days": ["Everyday"],
+      "hours": "7:00 AM - 10:00 PM"
+    },
+    "trainers": [],
+    "details": "Unwind and detox in our sauna and steam rooms, perfect after a workout or for general relaxation."
+  },
+  {
+    "id": "service_10",
+    "title": "Boxing Classes",
+    "description": "Boost fitness with boxing.",
+    "price": 20,
+    "schedule": {
+      "days": ["Monday", "Thursday"],
+      "hours": "5:30 PM - 6:30 PM"
+    },
+    "trainers": [
+      {
+        "id": "trainer_17",
+        "first_name": "Tom",
+        "last_name": "Scott"
+      },
+      {
+        "id": "trainer_18",
+        "first_name": "Sophia",
+        "last_name": "Miller"
+      }
+    ],
+    "details": "Boxing classes designed to improve cardiovascular health, agility, and power, enhancing your overall fitness."
+  },
+  {
+    "id": "service_11",
+    "title": "Swimming Lessons",
+    "description": "Learn or improve swimming.",
+    "price": 30,
+    "schedule": {
+      "days": ["Tuesday", "Thursday", "Saturday"],
+      "hours": "9:00 AM - 11:00 AM"
+    },
+    "trainers": [
+      {
+        "id": "trainer_19",
+        "first_name": "Aiden",
+        "last_name": "Roberts"
+      },
+      {
+        "id": "trainer_20",
+        "first_name": "Olivia",
+        "last_name": "Green"
+      }
+    ],
+    "details": "Whether you're a beginner or looking to refine your technique, our swimming lessons offer one-on-one coaching or group sessions for all levels."
+  }
+]

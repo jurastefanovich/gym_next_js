@@ -1,51 +1,68 @@
 "use client";
+
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import { Background, Text } from "../enums/Colors";
+import {
+  AppBar,
+  Box,
+  Button,
+  Drawer,
+  IconButton,
+  Toolbar,
+  useMediaQuery,
+} from "@mui/material";
+import { Menu as MenuIcon } from "@mui/icons-material";
 import { useRouter, usePathname } from "next/navigation";
-const navItems = ["Usluge", "Kontakt", "O nama"];
+import { Background } from "../enums/Colors";
+
+const navItems = [
+  { title: "Početak", path: "/" },
+  { title: "Usluge", path: "/services" },
+  { title: "Kontakt", path: "/contact" },
+  { title: "O nama", path: "/about_us" },
+];
 
 export default function Navbar() {
   const path = usePathname();
-  const rout = useRouter();
+  const router = useRouter();
   const isLogin = path === "/login";
   const isSignUp = path === "/signUp";
 
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const isSmallScreen = useMediaQuery((theme: any) =>
+    theme.breakpoints.down("sm")
+  );
+
   function redirect(path: string) {
-    rout.push(path);
+    router.push(path);
   }
+
+  const handleDrawerToggle = () => {
+    setOpenDrawer(!openDrawer);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar
-        component="nav"
-        sx={{ bgcolor: Background.SECONDARY, boxShadow: "none" }}
+        sx={{
+          bgcolor: "transparent", // Make the navbar transparent
+          position: "sticky", // Ensure it stays at the top on scroll
+        }}
       >
-        <Toolbar>
-          <Typography
+        <Toolbar
+          sx={{
+            bgcolor: "transparent", // Make the navbar transparent
+          }}
+        >
+          <IconButton
+            edge="start"
             color="primary"
-            variant="h6"
-            component="div"
-            fontWeight={"bold"}
-            sx={{
-              flexGrow: 1,
-              display: { xs: "none", sm: "block" },
-            }}
+            aria-label="menu"
+            sx={{ display: { xs: "flex" } }}
+            onClick={handleDrawerToggle}
           >
-            Gym
-          </Typography>
-          <Box
-            sx={{
-              display: { xs: "none", sm: "block" },
-            }}
-          >
-            {navItems.map((item) => (
-              <Button key={item}>{item}</Button>
-            ))}
+            <MenuIcon />
+          </IconButton>
+          <Box>
             <Button onClick={() => redirect("/login")}>Login</Button>
             <Button variant="outlined" onClick={() => redirect("/signup")}>
               Sign Up
@@ -53,6 +70,36 @@ export default function Navbar() {
           </Box>
         </Toolbar>
       </AppBar>
+
+      {/* Drawer (Hamburger Menu) */}
+      <Drawer
+        anchor="left"
+        open={openDrawer}
+        onClose={handleDrawerToggle}
+        sx={{
+          width: 250,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: 250,
+            boxSizing: "border-box",
+          },
+        }}
+      >
+        <Box sx={{ padding: 2 }}>
+          {navItems.map((item) => (
+            <Button
+              key={item.title}
+              onClick={() => {
+                redirect(item.path);
+                setOpenDrawer(false); // Close the drawer after navigation
+              }}
+              sx={{ width: "100%", padding: "10px 0" }}
+            >
+              {item.title}
+            </Button>
+          ))}
+        </Box>
+      </Drawer>
     </Box>
   );
 }

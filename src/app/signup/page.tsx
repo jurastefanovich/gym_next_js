@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
 import { TextField, Button, Typography, Link, Container } from "@mui/material";
-import { LockOutlined } from "@mui/icons-material";
+import { LockOpenOutlined, LockOutlined } from "@mui/icons-material";
 import { styled } from "@mui/system";
 import { Text } from "../_features/enums/Colors";
 
 const Root = styled("div")({
   display: "flex",
-  height: "100vh",
+  height: "90vh",
   backgroundImage: "url('/login.jpg')",
   backgroundSize: "cover",
   backgroundPosition: "center",
@@ -32,7 +32,6 @@ const FormContainer = styled(Container)(({ theme }) => ({
   alignItems: "center",
   display: "flex",
   flexDirection: "column",
-  zIndex: 2,
   [theme.breakpoints.up("lg")]: {
     position: "absolute",
     top: "50%",
@@ -52,7 +51,7 @@ const FormContainer = styled(Container)(({ theme }) => ({
   },
 }));
 
-const Icon = styled(LockOutlined)({
+const Icon = styled(LockOpenOutlined)({
   fontSize: "4rem",
   color: Text.SECONDARY,
   marginBottom: "16px",
@@ -81,12 +80,18 @@ const LinkContainer = styled("div")({
 });
 
 export default function SignUp() {
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [username, setUsername] = React.useState("");
-  const [birthdate, setBirthdate] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [firstName, setFirstName] = React.useState<string | undefined>(
+    undefined
+  );
+  const [lastName, setLastName] = React.useState<string | undefined>(undefined);
+  const [username, setUsername] = React.useState<string | undefined>(undefined);
+  const [birthdate, setBirthdate] = React.useState<string | undefined>(
+    undefined
+  );
+  const [password, setPassword] = React.useState<string | undefined>(undefined);
+  const [confirmPassword, setConfirmPassword] = React.useState<
+    string | undefined
+  >(undefined);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

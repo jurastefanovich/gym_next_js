@@ -1,10 +1,13 @@
-"use client";
 import React, { useState } from "react";
 import { TextField, Button, Typography, Link, Container } from "@mui/material";
 import { LockOutlined } from "@mui/icons-material";
-import { styled } from "@mui/system";
-import { Text } from "../_features/enums/Colors";
+import { Box, styled } from "@mui/system";
+import { Text } from "../enums/Colors";
+import { GlobalMargin, GlobalMarginReduced } from "@/app/layout";
 
+export const BoxNoMargin = styled(Box)({
+  margin: 0, // If GlobalMargin is a number, apply units
+});
 const Root = styled("div")({
   display: "flex",
   height: "100vh",
@@ -79,50 +82,3 @@ const LinkContainer = styled("div")({
   textAlign: "center",
   marginTop: "16px",
 });
-
-export default function Login() {
-  const [emailOrUsername, setEmailOrUsername] = useState<string | undefined>(undefined);
-  const [password, setPassword] = useState<string | undefined>(undefined);
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-  };
-
-  return (
-    <Root>
-      <FormContainer>
-        <Icon />
-        <Title variant="h5">Log in</Title>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            label="Email/Username"
-            variant="outlined"
-            value={emailOrUsername}
-            onChange={(e) => setEmailOrUsername(e.target.value)}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="Password"
-            type="password"
-            variant="outlined"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            margin="normal"
-            required
-          />
-          <LoginButton type="submit" variant="contained">
-            Log In
-          </LoginButton>
-        </form>
-        <LinkContainer>
-          <Link href="/signup" variant="body2">
-            Don't have an account? Sign Up
-          </Link>
-        </LinkContainer>
-      </FormContainer>
-    </Root>
-  );
-}

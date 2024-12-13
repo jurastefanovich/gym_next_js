@@ -7,4 +7,6 @@ export enum Text {
 export enum Background {
   PRIMARY = CRIMSON_RED,
   SECONDARY = "#fff",
+  DARK = "#161a1d",
+  LIGHT = "#f5f5f5"
 }
