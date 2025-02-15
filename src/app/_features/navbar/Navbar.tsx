@@ -24,8 +24,8 @@ const navItems = [
 export default function Navbar() {
   const path = usePathname();
   const router = useRouter();
-  const isLogin = path === "/login";
-  const isSignUp = path === "/signUp";
+  const isLogin = path.toLowerCase() === "/login";
+  const isSignUp = path.toLowerCase() === "/signup";
 
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const isSmallScreen = useMediaQuery((theme: any) =>
@@ -36,23 +36,22 @@ export default function Navbar() {
     router.push(path);
   }
 
-
-  
-
   const handleDrawerToggle = () => {
     setOpenDrawer(!openDrawer);
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "block", boxShadow: "none" }}>
       <AppBar
         sx={{
-          bgcolor: "transparent", // Make the navbar transparent
-          position: "sticky", // Ensure it stays at the top on scroll
+          boxShadow: "none",
+          bgcolor: "white", // Make the navbar transparent
         }}
       >
         <Toolbar
           sx={{
+            display: "flex",
+            justifyContent: "space-between",
             bgcolor: "transparent", // Make the navbar transparent
           }}
         >
@@ -66,10 +65,14 @@ export default function Navbar() {
             <MenuIcon />
           </IconButton>
           <Box>
-            <Button onClick={() => redirect("/login")}>Login</Button>
-            <Button variant="outlined" onClick={() => redirect("/signup")}>
-              Sign Up
-            </Button>
+            {!isLogin ? (
+              <Button onClick={() => redirect("/login")}>Login</Button>
+            ) : null}
+            {!isSignUp ? (
+              <Button variant="outlined" onClick={() => redirect("/signup")}>
+                Sign Up
+              </Button>
+            ) : null}
           </Box>
         </Toolbar>
       </AppBar>

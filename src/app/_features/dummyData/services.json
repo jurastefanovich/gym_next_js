@@ -13,11 +13,6 @@
         "id": "trainer_1",
         "first_name": "Emily",
         "last_name": "Jones"
-      },
-      {
-        "id": "trainer_2",
-        "first_name": "Michael",
-        "last_name": "Smith"
       }
     ],
     "details": "Work with certified nutritionists to develop a personalized diet plan to achieve your fitness goals, including weight loss, muscle gain, and overall health improvements."
@@ -36,11 +31,6 @@
         "id": "trainer_3",
         "first_name": "Sarah",
         "last_name": "Williams"
-      },
-      {
-        "id": "trainer_4",
-        "first_name": "John",
-        "last_name": "Davis"
       }
     ],
     "details": "Personalized training sessions aimed at improving strength, endurance, flexibility, and more. Our certified trainers will work with you to reach your individual fitness goals."
@@ -59,11 +49,6 @@
         "id": "trainer_5",
         "first_name": "Rachel",
         "last_name": "Brown"
-      },
-      {
-        "id": "trainer_6",
-        "first_name": "David",
-        "last_name": "Martinez"
       }
     ],
     "details": "Join high-energy group fitness classes that include a variety of workouts like HIIT, yoga, and strength training. Perfect for all fitness levels in a fun, motivating environment."
@@ -82,11 +67,6 @@
         "id": "trainer_7",
         "first_name": "Laura",
         "last_name": "Green"
-      },
-      {
-        "id": "trainer_8",
-        "first_name": "Robert",
-        "last_name": "Adams"
       }
     ],
     "details": "Our yoga classes focus on improving flexibility, mindfulness, and stress relief. Suitable for all levels from beginner to advanced."
@@ -105,11 +85,6 @@
         "id": "trainer_9",
         "first_name": "Jessica",
         "last_name": "Taylor"
-      },
-      {
-        "id": "trainer_10",
-        "first_name": "Brian",
-        "last_name": "Clark"
       }
     ],
     "details": "High-intensity cycling sessions that build endurance and burn fat, suitable for all levels of cyclists."
@@ -128,11 +103,6 @@
         "id": "trainer_11",
         "first_name": "Nina",
         "last_name": "White"
-      },
-      {
-        "id": "trainer_12",
-        "first_name": "Luis",
-        "last_name": "Hernandez"
       }
     ],
     "details": "Zumba combines dance and fitness, offering a fun and energetic workout set to Latin and international music."
@@ -151,11 +121,6 @@
         "id": "trainer_13",
         "first_name": "Mark",
         "last_name": "Wilson"
-      },
-      {
-        "id": "trainer_14",
-        "first_name": "Angela",
-        "last_name": "Taylor"
       }
     ],
     "details": "CrossFit combines weightlifting, gymnastics, and cardio into high-intensity workouts that improve strength, stamina, and athleticism."
@@ -174,11 +139,6 @@
         "id": "trainer_15",
         "first_name": "Sophie",
         "last_name": "King"
-      },
-      {
-        "id": "trainer_16",
-        "first_name": "James",
-        "last_name": "Lewis"
       }
     ],
     "details": "Relax your muscles and reduce stress with deep tissue, Swedish, or sports massages offered by our certified therapists."
@@ -209,11 +169,6 @@
         "id": "trainer_17",
         "first_name": "Tom",
         "last_name": "Scott"
-      },
-      {
-        "id": "trainer_18",
-        "first_name": "Sophia",
-        "last_name": "Miller"
       }
     ],
     "details": "Boxing classes designed to improve cardiovascular health, agility, and power, enhancing your overall fitness."
@@ -232,11 +187,6 @@
         "id": "trainer_19",
         "first_name": "Aiden",
         "last_name": "Roberts"
-      },
-      {
-        "id": "trainer_20",
-        "first_name": "Olivia",
-        "last_name": "Green"
       }
     ],
     "details": "Whether you're a beginner or looking to refine your technique, our swimming lessons offer one-on-one coaching or group sessions for all levels."

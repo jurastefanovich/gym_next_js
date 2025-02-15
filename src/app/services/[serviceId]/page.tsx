@@ -20,7 +20,7 @@ export default function ServicePage({
   }
 
   return (
-    <BoxNoMargin sx={{ bgcolor: Background.LIGHT, py: 4 }}>
+    <BoxNoMargin sx={{ bgcolor: Background.LIGHT, pt: 10, pb: 10 }}>
       <Container maxWidth="lg">
         <Grid container>
           <Grid item xs={12} md={12 / 2}>

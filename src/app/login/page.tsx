@@ -4,6 +4,7 @@ import { TextField, Button, Typography, Link, Container } from "@mui/material";
 import { LockOutlined } from "@mui/icons-material";
 import { styled } from "@mui/system";
 import { Text } from "../_features/enums/Colors";
+import { useRouter } from "next/navigation";
 
 const Root = styled("div")({
   display: "flex",
@@ -81,19 +82,32 @@ const LinkContainer = styled("div")({
 });
 
 export default function Login() {
-  const [emailOrUsername, setEmailOrUsername] = useState<string | undefined>(undefined);
-  const [password, setPassword] = useState<string | undefined>(undefined);
-
-  const handleSubmit = (e: any) => {
+  const [emailOrUsername, setEmailOrUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const router = useRouter();
+  const [error, setError] = useState("");
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-  };
 
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ emailOrUsername, password }),
+    });
+
+    if (response.ok) {
+      router.push("/dashboard"); // Redirect after login
+    } else {
+      const data = await response.json();
+      setError(data.message);
+    }
+  };
   return (
     <Root>
       <FormContainer>
         <Icon />
         <Title variant="h5">Log in</Title>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLogin}>
           <TextField
             fullWidth
             label="Email/Username"

@@ -1,6 +1,7 @@
 "use client";
 import { Box, Typography, Button } from "@mui/material";
 import { styled } from "@mui/system";
+import Link from "next/link";
 
 const HeroSection = styled(Box)(({ theme }) => ({
   position: "relative",
@@ -47,12 +48,9 @@ export default function Hero() {
       <HeroSubtitle variant="h6" letterSpacing={15}>
         See the better you
       </HeroSubtitle>
-      <HeroButton
-        variant="contained"
-        onClick={() => alert("Redirect somewhere")}
-      >
-        Start training
-      </HeroButton>
+      <Link href="/login" passHref legacyBehavior>
+        <HeroButton variant="contained">Start training</HeroButton>
+      </Link>
     </HeroSection>
   );
 }

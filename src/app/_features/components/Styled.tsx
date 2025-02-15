@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { TextField, Button, Typography, Link, Container } from "@mui/material";
+import { Button, Typography, Container } from "@mui/material";
 import { LockOutlined } from "@mui/icons-material";
 import { Box, styled } from "@mui/system";
 import { Text } from "../enums/Colors";
-import { GlobalMargin, GlobalMarginReduced } from "@/app/layout";
 
 export const BoxNoMargin = styled(Box)({
+  minHeight: "100vh",
+  padding: 100,
   margin: 0, // If GlobalMargin is a number, apply units
 });
 const Root = styled("div")({

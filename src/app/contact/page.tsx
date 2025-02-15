@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import {
   Box,
   Typography,
@@ -21,7 +21,6 @@ const useStyles = makeStyles({
   section: {
     marginBottom: "2rem",
     padding: "2rem",
-    backgroundColor: "#f4f4f4",
     borderRadius: "8px",
   },
   sectionTitle: {
@@ -78,74 +77,74 @@ const page = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: "1200px", margin: "auto", padding: 2 }}>
-      {/* Contact Form Section */}
-      <Box className={classes.section}>
-        <Typography
-          variant="h4"
-          align="center"
-          className={classes.sectionTitle}
-        >
-          Contact Us
-        </Typography>
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <TextField
-            label="Your Name"
-            variant="outlined"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className={classes.inputField}
-            required
-          />
-          <TextField
-            label="Your Email"
-            variant="outlined"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={classes.inputField}
-            required
-          />
-          <FormControl variant="outlined" className={classes.inputField}>
-            <InputLabel>Subject</InputLabel>
-            <Select
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              label="Subject"
-            >
-              <MenuItem value="General Inquiry">General Inquiry</MenuItem>
-              <MenuItem value="Membership">Membership</MenuItem>
-              <MenuItem value="Personal Training">Personal Training</MenuItem>
-              <MenuItem value="Classes">Classes</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            multiline
-            minRows={4}
-            placeholder="Your Message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className={classes.inputField}
-            required
-          />
-          <Button
-            variant="contained"
-            type="submit"
-            color="primary"
-            disabled={loading}
-            className={classes.submitButton}
+    <Fragment>
+      <Box sx={{ margin: "auto", padding: 5 }}>
+        {/* Contact Form Section */}
+        <Box className={classes.section}>
+          <Typography
+            variant="h4"
+            align="center"
+            className={classes.sectionTitle}
           >
-            {loading ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : (
-              "Send Message"
-            )}
-          </Button>
-        </form>
+            Contact Us
+          </Typography>
+          <form className={classes.form} onSubmit={handleSubmit}>
+            <TextField
+              label="Your Name"
+              variant="outlined"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={classes.inputField}
+              required
+            />
+            <TextField
+              label="Your Email"
+              variant="outlined"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={classes.inputField}
+              required
+            />
+            <FormControl variant="outlined" className={classes.inputField}>
+              <InputLabel>Subject</InputLabel>
+              <Select
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                label="Subject"
+              >
+                <MenuItem value="General Inquiry">General Inquiry</MenuItem>
+                <MenuItem value="Membership">Membership</MenuItem>
+                <MenuItem value="Personal Training">Personal Training</MenuItem>
+                <MenuItem value="Classes">Classes</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              multiline
+              minRows={4}
+              placeholder="Your Message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className={classes.inputField}
+              required
+            />
+            <Button
+              variant="contained"
+              type="submit"
+              color="primary"
+              disabled={loading}
+              className={classes.submitButton}
+            >
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Send Message"
+              )}
+            </Button>
+          </form>
+        </Box>
       </Box>
-
-      <Location />
-    </Box>
+    </Fragment>
   );
 };
 

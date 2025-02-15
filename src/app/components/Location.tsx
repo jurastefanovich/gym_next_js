@@ -2,22 +2,45 @@
 
 import React from "react";
 import { Box, Typography, Paper } from "@mui/material";
+import { Text } from "../_features/enums/Colors";
 
 const Location = () => {
   return (
     <Box sx={{ maxWidth: "1200px", margin: "auto", padding: 3 }}>
       {/* Location Info Section */}
-      <Paper sx={{ padding: 3, backgroundColor: "#f4f4f4", borderRadius: 2 }}>
-        <Typography variant="h4" align="center" sx={{ marginBottom: 2 }}>
+      <Paper
+        sx={{ padding: 3, backgroundColor: Text.SECONDARY, borderRadius: 2 }}
+      >
+        <Typography
+          variant="h4"
+          color="white"
+          align="center"
+          sx={{ marginBottom: 2 }}
+        >
           Our Location
         </Typography>
-        <Typography variant="h6" align="center" sx={{ marginBottom: 1 }}>
+        <Typography
+          variant="h6"
+          color="white"
+          align="center"
+          sx={{ marginBottom: 1 }}
+        >
           123 Fitness St, Workout City, State, 12345
         </Typography>
-        <Typography variant="body1" align="center" sx={{ marginBottom: 1 }}>
+        <Typography
+          variant="body1"
+          color="white"
+          align="center"
+          sx={{ marginBottom: 1 }}
+        >
           <strong>Phone:</strong> +1 (123) 456-7890
         </Typography>
-        <Typography variant="body1" align="center" sx={{ marginBottom: 3 }}>
+        <Typography
+          variant="body1"
+          color="white"
+          align="center"
+          sx={{ marginBottom: 3 }}
+        >
           <strong>Email:</strong> contact@fitgym.com
         </Typography>
 

@@ -7,7 +7,7 @@ import { Text } from "../_features/enums/Colors";
 
 const Root = styled("div")({
   display: "flex",
-  height: "90vh",
+  height: "100vh",
   backgroundImage: "url('/login.jpg')",
   backgroundSize: "cover",
   backgroundPosition: "center",

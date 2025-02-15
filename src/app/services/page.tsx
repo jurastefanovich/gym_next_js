@@ -8,7 +8,7 @@ import { Grid, Container, Typography } from "@mui/material";
 
 export default function Page() {
   return (
-    <BoxNoMargin sx={{ bgcolor: Background.DARK, pt: 10, pb: 10 }}>
+    <BoxNoMargin sx={{ bgcolor: Background.DARK }}>
       <Container maxWidth="xl">
         <Typography
           variant="h3"

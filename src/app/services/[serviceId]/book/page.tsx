@@ -9,11 +9,13 @@ import {
   Grid,
   Container,
 } from "@mui/material";
-
+import { BoxNoMargin } from "@/app/_features/components/Styled";
+import { Background } from "@/app/_features/enums/Colors";
+import dummyServices from "@/app/_features/dummyData/services.json"
 // Define the structure for services
 interface Service {
   id: string;
-  name: string;
+  title: string;
 }
 
 interface Props {
@@ -23,11 +25,7 @@ interface Props {
 }
 
 // Mock services
-const services: Service[] = [
-  { id: "service_1", name: "Yoga Class" },
-  { id: "service_2", name: "Personal Training" },
-  { id: "service_3F", name: "Zumba Class" },
-];
+const services: Service[] = dummyServices;
 
 // Define the structure for form data
 interface FormData {
@@ -70,120 +68,120 @@ const BookServicePage = ({ params }: Props) => {
   };
 
   return (
-    <Container
-      sx={{
-        height: "100vh",
-      }}
+    <BoxNoMargin
+      sx={{ height: "100vh", bgcolor: Background.LIGHT, pt: 10, pb: 10 }}
     >
-      <Typography variant="h5" fontWeight={"bold"} mb={3}>
-        Book an Appointment
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          {/* Name Field */}
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              required
-            />
-          </Grid>
+      <Container>
+        <Typography variant="h5" fontWeight={"bold"} mb={3}>
+          Book an Appointment
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            {/* Name Field */}
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+              />
+            </Grid>
 
-          {/* Email Field */}
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              type="email"
-              label="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-            />
-          </Grid>
+            {/* Email Field */}
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                type="email"
+                label="Email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+              />
+            </Grid>
 
-          {/* Phone Field */}
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              type="tel"
-              label="Phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              required
-            />
-          </Grid>
+            {/* Phone Field */}
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                type="tel"
+                label="Phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                required
+              />
+            </Grid>
 
-          {/* Date Field */}
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              type="date"
-              label="Preferred Date"
-              name="date"
-              value={formData.date}
-              onChange={handleInputChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              required
-            />
-          </Grid>
+            {/* Date Field */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                type="date"
+                label="Preferred Date"
+                name="date"
+                value={formData.date}
+                onChange={handleInputChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                required
+              />
+            </Grid>
 
-          {/* Time Field */}
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              type="time"
-              label="Preferred Time"
-              name="time"
-              value={formData.time}
-              onChange={handleInputChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              required
-            />
-          </Grid>
+            {/* Time Field */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                type="time"
+                label="Preferred Time"
+                name="time"
+                value={formData.time}
+                onChange={handleInputChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                required
+              />
+            </Grid>
 
-          {/* Service Selection */}
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              select
-              label="Select Service"
-              name="serviceId"
-              value={serviceId}
-              onChange={handleInputChange}
-              required
-            >
-              {services.map((service) => (
-                <MenuItem key={service.id} value={service.id}>
-                  {service.name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
+            {/* Service Selection */}
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                select
+                label="Select Service"
+                name="serviceId"
+                value={serviceId}
+                onChange={handleInputChange}
+                required
+              >
+                {services.map((service) => (
+                  <MenuItem key={service.id} value={service.id}>
+                    {service.title}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
 
-          {/* Submit Button */}
-          <Grid item xs={12}>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2 }}
-            >
-              Submit Appointment
-            </Button>
+            {/* Submit Button */}
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{ mt: 2 }}
+              >
+                Submit Appointment
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
-    </Container>
+        </form>
+      </Container>
+    </BoxNoMargin>
   );
 };
 export default BookServicePage;
