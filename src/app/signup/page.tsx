@@ -1,9 +1,13 @@
 "use client";
-import React from "react";
-import { TextField, Button, Typography, Link, Container } from "@mui/material";
-import { LockOpenOutlined, LockOutlined } from "@mui/icons-material";
+import { LockOpenOutlined } from "@mui/icons-material";
+import { Button, Container, Link, TextField, Typography } from "@mui/material";
 import { styled } from "@mui/system";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { Text } from "../_features/enums/Colors";
+import { AuthInput, RegResponse } from "../_features/utils/Interfaces";
+import { usePost } from "../hooks/usePost";
+import { useRedirectIfAuthenticated } from "../hooks/useRedirectIfAuthenticated";
 
 const Root = styled("div")({
   display: "flex",
@@ -79,30 +83,54 @@ const LinkContainer = styled("div")({
   marginTop: "16px",
 });
 
-export default function SignUp() {
-  const [firstName, setFirstName] = React.useState<string | undefined>(
-    undefined
-  );
-  const [lastName, setLastName] = React.useState<string | undefined>(undefined);
-  const [username, setUsername] = React.useState<string | undefined>(undefined);
-  const [birthdate, setBirthdate] = React.useState<string | undefined>(
-    undefined
-  );
-  const [password, setPassword] = React.useState<string | undefined>(undefined);
-  const [confirmPassword, setConfirmPassword] = React.useState<
-    string | undefined
-  >(undefined);
+type AuthFormFields = {
+  firstName?: AuthInput;
+  lastName?: AuthInput;
+  username?: AuthInput;
+  birthdate?: AuthInput;
+  email?: AuthInput;
+  password?: AuthInput;
+  confirmPassword?: AuthInput;
+};
 
-  const handleSubmit = (e: React.FormEvent) => {
+export default function SignUp() {
+  useRedirectIfAuthenticated();
+  const { post } = usePost<RegResponse>();
+  const router = useRouter();
+
+  const [formFields, setFormFields] = React.useState<AuthFormFields>({});
+  const updateField = (field: keyof AuthFormFields, value: AuthInput) => {
+    setFormFields((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({
+
+    const {
       firstName,
       lastName,
       username,
       birthdate,
       password,
       confirmPassword,
-    });
+      email,
+    } = formFields;
+
+    const obj = {
+      firstName: firstName?.value,
+      lastName: lastName?.value,
+      username: username?.value,
+      birthdate: birthdate?.value,
+      password: password?.value,
+      confirmPassword: confirmPassword?.value,
+      email: email?.value,
+    };
+
+    const res = await post("http://localhost:8080/auth/register", obj);
+
+    if (res) {
+      router.push("/login");
+    }
   };
 
   return (
@@ -115,8 +143,10 @@ export default function SignUp() {
             fullWidth
             label="First Name"
             variant="outlined"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            value={formFields.firstName?.value || ""}
+            onChange={(e) =>
+              updateField("firstName", { value: e.target.value })
+            }
             margin="normal"
             required
           />
@@ -124,8 +154,8 @@ export default function SignUp() {
             fullWidth
             label="Last Name"
             variant="outlined"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            value={formFields.lastName?.value || ""}
+            onChange={(e) => updateField("lastName", { value: e.target.value })}
             margin="normal"
             required
           />
@@ -133,53 +163,55 @@ export default function SignUp() {
             fullWidth
             label="Username"
             variant="outlined"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={formFields.username?.value || ""}
+            onChange={(e) => updateField("username", { value: e.target.value })}
             margin="normal"
             required
           />
           <TextField
             fullWidth
             label="Birthdate"
-            type="date"
             variant="outlined"
-            value={birthdate}
-            onChange={(e) => setBirthdate(e.target.value)}
+            value={formFields.birthdate?.value || ""}
+            onChange={(e) =>
+              updateField("birthdate", { value: e.target.value })
+            }
             margin="normal"
-            InputLabelProps={{
-              shrink: true,
-            }}
+            required
+          />
+          <TextField
+            fullWidth
+            label="Email"
+            variant="outlined"
+            value={formFields.email?.value || ""}
+            onChange={(e) => updateField("email", { value: e.target.value })}
+            margin="normal"
             required
           />
           <TextField
             fullWidth
             label="Password"
-            type="password"
             variant="outlined"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            value={formFields.password?.value || ""}
+            onChange={(e) => updateField("password", { value: e.target.value })}
             margin="normal"
             required
           />
           <TextField
             fullWidth
             label="Confirm Password"
-            type="password"
             variant="outlined"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            type="password"
+            value={formFields.confirmPassword?.value || ""}
+            onChange={(e) =>
+              updateField("confirmPassword", { value: e.target.value })
+            }
             margin="normal"
             required
           />
-          <SignUpButton type="submit" variant="contained">
-            Sign Up
-          </SignUpButton>
+          <button type="submit">Sign Up</button>
         </form>
-        <LinkContainer>
-          <Link href="/login" variant="body2">
-            Already have an account? Log In
-          </Link>
-        </LinkContainer>
       </FormContainer>
     </Root>
   );

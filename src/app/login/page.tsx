@@ -1,11 +1,29 @@
 "use client";
-import React, { useState } from "react";
-import { TextField, Button, Typography, Link, Container } from "@mui/material";
-import { LockOutlined } from "@mui/icons-material";
-import { styled } from "@mui/system";
-import { Text } from "../_features/enums/Colors";
-import { useRouter } from "next/navigation";
 
+import React, { useState } from "react";
+import {
+  TextField,
+  Button,
+  Typography,
+  Link,
+  Container,
+  CircularProgress,
+} from "@mui/material";
+import { LockOpenOutlined, LockOutlined, LockReset } from "@mui/icons-material";
+import { styled } from "@mui/system";
+import { usePost } from "../hooks/usePost"; // Adjust path based on actual file location
+import { useRouter } from "next/navigation";
+import { Text } from "../_features/enums/Colors";
+import { useRedirectIfAuthenticated } from "../hooks/useRedirectIfAuthenticated";
+import { setLoginData } from "../_features/utils/LocalStorageHelpers";
+import { LoginData } from "../_features/utils/Interfaces";
+const Icon = styled(LockOutlined)({
+  fontSize: "4rem",
+  color: Text.SECONDARY,
+  marginBottom: "16px",
+  textAlign: "center",
+});
+//Styles
 const Root = styled("div")({
   display: "flex",
   height: "100vh",
@@ -33,7 +51,6 @@ const FormContainer = styled(Container)(({ theme }) => ({
   alignItems: "center",
   display: "flex",
   flexDirection: "column",
-  zIndex: 2,
   [theme.breakpoints.up("lg")]: {
     position: "absolute",
     top: "50%",
@@ -53,89 +70,71 @@ const FormContainer = styled(Container)(({ theme }) => ({
   },
 }));
 
-const Icon = styled(LockOutlined)({
-  fontSize: "4rem",
-  color: Text.SECONDARY,
-  marginBottom: "16px",
-  textAlign: "center",
-});
-
 const Title = styled(Typography)({
   textAlign: "center",
   marginBottom: "16px",
 });
 
-const LoginButton = styled(Button)({
-  marginTop: "16px",
-  width: "100%",
-  boxShadow: "none",
-  "&:hover": {
-    backgroundColor: "transparent",
-    boxShadow: "none",
-    color: Text.SECONDARY,
-  },
-});
-
-const LinkContainer = styled("div")({
-  textAlign: "center",
-  marginTop: "16px",
-});
-
-export default function Login() {
-  const [emailOrUsername, setEmailOrUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+export default function LoginForm() {
+  useRedirectIfAuthenticated();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
-  const [error, setError] = useState("");
-  const handleLogin = async (e: React.FormEvent) => {
+  const { post, loading } = usePost<LoginData>();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const obj = {
+      email: String(email),
+      password: String(password),
+    };
 
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ emailOrUsername, password }),
-    });
+    const response = await post("http://localhost:8080/auth/login", obj);
 
-    if (response.ok) {
-      router.push("/dashboard"); // Redirect after login
-    } else {
-      const data = await response.json();
-      setError(data.message);
+    if (response) {
+      setLoginData(response);
+      router.push("/"); // redirect after login
     }
   };
+
   return (
     <Root>
       <FormContainer>
         <Icon />
-        <Title variant="h5">Log in</Title>
-        <form onSubmit={handleLogin}>
+        <Title variant="h5">Log In</Title>
+        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
           <TextField
             fullWidth
-            label="Email/Username"
-            variant="outlined"
-            value={emailOrUsername}
-            onChange={(e) => setEmailOrUsername(e.target.value)}
+            label="Email"
+            type="email"
             margin="normal"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             fullWidth
             label="Password"
             type="password"
-            variant="outlined"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             margin="normal"
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
-          <LoginButton type="submit" variant="contained">
-            Log In
-          </LoginButton>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            disabled={loading}
+            sx={{ mt: 2 }}
+          >
+            {loading ? <CircularProgress size={24} /> : "Login"}
+          </Button>
+          <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+            Don't have an account? <Link href="/signup">Register</Link>
+          </Typography>
         </form>
-        <LinkContainer>
-          <Link href="/signup" variant="body2">
-            Don't have an account? Sign Up
-          </Link>
-        </LinkContainer>
       </FormContainer>
     </Root>
   );

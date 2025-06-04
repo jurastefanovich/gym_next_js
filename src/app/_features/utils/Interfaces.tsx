@@ -25,3 +25,16 @@ export interface ServiceProps extends TitleAndDesc {
 }
 
 export interface SingleService extends ServiceProps {}
+
+export interface LoginData {
+  token: string;
+  fullName: string;
+}
+
+export interface Message {
+  value: string;
+}
+
+export interface RegResponse extends Message {}
+
+export interface AuthInput extends Message {}

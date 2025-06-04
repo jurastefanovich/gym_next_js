@@ -2,6 +2,8 @@
 import { Box, Typography, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import Link from "next/link";
+import { Names } from "../enums/Text";
+import { getToken } from "../utils/LocalStorageHelpers";
 
 const HeroSection = styled(Box)(({ theme }) => ({
   position: "relative",
@@ -44,13 +46,24 @@ const HeroButton = styled(Button)(({ theme }) => ({
 export default function Hero() {
   return (
     <HeroSection>
-      <HeroTitle variant="h1">Gym</HeroTitle>
+      <HeroTitle variant="h1">{Names.GYM}</HeroTitle>
       <HeroSubtitle variant="h6" letterSpacing={15}>
         See the better you
       </HeroSubtitle>
+      <AuthButton />
+    </HeroSection>
+  );
+}
+
+function AuthButton() {
+  const hasToken = getToken();
+  if (hasToken) {
+    return null;
+  } else {
+    return (
       <Link href="/login" passHref legacyBehavior>
         <HeroButton variant="contained">Start training</HeroButton>
       </Link>
-    </HeroSection>
-  );
+    );
+  }
 }

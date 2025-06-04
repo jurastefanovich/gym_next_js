@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   AppBar,
+  Avatar,
   Box,
   Button,
   Drawer,
@@ -13,6 +14,8 @@ import {
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { useRouter, usePathname } from "next/navigation";
 import { Background } from "../enums/Colors";
+import AvatarMenu from "../components/AvatarMenu";
+import { getToken } from "../utils/LocalStorageHelpers";
 
 const navItems = [
   { title: "Početak", path: "/" },
@@ -26,7 +29,7 @@ export default function Navbar() {
   const router = useRouter();
   const isLogin = path.toLowerCase() === "/login";
   const isSignUp = path.toLowerCase() === "/signup";
-
+  const hasToken = getToken();
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const isSmallScreen = useMediaQuery((theme: any) =>
     theme.breakpoints.down("sm")
@@ -64,16 +67,20 @@ export default function Navbar() {
           >
             <MenuIcon />
           </IconButton>
-          <Box>
-            {!isLogin ? (
-              <Button onClick={() => redirect("/login")}>Login</Button>
-            ) : null}
-            {!isSignUp ? (
-              <Button variant="outlined" onClick={() => redirect("/signup")}>
-                Sign Up
-              </Button>
-            ) : null}
-          </Box>
+          {hasToken ? (
+            <AvatarMenu />
+          ) : (
+            <Box>
+              {!isLogin ? (
+                <Button onClick={() => redirect("/login")}>Login</Button>
+              ) : null}
+              {!isSignUp ? (
+                <Button variant="outlined" onClick={() => redirect("/signup")}>
+                  Sign Up
+                </Button>
+              ) : null}
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
 

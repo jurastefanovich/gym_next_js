@@ -1,10 +1,17 @@
 "use client";
-import { createTheme, ThemeProvider, CssBaseline, Box } from "@mui/material";
+import {
+  createTheme,
+  ThemeProvider,
+  CssBaseline,
+  Box,
+  SnackbarContent,
+} from "@mui/material";
 import localFont from "next/font/local";
 import Navbar from "./_features/navbar/Navbar";
 import Footer from "./_features/footer/Footer";
 import React from "react";
 import { Montserrat } from "next/font/google";
+import { SnackbarProvider } from "./context/SnackbarContext";
 // Define your custom colors
 const CRIMSON_RED = "#c1121f";
 
@@ -52,18 +59,20 @@ export default function RootLayout({
   return (
     <html lang="en" className={montserrat.variable}>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Navbar />
-          <Box
-            sx={{
-              minHeight: "50vh",
-            }}
-          >
-            {children}
-          </Box>
-          <Footer />
-        </ThemeProvider>
+        <SnackbarProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Navbar />
+            <Box
+              sx={{
+                minHeight: "50vh",
+              }}
+            >
+              {children}
+            </Box>
+            <Footer />
+          </ThemeProvider>
+        </SnackbarProvider>
       </body>
     </html>
   );
