@@ -14,12 +14,15 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useRouter } from "next/navigation";
-import { removeToken } from "../utils/LocalStorageHelpers";
+import { logout, removeToken } from "../utils/LocalStorageHelpers";
+import { useGet } from "@/app/hooks/useGet";
+import { ProfileResponse } from "../utils/Interfaces";
+import { UserApi } from "../enums/ApiPaths";
 
 const AvatarMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter();
-
+  const get = useGet<ProfileResponse>(UserApi.PROFILE);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -34,7 +37,7 @@ const AvatarMenu: React.FC = () => {
   };
 
   const handleLogout = () => {
-    removeToken();
+    logout();
     router.push("/");
     handleClose();
   };
@@ -42,7 +45,9 @@ const AvatarMenu: React.FC = () => {
   return (
     <>
       <IconButton onClick={handleClick} sx={{ p: 0 }}>
-        <Avatar sx={{ bgcolor: "primary.main", color: "white" }}>JŠ</Avatar>
+        <Avatar sx={{ bgcolor: "primary.main", color: "white" }}>
+          {get.data?.initials}
+        </Avatar>
       </IconButton>
 
       <Popover
@@ -63,9 +68,11 @@ const AvatarMenu: React.FC = () => {
         }}
       >
         <Box sx={{ px: 2, pt: 1, pb: 0.5 }}>
-          <Typography variant="subtitle2">John Šmith</Typography>
+          <Typography variant="subtitle2">
+            {get.data?.firstName} {get.data?.lastName}
+          </Typography>
           <Typography variant="body2" color="text.secondary">
-            john@example.com
+            {get.data?.email}
           </Typography>
         </Box>
 

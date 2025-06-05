@@ -15,6 +15,9 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Location from "../components/Location";
+import { usePost } from "../hooks/usePost";
+import { ContactResponse, Message } from "../_features/utils/Interfaces";
+import { isLoggedIn } from "../_features/utils/LocalStorageHelpers";
 
 // Styles using makeStyles (optional)
 const useStyles = makeStyles({
@@ -54,26 +57,27 @@ const useStyles = makeStyles({
 });
 
 const page = () => {
+  const loggedIn = isLoggedIn();
   const classes = useStyles();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState(loggedIn ? "puno ime korisnika" : "");
+  const [email, setEmail] = useState(loggedIn ? "postojeci email" : "");
   const [message, setMessage] = useState("");
   const [subject, setSubject] = useState("");
-  const [loading, setLoading] = useState(false);
+  const post = usePost<ContactResponse>();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    const body = {};
+    post.post("send_contact_api_path", body);
 
     // Simulate form submission
     setTimeout(() => {
       alert("Your message has been sent!");
-      setLoading(false);
       setName("");
       setEmail("");
       setMessage("");
       setSubject("");
-    }, 2000);
+    }, 1000);
   };
 
   return (
@@ -89,23 +93,28 @@ const page = () => {
             Contact Us
           </Typography>
           <form className={classes.form} onSubmit={handleSubmit}>
-            <TextField
-              label="Your Name"
-              variant="outlined"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={classes.inputField}
-              required
-            />
-            <TextField
-              label="Your Email"
-              variant="outlined"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={classes.inputField}
-              required
-            />
+            {!loggedIn ? (
+              <>
+                <TextField
+                  label="Your Name"
+                  variant="outlined"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className={classes.inputField}
+                  required
+                />
+                <TextField
+                  label="Your Email"
+                  variant="outlined"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={classes.inputField}
+                  required
+                />
+              </>
+            ) : null}
+
             <FormControl variant="outlined" className={classes.inputField}>
               <InputLabel>Subject</InputLabel>
               <Select
@@ -132,10 +141,10 @@ const page = () => {
               variant="contained"
               type="submit"
               color="primary"
-              disabled={loading}
+              disabled={post.loading}
               className={classes.submitButton}
             >
-              {loading ? (
+              {post.loading ? (
                 <CircularProgress size={24} color="inherit" />
               ) : (
                 "Send Message"

@@ -17,6 +17,7 @@ import { Text } from "../_features/enums/Colors";
 import { useRedirectIfAuthenticated } from "../hooks/useRedirectIfAuthenticated";
 import { setLoginData } from "../_features/utils/LocalStorageHelpers";
 import { LoginData } from "../_features/utils/Interfaces";
+import { AuthApi } from "../_features/enums/ApiPaths";
 const Icon = styled(LockOutlined)({
   fontSize: "4rem",
   color: Text.SECONDARY,
@@ -89,7 +90,7 @@ export default function LoginForm() {
       password: String(password),
     };
 
-    const response = await post("http://localhost:8080/auth/login", obj);
+    const response = await post(AuthApi.LOGIN, obj);
 
     if (response) {
       setLoginData(response);

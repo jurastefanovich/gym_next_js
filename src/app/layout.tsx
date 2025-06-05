@@ -12,6 +12,7 @@ import Footer from "./_features/footer/Footer";
 import React from "react";
 import { Montserrat } from "next/font/google";
 import { SnackbarProvider } from "./context/SnackbarContext";
+import { useTokenRefresher } from "./hooks/useTokenRefresher";
 // Define your custom colors
 const CRIMSON_RED = "#c1121f";
 
@@ -56,6 +57,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // useTokenRefresher();
   return (
     <html lang="en" className={montserrat.variable}>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>

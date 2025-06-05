@@ -27,8 +27,9 @@ export interface ServiceProps extends TitleAndDesc {
 export interface SingleService extends ServiceProps {}
 
 export interface LoginData {
-  token: string;
   fullName: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface Message {
@@ -38,3 +39,17 @@ export interface Message {
 export interface RegResponse extends Message {}
 
 export interface AuthInput extends Message {}
+
+export interface ContactResponse extends Message {}
+
+interface UserDto {
+  username: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  id: number;
+  email: string;
+  initials: string;
+}
+
+export interface ProfileResponse extends UserDto {}

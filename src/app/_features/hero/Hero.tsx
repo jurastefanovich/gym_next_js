@@ -3,7 +3,7 @@ import { Box, Typography, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import Link from "next/link";
 import { Names } from "../enums/Text";
-import { getToken } from "../utils/LocalStorageHelpers";
+import { getAccessToken } from "../utils/LocalStorageHelpers";
 
 const HeroSection = styled(Box)(({ theme }) => ({
   position: "relative",
@@ -56,7 +56,7 @@ export default function Hero() {
 }
 
 function AuthButton() {
-  const hasToken = getToken();
+  const hasToken = getAccessToken();
   if (hasToken) {
     return null;
   } else {

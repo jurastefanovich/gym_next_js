@@ -1,15 +1,15 @@
 // hooks/useRedirectIfAuthenticated.ts
 import { useEffect } from "react";
 import { useRouter } from "next/navigation"; // or 'next/router'
-import { getToken } from "../_features/utils/LocalStorageHelpers";
-/**
+import { getAccessToken } from "../_features/utils/LocalStorageHelpers";
+/**getAccessToken
  * Method blocks going to auth pages like login, sign up etc
  */
 export function useRedirectIfAuthenticated() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = getToken();
+    const token = getAccessToken();
     if (token) {
       router.replace("/");
     }

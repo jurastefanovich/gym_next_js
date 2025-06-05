@@ -1,38 +1,56 @@
 // app/hooks/useGet.ts
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { useSnackbar } from "../context/SnackbarContext";
+import { getAccessToken, getRefreshToken } from "../_features/utils/LocalStorageHelpers";
 
 interface UseGetResult<T> {
   data: T | null;
   loading: boolean;
-  get: (url: string, config?: AxiosRequestConfig) => Promise<void>;
+  error: string | null;
 }
 
-export function useGet<T = any>(): UseGetResult<T> {
+export function useGet<T = any>(
+  url: string | null,
+  config?: AxiosRequestConfig
+): UseGetResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const { showMessage } = useSnackbar();
 
-  const get = async (url: string, config?: AxiosRequestConfig) => {
-    setLoading(true);
-    try {
-      const response: AxiosResponse<T> = await axios.get<T>(url, config);
-      setData(response.data);
-    } catch (err: any) {
-      showMessage(
-        typeof err?.response?.data === "string"
-          ? err.response.data
-          : err?.response?.data?.message ||
-              err.message ||
-              "Something went wrong"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    if (!url) return;
+    const token = getAccessToken();
+    console.log(token)
+    const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response: AxiosResponse<T> = await axios.get<T>(url, {
+          ...config,
+          headers: {
+            ...authHeader,
+          },
+        });
+        console.log(response)
+        setData(response.data);
+        return data;
+      } catch (err: any) {
+        const message =
+          err?.response?.data?.message || err.message || "Something went wrong";
+        setError(message);
+        showMessage(message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  return { data, loading, get };
+    fetchData();
+  }, [url]);
+
+  return { data, loading, error };
 }

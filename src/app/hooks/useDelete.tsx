@@ -23,11 +23,7 @@ export function useDelete<T = any>(): UseDeleteResult<T> {
       setData(response.data);
     } catch (err: any) {
       showMessage(
-        typeof err?.response?.data === "string"
-          ? err.response.data
-          : err?.response?.data?.message ||
-              err.message ||
-              "Something went wrong"
+        err?.response?.data?.message || err.message || "Something went wrong"
       );
     } finally {
       setLoading(false);

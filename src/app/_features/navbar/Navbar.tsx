@@ -15,7 +15,7 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 import { useRouter, usePathname } from "next/navigation";
 import { Background } from "../enums/Colors";
 import AvatarMenu from "../components/AvatarMenu";
-import { getToken } from "../utils/LocalStorageHelpers";
+import { getAccessToken } from "../utils/LocalStorageHelpers";
 
 const navItems = [
   { title: "Početak", path: "/" },
@@ -29,7 +29,7 @@ export default function Navbar() {
   const router = useRouter();
   const isLogin = path.toLowerCase() === "/login";
   const isSignUp = path.toLowerCase() === "/signup";
-  const hasToken = getToken();
+  const hasToken = getAccessToken();
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const isSmallScreen = useMediaQuery((theme: any) =>
     theme.breakpoints.down("sm")

@@ -13,17 +13,13 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import UserStats from "../components/UserStats";
+import { useGet } from "../hooks/useGet";
+import { ProfileResponse } from "../_features/utils/Interfaces";
+import { UserApi } from "../_features/enums/ApiPaths";
 
 export default function Profile() {
-  // Dummy user data
-  const user = {
-    username: "janedoe",
-    firstName: "Jane",
-    lastName: "Doe",
-    email: "jane@example.com",
-    phoneNumber: "+1 (555) 123-4567",
-    avatarUrl: "", // fallback to initials
-  };
+  const get = useGet<ProfileResponse>(UserApi.PROFILE);
+  const user = get.data;
 
   return (
     <Box
@@ -42,7 +38,7 @@ export default function Profile() {
             {/* Avatar Section */}
             <Grid item xs={12} md={4} sx={{ textAlign: "center" }}>
               <Avatar
-                src={user.avatarUrl}
+                // src={user.avatarUrl}
                 sx={{
                   width: 150,
                   height: 150,
@@ -51,8 +47,7 @@ export default function Profile() {
                   mx: "auto",
                 }}
               >
-                {user.firstName[0]}
-                {user.lastName[0]}
+                {user?.initials}
               </Avatar>
             </Grid>
 
@@ -65,7 +60,7 @@ export default function Profile() {
                 mb={2}
               >
                 <Typography variant="h5" fontWeight="bold">
-                  {user.firstName} {user.lastName}
+                  {user?.firstName} {user?.lastName}
                 </Typography>
                 <Button
                   variant="outlined"
@@ -85,7 +80,7 @@ export default function Profile() {
                   Username
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  {user.username}
+                  {user?.username}
                 </Typography>
 
                 <Typography
@@ -96,7 +91,7 @@ export default function Profile() {
                   Email
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  {user.email}
+                  {user?.email}
                 </Typography>
 
                 <Typography
@@ -106,12 +101,12 @@ export default function Profile() {
                 >
                   Phone
                 </Typography>
-                <Typography variant="body1">{user.phoneNumber}</Typography>
+                <Typography variant="body1">{user?.phoneNumber}</Typography>
               </Box>
             </Grid>
           </Grid>
         </>
-        <UserStats />
+        {/* <UserStats /> */}
       </Container>
     </Box>
   );
