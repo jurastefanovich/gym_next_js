@@ -13,6 +13,7 @@ import React from "react";
 import { Montserrat } from "next/font/google";
 import { SnackbarProvider } from "./context/SnackbarContext";
 import { useTokenRefresher } from "./hooks/useTokenRefresher";
+import { AuthProvider } from "./context/AuthContext";
 // Define your custom colors
 const CRIMSON_RED = "#c1121f";
 
@@ -62,18 +63,20 @@ export default function RootLayout({
     <html lang="en" className={montserrat.variable}>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <SnackbarProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Navbar />
-            <Box
-              sx={{
-                minHeight: "50vh",
-              }}
-            >
-              {children}
-            </Box>
-            <Footer />
-          </ThemeProvider>
+          <AuthProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <Navbar />
+              <Box
+                sx={{
+                  minHeight: "50vh",
+                }}
+              >
+                {children}
+              </Box>
+              <Footer />
+            </ThemeProvider>
+          </AuthProvider>
         </SnackbarProvider>
       </body>
     </html>

@@ -1,6 +1,7 @@
 const BASE_URL = "http://localhost:8080";
 const USER_CONTROLLER = `${BASE_URL}/users`;
 const AUTH_CONTROLLER = `${BASE_URL}/auth`;
+const SERVICES_CONTROLLER = `${BASE_URL}/gym-services`;
 
 export enum UserApi {
   PROFILE = `${USER_CONTROLLER}/loggedIn/user/profile`,
@@ -14,4 +15,8 @@ export enum UserApi {
 export enum AuthApi {
   LOGIN = `${AUTH_CONTROLLER}/login`,
   REGISTER = `${AUTH_CONTROLLER}/register`,
+}
+
+export enum ServicesApi {
+  ALL = `${SERVICES_CONTROLLER}`,
 }

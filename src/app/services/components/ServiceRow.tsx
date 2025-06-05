@@ -1,11 +1,16 @@
 "use client";
-import { ServiceProps } from "@/app/_features/utils/Interfaces";
+import { ServiceDto, ServiceProps } from "@/app/_features/utils/Interfaces";
 import { Button, Typography, Card, CardContent } from "@mui/material";
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Background } from "@/app/_features/enums/Colors";
 
-const ServiceRow: React.FC<ServiceProps> = ({ description, title, id }) => {
+const ServiceRow: React.FC<ServiceDto> = ({
+  description,
+  durationSeconds,
+  title,
+  id,
+}) => {
   const navigate = useRouter();
 
   function redirect(path: string) {
@@ -17,6 +22,7 @@ const ServiceRow: React.FC<ServiceProps> = ({ description, title, id }) => {
       sx={{
         borderRadius: 2,
         boxShadow: "none",
+        minHeight: 250,
         bgcolor: Background.PRIMARY,
         color: "whitesmoke",
       }}

@@ -1,23 +1,17 @@
 "use client";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import services from "@/app/_features/dummyData/services.json";
 import { Grid, Stack, Typography, Container, Button } from "@mui/material";
 import TrainerContainer from "./components/TrainerContainer";
 import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { Background } from "@/app/_features/enums/Colors";
 
-export default function ServicePage({
+export default const ServicePage({
   params,
 }: {
   params: { serviceId: string };
 }) {
-  const { serviceId } = params;
-
-  const service = services.find((service) => service.id === serviceId);
-
-  if (!service) {
-    notFound();
-  }
+  const { serviceId } = useParams();
 
   return (
     <BoxNoMargin sx={{ bgcolor: Background.LIGHT, pt: 10, pb: 10 }}>

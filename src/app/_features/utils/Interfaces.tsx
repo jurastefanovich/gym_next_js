@@ -53,3 +53,12 @@ interface UserDto {
 }
 
 export interface ProfileResponse extends UserDto {}
+
+export interface ServiceDto {
+  id: number;
+  title: string;
+  description: string;
+  durationSeconds: number;
+}
+
+export interface ServiceDetail extends ServiceDto {}
