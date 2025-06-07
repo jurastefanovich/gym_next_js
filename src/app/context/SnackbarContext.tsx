@@ -1,10 +1,17 @@
+// app/context/SnackbarContext.tsx
 "use client";
 
-import React, { createContext, useState, useContext, ReactNode } from "react";
-import { Snackbar, Alert } from "@mui/material";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useCallback,
+} from "react";
+import { Snackbar, Alert, AlertColor } from "@mui/material";
 
 interface SnackbarContextType {
-  showMessage: (message: string) => void;
+  showMessage: (message: string, severity?: AlertColor) => void;
 }
 
 const SnackbarContext = createContext<SnackbarContextType | undefined>(
@@ -20,26 +27,39 @@ export const useSnackbar = (): SnackbarContextType => {
 };
 
 export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
-  const [message, setMessage] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState<string>("");
+  const [severity, setSeverity] = useState<AlertColor>("info");
 
-  const showMessage = (msg: string) => {
+  const showMessage = useCallback((msg: string, sev: AlertColor = "info") => {
     setMessage(msg);
-  };
+    setSeverity(sev);
+    setOpen(true);
+  }, []);
 
-  const handleClose = () => {
-    setMessage(null);
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") return;
+    setOpen(false);
   };
 
   return (
     <SnackbarContext.Provider value={{ showMessage }}>
       {children}
       <Snackbar
-        open={!!message}
-        autoHideDuration={5000}
+        open={open}
+        autoHideDuration={4000}
         onClose={handleClose}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert severity="error" onClose={handleClose} variant="filled">
+        <Alert
+          onClose={handleClose}
+          severity={severity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
           {message}
         </Alert>
       </Snackbar>

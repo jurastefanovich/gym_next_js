@@ -7,7 +7,7 @@ import { Background } from "@/app/_features/enums/Colors";
 
 const ServiceRow: React.FC<ServiceDto> = ({
   description,
-  durationSeconds,
+  duration,
   title,
   id,
 }) => {
@@ -22,7 +22,7 @@ const ServiceRow: React.FC<ServiceDto> = ({
       sx={{
         borderRadius: 2,
         boxShadow: "none",
-        minHeight: 250,
+        minHeight: 220,
         bgcolor: Background.PRIMARY,
         color: "whitesmoke",
       }}
@@ -44,11 +44,13 @@ const ServiceRow: React.FC<ServiceDto> = ({
           color="whitesmoke"
           mb={3}
           sx={{
-            fontSize: { xs: "0.9rem", sm: "1rem" }, // Responsive description size
+            fontSize: { xs: "0.9rem", sm: "1rem" },
             textAlign: "center",
           }}
         >
-          {description}
+          {description.length > 100
+            ? `${description.substring(0, 100)}...`
+            : description}
         </Typography>
 
         <Button

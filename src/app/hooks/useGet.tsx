@@ -4,7 +4,10 @@
 import { useEffect, useState } from "react";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { useSnackbar } from "../context/SnackbarContext";
-import { getAccessToken, getRefreshToken } from "../_features/utils/LocalStorageHelpers";
+import {
+  getAccessToken,
+  getRefreshToken,
+} from "../_features/utils/LocalStorageHelpers";
 
 interface UseGetResult<T> {
   data: T | null;
@@ -24,7 +27,6 @@ export function useGet<T = any>(
   useEffect(() => {
     if (!url) return;
     const token = getAccessToken();
-    console.log(token)
     const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
     const fetchData = async () => {
       setLoading(true);
@@ -36,7 +38,6 @@ export function useGet<T = any>(
             ...authHeader,
           },
         });
-        console.log(response)
         setData(response.data);
         return data;
       } catch (err: any) {

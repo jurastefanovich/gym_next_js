@@ -6,7 +6,7 @@ import { Text } from "../enums/Colors";
 export const BoxNoMargin = styled(Box)({
   minHeight: "100vh",
   padding: 100,
-  margin: 0, // If GlobalMargin is a number, apply units
+  margin: 0,
 });
 const Root = styled("div")({
   display: "flex",

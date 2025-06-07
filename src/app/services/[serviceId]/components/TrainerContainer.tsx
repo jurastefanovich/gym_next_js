@@ -8,21 +8,30 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-interface TrainerProp {
-  name: string;
+import { useRouter } from "next/navigation";
+
+interface TrainerContainerProps {
+  id: number;
+  firstName: string;
   lastName: string;
 }
-import { useRouter } from "next/navigation";
-const TrainerContainer: React.FC<TrainerProp> = ({ name, lastName }) => {
-  const route = useRouter();
+
+const TrainerContainer: React.FC<TrainerContainerProps> = ({
+  id,
+  firstName,
+  lastName,
+}) => {
+  const router = useRouter();
+
   function redirect(path: string) {
-    route.push(path);
+    router.push(path);
   }
+
   return (
-    <Card>
+    <Card sx={{ maxWidth: 345 }}>
       <CardMedia
         component="img"
-        alt="trainer image"
+        alt={`${firstName} ${lastName}`}
         height="200"
         image="/trainer.jpg"
         sx={{
@@ -32,14 +41,14 @@ const TrainerContainer: React.FC<TrainerProp> = ({ name, lastName }) => {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {name} {lastName}
+          {firstName} {lastName}
         </Typography>
       </CardContent>
       <CardActions>
         <Button
           variant="text"
           size="small"
-          onClick={() => redirect("/trainers/trainer_1")}
+          onClick={() => redirect(`/trainers/${id}`)}
         >
           View More
         </Button>
@@ -47,4 +56,5 @@ const TrainerContainer: React.FC<TrainerProp> = ({ name, lastName }) => {
     </Card>
   );
 };
+
 export default TrainerContainer;

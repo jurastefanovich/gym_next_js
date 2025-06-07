@@ -54,11 +54,17 @@ interface UserDto {
 
 export interface ProfileResponse extends UserDto {}
 
+export interface TrainerDto extends UserDto {}
+
 export interface ServiceDto {
   id: number;
   title: string;
   description: string;
-  durationSeconds: number;
+  duration: number;
 }
 
-export interface ServiceDetail extends ServiceDto {}
+export interface ServiceDetail extends ServiceDto {
+  trainer: TrainerDto;
+  needsTrainer: boolean;
+  individual: boolean;
+}

@@ -18,7 +18,7 @@ export default function Page() {
         <Typography
           variant="h3"
           color="primary"
-          textAlign="center"
+          textAlign="left"
           gutterBottom
           fontWeight={"bold"}
         >
@@ -28,7 +28,7 @@ export default function Page() {
           {get?.data?.map((service) => (
             <Grid item xs={12} sm={6} md={4} key={service.id}>
               <ServiceRow
-                durationSeconds={service.durationSeconds}
+                duration={service.duration}
                 id={service.id}
                 description={service.description}
                 title={service.title}

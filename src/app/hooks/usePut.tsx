@@ -23,7 +23,8 @@ export function usePut<T = any>(): UsePutResult<T> {
       setData(response.data);
     } catch (err: any) {
       showMessage(
-        err?.response?.data?.message || err.message || "Something went wrong"
+        err?.response?.data?.message || err.message || "Something went wrong",
+        "error"
       );
     } finally {
       setLoading(false);

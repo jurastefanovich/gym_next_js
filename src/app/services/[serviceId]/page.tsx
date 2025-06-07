@@ -1,78 +1,168 @@
 "use client";
-import { notFound, useParams } from "next/navigation";
-import services from "@/app/_features/dummyData/services.json";
-import { Grid, Stack, Typography, Container, Button } from "@mui/material";
+import { useParams } from "next/navigation";
+import {
+  Grid,
+  Stack,
+  Typography,
+  Container,
+  Button,
+  Chip,
+  Divider,
+  Box,
+} from "@mui/material";
 import TrainerContainer from "./components/TrainerContainer";
 import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { Background } from "@/app/_features/enums/Colors";
+import { useGet } from "@/app/hooks/useGet";
+import { ServiceDetail } from "@/app/_features/utils/Interfaces";
+import { ServicesApi } from "@/app/_features/enums/ApiPaths";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { ArrowBack } from "@mui/icons-material";
+import ServiceMessage from "./components/ServiceMessage";
+import { useState } from "react";
+import BookingStepperDialog from "./components/BookingStepperDialog";
 
-export default const ServicePage({
-  params,
-}: {
-  params: { serviceId: string };
-}) {
+export default function ServicePage() {
   const { serviceId } = useParams();
+  const get = useGet<ServiceDetail>(ServicesApi.GET_BY_ID + serviceId);
+  const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
+  const service = get.data;
 
   return (
-    <BoxNoMargin sx={{ bgcolor: Background.LIGHT, pt: 10, pb: 10 }}>
-      <Container maxWidth="lg">
-        <Grid container>
-          <Grid item xs={12} md={12 / 2}>
-            <Typography variant="h3" sx={{ fontWeight: "bold", mb: 2 }}>
-              {service.title}
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={6}
-            display={"flex"}
-            justifyContent={{ xs: "flex-start", md: "flex-end" }}
-            alignItems={"center"}
-          >
-            <Button
-              variant="contained"
-              sx={{ mb: 4 }}
-              href={`/services/${serviceId}/book`}
+    <BoxNoMargin sx={{ bgcolor: Background.LIGHT, pt: 8, pb: 12 }}>
+      <Container maxWidth="lg" sx={{ marginTop: 4 }}>
+        {/* Header Section */}
+        <Grid container sx={{ mb: 6 }}>
+          {/* Left Column - Service Info */}
+          <Grid item xs={12} md={11}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="flex-start"
             >
-              Make appointment
+              <div>
+                <Typography
+                  variant="h2"
+                  sx={{
+                    fontWeight: 700,
+                    mb: 2,
+                    lineHeight: 1.2,
+                    color: "primary.main",
+                  }}
+                >
+                  {service?.title}
+                </Typography>
+
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  alignItems="center"
+                  sx={{ mb: 3 }}
+                >
+                  <Chip
+                    icon={<AccessTimeIcon />}
+                    label={
+                      service?.duration
+                        ? `${Math.ceil(service.duration / 60)} min`
+                        : "N/A"
+                    }
+                    variant="outlined"
+                    color="primary"
+                  />
+                </Stack>
+
+                {service && (
+                  <ServiceMessage
+                    individual={service.individual}
+                    needsTrainer={service.needsTrainer}
+                  />
+                )}
+              </div>
+            </Stack>
+          </Grid>
+
+          {/* Right Column - Book Button (now moved below description) */}
+          <Grid item xs={12} md={1}>
+            {/* Back Button - Now positioned top-right */}
+            <Button
+              startIcon={<ArrowBack />}
+              variant="text"
+              href="/services"
+              size="large"
+              sx={{ alignSelf: "flex-start" }}
+            >
+              Back
             </Button>
           </Grid>
         </Grid>
-        <Typography variant="h5" color="text.secondary" mb={4}>
-          {service.description}
-        </Typography>
-        <Typography variant="body1" color="text.primary" mb={6}>
-          {service.details}
-        </Typography>
 
-        <Button variant="outlined" sx={{ mb: 4 }} href="/services">
-          Back to Services
-        </Button>
-
-        <Stack spacing={3}>
-          <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-            Upoznajte vašeg trenera
+        {/* Description Section */}
+        <Stack spacing={4} sx={{ mb: 6 }}>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            Service Details
           </Typography>
+          <Divider />
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: "1.1rem",
+              lineHeight: 1.7,
+              whiteSpace: "pre-line",
+            }}
+          >
+            {service?.description}
+          </Typography>
+        </Stack>
 
-          <Grid container>
-            {service.trainers.map((trainer) => (
-              <Grid
-                item
-                sx={{ m: 1 }}
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                key={trainer.id}
+        <Stack spacing={4}>
+          <Box>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => setBookingDialogOpen(true)}
+              sx={{
+                px: 6,
+                py: 1.5,
+                fontSize: "1.1rem",
+                minWidth: 200,
+              }}
+            >
+              Book Now
+            </Button>
+          </Box>
+          {service && (
+            <BookingStepperDialog
+              open={bookingDialogOpen}
+              onClose={() => setBookingDialogOpen(false)}
+              service={service}
+              serviceId={Number(serviceId)}
+            />
+          )}
+          {/* Trainer Section - Only show if needsTrainer is true */}
+          {service?.needsTrainer && service?.trainer && (
+            <Stack spacing={4}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 700,
+                  color: "primary.main",
+                }}
               >
-                <TrainerContainer
-                  lastName={trainer.last_name}
-                  name={trainer.first_name}
-                />
+                Meet Your Trainer
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+
+              <Grid container gap={2}>
+                <Grid item xs={12} sm={6} md={4} key={service.trainer.id}>
+                  <TrainerContainer
+                    id={service.trainer.id}
+                    lastName={service.trainer.lastName}
+                    firstName={service.trainer.firstName}
+                  />
+                </Grid>
               </Grid>
-            ))}
-          </Grid>
+            </Stack>
+          )}
         </Stack>
       </Container>
     </BoxNoMargin>
