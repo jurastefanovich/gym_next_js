@@ -1,17 +1,55 @@
 "use client";
 
 import React from "react";
-import { Box, Typography, Grid, Paper, Avatar, Card, CardContent, List, ListItem, ListItemText } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import {
+  Box,
+  Typography,
+  Grid,
+  Paper,
+  Avatar,
+  Card,
+  CardContent,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Container,
+  Chip,
+  Stack,
+  useTheme,
+} from "@mui/material";
+import {
+  LocationOn,
+  Phone,
+  Email,
+  AccessTime,
+  FitnessCenter,
+  People,
+  EmojiEvents,
+} from "@mui/icons-material";
+import { BoxNoMargin } from "../_features/components/Styled";
 
-// Dummy data for the team section
 const teamMembers = [
-  { name: "John Doe", role: "Fitness Trainer", imageUrl: "/images/team/john.jpg" },
-  { name: "Jane Smith", role: "Yoga Instructor", imageUrl: "/images/team/jane.jpg" },
-  { name: "Mark Wilson", role: "Personal Trainer", imageUrl: "/images/team/mark.jpg" },
+  {
+    name: "John Doe",
+    role: "Fitness Trainer",
+    imageUrl: "/images/team/john.jpg",
+    specialties: ["Weight Loss", "Strength Training"],
+  },
+  {
+    name: "Jane Smith",
+    role: "Yoga Instructor",
+    imageUrl: "/images/team/jane.jpg",
+    specialties: ["Vinyasa", "Yin Yoga"],
+  },
+  {
+    name: "Mark Wilson",
+    role: "Personal Trainer",
+    imageUrl: "/images/team/mark.jpg",
+    specialties: ["Athletic Performance", "Bodybuilding"],
+  },
 ];
 
-// Dummy data for working hours and location
 const workingHours = [
   { day: "Monday", hours: "6:00 AM - 9:00 PM" },
   { day: "Tuesday", hours: "6:00 AM - 9:00 PM" },
@@ -28,153 +66,274 @@ const location = {
   email: "contact@fitgym.com",
 };
 
-// Styles using makeStyles (optional)
-const useStyles = makeStyles({
-  section: {
-    marginBottom: "2rem",
-    padding: "2rem",
-    backgroundColor: "#f4f4f4",
-    borderRadius: "8px",
+const values = [
+  {
+    title: "Inclusivity",
+    description:
+      "We welcome everyone, regardless of fitness level, background, or ability.",
+    icon: <People color="primary" fontSize="large" />,
   },
-  sectionTitle: {
-    marginBottom: "1rem",
-    fontWeight: "bold",
+  {
+    title: "Community",
+    description:
+      "We foster a supportive community that motivates and encourages each other.",
+    icon: <FitnessCenter color="primary" fontSize="large" />,
   },
-  teamCard: {
-    maxWidth: 240,
-    margin: "auto",
-    textAlign: "center",
+  {
+    title: "Excellence",
+    description:
+      "We believe that through dedication and consistency, you can achieve any fitness goal.",
+    icon: <EmojiEvents color="primary" fontSize="large" />,
   },
-  teamAvatar: {
-    width: 100,
-    height: 100,
-    margin: "auto",
-    marginBottom: "1rem",
-  },
-  listItem: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-});
+];
 
-const page = () => {
-  const classes = useStyles();
+const Page = () => {
+  const theme = useTheme();
 
   return (
-    <Box sx={{ maxWidth: "1200px", margin: "auto", padding: 2 }}>
-      {/* Gym Introduction Section */}
-      <Box className={classes.section}>
-        <Typography variant="h4" align="center" className={classes.sectionTitle}>
-          About Us
-        </Typography>
-        <Typography variant="body1" align="center">
-          Welcome to Fit Gym! Our mission is to help you achieve your fitness goals in a
-          supportive and welcoming environment. Whether you're here to lose weight, build muscle,
-          or improve your overall health, we're here to guide you every step of the way.
-        </Typography>
+    <BoxNoMargin>
+      {/* Hero Section */}
+      <Box
+        sx={{
+          background: `linear-gradient(rgba(0, 0, 0, 0.5), url('/images/gym-hero.jpg')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          color: "white",
+          py: 15,
+          textAlign: "center",
+        }}
+      >
+        <Container maxWidth="md">
+          <Typography
+            variant="h2"
+            component="h1"
+            textAlign={"center"}
+            gutterBottom
+            sx={{ fontWeight: 700 }}
+          >
+            Welcome to Fit Gym
+          </Typography>
+          <Typography textAlign={"center"} variant="h5" sx={{ mb: 4 }}>
+            Your journey to a healthier, stronger you starts here
+          </Typography>
+        </Container>
       </Box>
 
-      {/* Mission & Values Section */}
-      <Box className={classes.section}>
-        <Typography variant="h5" align="center" className={classes.sectionTitle}>
-          Our Mission & Values
-        </Typography>
-        <Typography variant="body1" align="center" paragraph>
-          At Fit Gym, our mission is to empower individuals to take control of their health and
-          wellness. We believe in inclusivity, community, and hard work. Here’s what we stand for:
-        </Typography>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} sm={4}>
-            <Paper elevation={3} sx={{ padding: 2 }}>
-              <Typography variant="h6" align="center" gutterBottom>
-                Inclusivity
-              </Typography>
-              <Typography variant="body2" align="center">
-                We welcome everyone, regardless of fitness level, background, or ability.
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Paper elevation={3} sx={{ padding: 2 }}>
-              <Typography variant="h6" align="center" gutterBottom>
-                Community
-              </Typography>
-              <Typography variant="body2" align="center">
-                We foster a supportive community that motivates and encourages each other.
-              </Typography>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Paper elevation={3} sx={{ padding: 2 }}>
-              <Typography variant="h6" align="center" gutterBottom>
-                Hard Work
-              </Typography>
-              <Typography variant="body2" align="center">
-                We believe that through dedication and consistency, you can achieve any fitness goal.
-              </Typography>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Box>
+      {/* About Section */}
+      <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Box sx={{ textAlign: "center", mb: 6 }}>
+          <Typography
+            variant="h4"
+            component="h2"
+            gutterBottom
+            sx={{ fontWeight: 600 }}
+          >
+            About Our Gym
+          </Typography>
+          <Divider
+            sx={{
+              width: 100,
+              height: 4,
+              backgroundColor: theme.palette.primary.main,
+              mx: "auto",
+              mb: 4,
+            }}
+          />
+          <Typography variant="body1" sx={{ maxWidth: 800, mx: "auto" }}>
+            At Fit Gym, we're more than just a fitness center - we're a
+            community dedicated to helping you achieve your health and wellness
+            goals. Our state-of-the-art facilities and expert trainers provide
+            the perfect environment for your transformation journey.
+          </Typography>
+        </Box>
 
-      {/* Team Section */}
-      <Box className={classes.section}>
-        <Typography variant="h5" align="center" className={classes.sectionTitle}>
-          Meet Our Team
-        </Typography>
-        <Grid container spacing={4} justifyContent="center">
-          {teamMembers.map((member, index) => (
-            <Grid item key={index}>
-              <Card className={classes.teamCard}>
-                <Avatar
-                  src={member.imageUrl}
-                  alt={member.name}
-                  className={classes.teamAvatar}
-                />
-                <CardContent>
-                  <Typography variant="h6">{member.name}</Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    {member.role}
+        {/* Mission & Values Section */}
+        <Box sx={{ my: 8 }}>
+          <Typography
+            variant="h4"
+            align="center"
+            gutterBottom
+            sx={{ fontWeight: 600, mb: 6 }}
+          >
+            Our Core Values
+          </Typography>
+          <Grid container spacing={4}>
+            {values.map((value, index) => (
+              <Grid item xs={12} md={4} key={index}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: 4,
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    borderRadius: 2,
+                  }}
+                >
+                  <Box sx={{ mb: 2 }}>{value.icon}</Box>
+                  <Typography
+                    variant="h5"
+                    gutterBottom
+                    sx={{ fontWeight: 600 }}
+                  >
+                    {value.title}
                   </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
+                  <Typography variant="body1">{value.description}</Typography>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+
+        {/* Team Section */}
+        <Box sx={{ my: 8 }}>
+          <Typography
+            variant="h4"
+            align="center"
+            gutterBottom
+            sx={{ fontWeight: 600, mb: 6 }}
+          >
+            Meet Our Expert Trainers
+          </Typography>
+          <Grid container spacing={4} justifyContent="center">
+            {teamMembers.map((member, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <Card
+                  sx={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    p: 3,
+                    border: "1px solid",
+                    borderColor: "divider",
+                    "&:hover": {
+                      boxShadow: 4,
+                    },
+                  }}
+                >
+                  <Avatar
+                    src={member.imageUrl}
+                    alt={member.name}
+                    sx={{
+                      width: 120,
+                      height: 120,
+                      mb: 3,
+                      border: `3px solid ${theme.palette.primary.main}`,
+                    }}
+                  />
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="h5" gutterBottom>
+                      {member.name}
+                    </Typography>
+                    <Typography
+                      variant="subtitle1"
+                      color="primary"
+                      gutterBottom
+                    >
+                      {member.role}
+                    </Typography>
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      justifyContent="center"
+                      sx={{ mb: 2 }}
+                    >
+                      {member.specialties.map((specialty, i) => (
+                        <Chip
+                          key={i}
+                          label={specialty}
+                          size="small"
+                          variant="outlined"
+                        />
+                      ))}
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+
+        {/* Hours & Location Section */}
+        <Grid container spacing={4} sx={{ my: 8 }}>
+          <Grid item xs={12} md={6}>
+            <Paper elevation={0} sx={{ p: 4, height: "100%", borderRadius: 2 }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+                <AccessTime color="primary" sx={{ mr: 2, fontSize: 40 }} />
+                <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                  Working Hours
+                </Typography>
+              </Box>
+              <List>
+                {workingHours.map((item, index) => (
+                  <React.Fragment key={index}>
+                    <ListItem sx={{ py: 1.5 }}>
+                      <ListItemText
+                        primary={
+                          <Typography variant="subtitle1">
+                            {item.day}
+                          </Typography>
+                        }
+                        sx={{ flex: "0 0 120px" }}
+                      />
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontWeight: item.day === "Sunday" ? 600 : "normal",
+                        }}
+                      >
+                        {item.hours}
+                      </Typography>
+                    </ListItem>
+                    {index < workingHours.length - 1 && <Divider />}
+                  </React.Fragment>
+                ))}
+              </List>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Paper elevation={0} sx={{ p: 4, height: "100%", borderRadius: 2 }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+                <LocationOn color="primary" sx={{ mr: 2, fontSize: 40 }} />
+                <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                  Our Location
+                </Typography>
+              </Box>
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                  <strong>Address:</strong> {location.address}
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                  <strong>Phone:</strong> {location.phone}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Email:</strong> {location.email}
+                </Typography>
+              </Box>
+              <Box sx={{ height: 300, bgcolor: "grey.200", borderRadius: 2 }}>
+                {/* Map placeholder - replace with actual map component */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    height: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "grey.500",
+                  }}
+                >
+                  <Typography>Map would be displayed here</Typography>
+                </Box>
+              </Box>
+            </Paper>
+          </Grid>
         </Grid>
-      </Box>
-
-      {/* Working Hours Section */}
-      <Box className={classes.section}>
-        <Typography variant="h5" align="center" className={classes.sectionTitle}>
-          Our Working Hours
-        </Typography>
-        <List>
-          {workingHours.map((item, index) => (
-            <ListItem key={index} className={classes.listItem}>
-              <ListItemText primary={item.day} />
-              <Typography variant="body2">{item.hours}</Typography>
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-
-      {/* Location Section */}
-      <Box className={classes.section}>
-        <Typography variant="h5" align="center" className={classes.sectionTitle}>
-          Location
-        </Typography>
-        <Typography variant="body1" align="center" paragraph>
-          <strong>Address:</strong> {location.address}
-        </Typography>
-        <Typography variant="body1" align="center" paragraph>
-          <strong>Phone:</strong> {location.phone}
-        </Typography>
-        <Typography variant="body1" align="center">
-          <strong>Email:</strong> {location.email}
-        </Typography>
-      </Box>
-    </Box>
+      </Container>
+    </BoxNoMargin>
   );
 };
 
-export default page;
+export default Page;

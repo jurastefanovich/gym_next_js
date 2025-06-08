@@ -17,23 +17,42 @@ import { Background } from "../enums/Colors";
 import AvatarMenu from "../components/AvatarMenu";
 import { getAccessToken } from "../utils/LocalStorageHelpers";
 
-const navItems = [
+const defaultItems = [
   { title: "Početak", path: "/" },
   { title: "Usluge", path: "/services" },
   { title: "Kontakt", path: "/contact" },
   { title: "O nama", path: "/about_us" },
 ];
+const adminItem = [
+  { title: "Početak", path: "/" },
+  { title: "Usluge", path: "/services" },
+  { title: "Kontakt", path: "/contact" },
+  { title: "O nama", path: "/about_us" },
+  { title: "Narudžbe", path: "/user_appointments" },
+];
+const userItems = [
+  { title: "Početak", path: "/" },
+  { title: "Usluge", path: "/services" },
+  { title: "Kontakt", path: "/contact" },
+  { title: "O nama", path: "/about_us" },
+  { title: "Narudžbe", path: "/user_appointments" },
+];
 
 export default function Navbar() {
   const path = usePathname();
+  const hasToken = getAccessToken();
+  const navItems = getNavItems();
   const router = useRouter();
   const isLogin = path.toLowerCase() === "/login";
   const isSignUp = path.toLowerCase() === "/signup";
-  const hasToken = getAccessToken();
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const isSmallScreen = useMediaQuery((theme: any) =>
     theme.breakpoints.down("sm")
   );
+
+  function getNavItems() {
+    return hasToken ? userItems : defaultItems;
+  }
 
   function redirect(path: string) {
     router.push(path);

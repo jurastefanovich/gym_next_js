@@ -1,5 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   Grid,
   Stack,
@@ -21,13 +21,19 @@ import { ArrowBack } from "@mui/icons-material";
 import ServiceMessage from "./components/ServiceMessage";
 import { useState } from "react";
 import BookingStepperDialog from "./components/BookingStepperDialog";
+import { getAccessToken } from "@/app/_features/utils/LocalStorageHelpers";
+
 
 export default function ServicePage() {
   const { serviceId } = useParams();
   const get = useGet<ServiceDetail>(ServicesApi.GET_BY_ID + serviceId);
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const service = get.data;
-
+  const isLoggedIn = getAccessToken();
+  const route = useRouter();
+  function handleNavigateToLogin() {
+    route.push("/login");
+  }
   return (
     <BoxNoMargin sx={{ bgcolor: Background.LIGHT, pt: 8, pb: 12 }}>
       <Container maxWidth="lg" sx={{ marginTop: 4 }}>
@@ -116,19 +122,35 @@ export default function ServicePage() {
 
         <Stack spacing={4}>
           <Box>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={() => setBookingDialogOpen(true)}
-              sx={{
-                px: 6,
-                py: 1.5,
-                fontSize: "1.1rem",
-                minWidth: 200,
-              }}
-            >
-              Book Now
-            </Button>
+            {isLoggedIn ? (
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => setBookingDialogOpen(true)}
+                sx={{
+                  px: 6,
+                  py: 1.5,
+                  fontSize: "1.1rem",
+                  minWidth: 200,
+                }}
+              >
+                Book Now
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => handleNavigateToLogin()}
+                sx={{
+                  px: 6,
+                  py: 1.5,
+                  fontSize: "1.1rem",
+                  minWidth: 200,
+                }}
+              >
+                Login to book service
+              </Button>
+            )}
           </Box>
           {service && (
             <BookingStepperDialog

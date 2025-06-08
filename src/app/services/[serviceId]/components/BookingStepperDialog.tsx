@@ -75,9 +75,28 @@ export default function BookingStepperDialog({
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle>Book Appointment</DialogTitle>
-      <DialogContent>
+    <Dialog
+      PaperProps={{
+        sx: {
+          borderRadius: 3,
+        },
+      }}
+      open={open}
+      onClose={handleClose}
+      maxWidth="md"
+      fullWidth
+    >
+      <DialogTitle
+        sx={{
+          bgcolor: "primary.main",
+          color: "white",
+          fontWeight: 600,
+          py: 2,
+        }}
+      >
+        Book Appointment
+      </DialogTitle>
+      <DialogContent sx={{ my: 3 }}>
         <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
           {steps.map((label) => (
             <Step key={label}>

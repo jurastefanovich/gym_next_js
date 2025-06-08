@@ -3,6 +3,7 @@ const USER_CONTROLLER = `${BASE_URL}/users`;
 const AUTH_CONTROLLER = `${BASE_URL}/auth`;
 const SERVICES_CONTROLLER = `${BASE_URL}/gym-services`;
 const APPOINTMENT_CONTROLLER = `${BASE_URL}/appointments`;
+const TRAINER_CONTROLLER = `${BASE_URL}/trainers`;
 export enum UserApi {
   PROFILE = `${USER_CONTROLLER}/loggedIn/user/profile`,
   DELETE_BY_ID = `${USER_CONTROLLER}`,
@@ -24,4 +25,9 @@ export enum ServicesApi {
 
 export enum AppointmentApi {
   SERVICE_BOOK = `${APPOINTMENT_CONTROLLER}`,
+  GET_ALL = `${APPOINTMENT_CONTROLLER}`,
+}
+
+export enum TrainerApi {
+  INTRO = `${TRAINER_CONTROLLER}/introduction/`,
 }

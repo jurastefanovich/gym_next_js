@@ -42,19 +42,27 @@ export interface AuthInput extends Message {}
 
 export interface ContactResponse extends Message {}
 
-interface UserDto {
-  username: string;
+interface UserBasic {
   firstName: string;
   lastName: string;
-  phoneNumber: string;
   id: number;
   email: string;
+}
+
+interface UserDto extends UserBasic {
+  username: string;
+  phoneNumber: string;
   initials: string;
 }
 
 export interface ProfileResponse extends UserDto {}
 
 export interface TrainerDto extends UserDto {}
+
+export interface TrainerIntroduction extends UserBasic {
+  description: string;
+  specialization: string[];
+}
 
 export interface ServiceDto {
   id: number;

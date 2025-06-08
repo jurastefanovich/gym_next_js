@@ -1,135 +1,298 @@
 "use client";
-import { hasSession } from "@/middleware";
+import { TrainerApi } from "@/app/_features/enums/ApiPaths";
+import { TrainerIntroduction } from "@/app/_features/utils/Interfaces";
+import { getAccessToken } from "@/app/_features/utils/LocalStorageHelpers";
+import { useGet } from "@/app/hooks/useGet";
+import { Email, FitnessCenter, Send } from "@mui/icons-material";
 import {
+  Avatar,
   Box,
   Button,
-  Grid,
-  Typography,
+  Card,
+  Chip,
   Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
+  Grid,
+  Stack,
   TextField,
+  Typography,
+  alpha,
+  styled,
+  useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 
-// Static trainer data for now
-const trainerData = {
-  firstName: "John",
-  lastName: "Doe",
-  bio: "John Doe is a certified fitness trainer with over 10 years of experience helping clients achieve their fitness goals. He specializes in strength training, nutrition, and high-intensity workouts. He is passionate about helping individuals live healthier lives.",
-  contact: "john.doe@example.com",
-  imageUrl: "/trainer2.jpg", // You can replace this with your actual image URL
-};
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+  width: 250,
+  height: 250,
+  margin: "0 auto",
+  [theme.breakpoints.down("sm")]: {
+    width: 180,
+    height: 180,
+  },
+}));
+
+const SkillChip = styled(Chip)(({ theme }) => ({
+  marginRight: theme.spacing(1),
+  marginBottom: theme.spacing(1),
+  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+  color: theme.palette.primary.dark,
+}));
 
 export default function TrainerPage() {
-  // State to control dialog open/close
+  const theme = useTheme();
+  const { trainerId } = useParams();
+  const { data: trainerData } = useGet<TrainerIntroduction>(
+    TrainerApi.INTRO + trainerId
+  );
+  const isLoggedIn = getAccessToken();
   const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    message: "",
+    email: "",
+  });
 
-  // State to handle form input values
-  const [title, setTitle] = useState("");
-  const [message, setMessage] = useState("");
-
-  // Open dialog
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Close dialog
-  const handleClose = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
     setOpen(false);
-  };
-
-  // Handle form submission (for now, just log to the console)
-  const handleSend = () => {
-    console.log("Title:", title);
-    console.log("Message:", message);
-    // You can add your send logic here, e.g., making an API call
-    handleClose();
+    setFormData({ title: "", message: "", email: "" });
   };
 
   return (
-    <Box sx={{ backgroundColor: "#f5f5f5", padding: 4 }}>
+    <Box
+      sx={{
+        background: `linear-gradient(135deg, ${alpha(
+          theme.palette.primary.light,
+          0.05
+        )} 0%, ${theme.palette.background.default} 100%)`,
+        py: 8,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Container maxWidth="lg">
-        <Grid container spacing={4} alignItems="center">
-          {/* Left Section: Trainer's Image */}
-          <Grid item xs={12} sm={5} md={4}>
-            <Box
+        <Card
+          sx={{
+            borderRadius: 4,
+            bgcolor: "transparent",
+            boxShadow: "0",
+            overflow: "hidden",
+          }}
+        >
+          <Grid container>
+            {/* Left Column - Trainer Image & Basic Info */}
+            <Grid
+              item
+              xs={12}
+              md={4}
               sx={{
-                borderRadius: "8px",
-                overflow: "hidden",
+                color: "white",
+                p: 4,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <img
-                src={trainerData.imageUrl}
-                alt={`${trainerData.firstName} ${trainerData.lastName}`}
-                style={{
-                  width: "100%",
-                  height: 500,
-                  objectFit: "cover",
-                }}
+              <StyledAvatar
+                src="/trainer2.jpg"
+                alt={`${trainerData?.firstName} ${trainerData?.lastName}`}
               />
-            </Box>
-          </Grid>
+              <Typography
+                variant="h4"
+                component="h1"
+                color="primary"
+                sx={{ mt: 3, fontWeight: 700 }}
+              >
+                {trainerData?.firstName} {trainerData?.lastName}
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                sx={{ opacity: 0.9, mb: 2 }}
+                color="primary"
+              >
+                Certified Personal Trainer
+              </Typography>
 
-          {/* Right Section: Trainer's Info */}
-          <Grid item xs={12} sm={7} md={8}>
-            <Typography variant="h4" fontWeight="bold">
-              {trainerData.firstName} {trainerData.lastName}
-            </Typography>
-            <Typography variant="h6" color="text.secondary" paragraph>
-              {trainerData.bio}
-            </Typography>
-            <Typography variant="body1" color="text.primary" paragraph>
-              <strong>Contact: </strong>
-              {trainerData.contact}
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleClickOpen()}
-            >
-              Get in Touch
-            </Button>
+              <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<Email />}
+                  onClick={() => setOpen(true)}
+                  sx={{
+                    borderRadius: 2,
+                    px: 3,
+                    py: 1,
+                    textTransform: "none",
+                    fontWeight: 600,
+                  }}
+                >
+                  Contact
+                </Button>
+              </Stack>
+            </Grid>
+
+            {/* Right Column - Trainer Details */}
+            <Grid item xs={12} md={8}>
+              <Box sx={{ p: 4 }}>
+                <Typography
+                  variant="h5"
+                  gutterBottom
+                  sx={{ fontWeight: 600, mb: 3 }}
+                >
+                  About {trainerData?.firstName}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  paragraph
+                  sx={{ mb: 3, lineHeight: 1.8 }}
+                >
+                  {trainerData?.description ||
+                    "Passionate fitness professional with years of experience helping clients achieve their health and wellness goals."}
+                </Typography>
+
+                <Divider sx={{ my: 4 }} />
+
+                <Typography
+                  variant="h5"
+                  gutterBottom
+                  sx={{ fontWeight: 600, mb: 3 }}
+                >
+                  Specializations
+                </Typography>
+                <Box sx={{ mb: 4 }}>
+                  {trainerData?.specialization?.map((skill) => (
+                    <SkillChip
+                      key={skill}
+                      label={skill}
+                      icon={<FitnessCenter fontSize="small" />}
+                    />
+                  ))}
+                </Box>
+
+                <Divider sx={{ my: 4 }} />
+
+                <Typography
+                  variant="h5"
+                  gutterBottom
+                  sx={{ fontWeight: 600, mb: 3 }}
+                >
+                  Contact Information
+                </Typography>
+                <Typography variant="body1" paragraph>
+                  <strong>Email:</strong> {trainerData?.email}
+                </Typography>
+                <Typography variant="body1" paragraph>
+                  <strong>Phone:</strong> (555) 123-4567
+                </Typography>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
+        </Card>
       </Container>
 
-      {/* Dialog for the Contact Form */}
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Contact {trainerData.firstName}</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Title"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="Message"
-            type="text"
-            fullWidth
-            variant="outlined"
-            multiline
-            rows={4}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSend} color="primary">
-            Send
-          </Button>
-        </DialogActions>
+      {/* Contact Dialog */}
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            width: "100%",
+            maxWidth: "500px",
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            bgcolor: "primary.main",
+            color: "white",
+            fontWeight: 600,
+            py: 2,
+          }}
+        >
+          Contact {trainerData?.firstName}
+        </DialogTitle>
+        <form onSubmit={handleSubmit}>
+          <DialogContent sx={{ py: 3 }}>
+            {isLoggedIn ? null : (
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Subject"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                variant="outlined"
+                sx={{ mb: 2 }}
+              />
+            )}
+
+            <TextField
+              fullWidth
+              margin="normal"
+              label="Subject"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              variant="outlined"
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              margin="normal"
+              label="Your Message"
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              required
+              multiline
+              rows={4}
+              variant="outlined"
+            />
+          </DialogContent>
+          <DialogActions sx={{ px: 3, py: 2 }}>
+            <Button
+              onClick={() => setOpen(false)}
+              sx={{
+                color: "text.secondary",
+                borderRadius: 1,
+                px: 3,
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              startIcon={<Send />}
+              sx={{
+                borderRadius: 1,
+                px: 3,
+                fontWeight: 600,
+              }}
+            >
+              Send Message
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
     </Box>
   );

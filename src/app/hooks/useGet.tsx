@@ -44,7 +44,7 @@ export function useGet<T = any>(
         const message =
           err?.response?.data?.message || err.message || "Something went wrong";
         setError(message);
-        showMessage(message);
+        showMessage(message, "error");
       } finally {
         setLoading(false);
       }
