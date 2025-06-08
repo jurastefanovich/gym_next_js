@@ -111,7 +111,7 @@ const Page = () => {
             gutterBottom
             sx={{ fontWeight: 700 }}
           >
-            Welcome to Fit Gym
+            Welcome to Iron Path
           </Typography>
           <Typography textAlign={"center"} variant="h5" sx={{ mb: 4 }}>
             Your journey to a healthier, stronger you starts here
@@ -128,7 +128,7 @@ const Page = () => {
             gutterBottom
             sx={{ fontWeight: 600 }}
           >
-            About Our Gym
+            About Us
           </Typography>
           <Divider
             sx={{
@@ -140,7 +140,7 @@ const Page = () => {
             }}
           />
           <Typography variant="body1" sx={{ maxWidth: 800, mx: "auto" }}>
-            At Fit Gym, we're more than just a fitness center - we're a
+            At Iron Path, we're more than just a fitness center - we're a
             community dedicated to helping you achieve your health and wellness
             goals. Our state-of-the-art facilities and expert trainers provide
             the perfect environment for your transformation journey.
