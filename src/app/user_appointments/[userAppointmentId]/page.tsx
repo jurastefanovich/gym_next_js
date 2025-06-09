@@ -1,33 +1,120 @@
 "use client";
 
-import React from "react";
+import { BoxNoMargin } from "@/app/_features/components/Styled";
+import { AppointmentApi } from "@/app/_features/enums/ApiPaths";
+import { formatDate } from "@/app/_features/utils/DateHelpers";
+import { useGet } from "@/app/hooks/useGet";
+import { usePostAuth } from "@/app/hooks/usePost";
 import {
-  Box,
-  Typography,
-  Grid,
+  ArrowBack,
+  Edit,
+  FitnessCenter,
+  PendingActions,
+  People,
+  Person,
+  Schedule,
+  Warning,
+} from "@mui/icons-material";
+import {
   Avatar,
+  Box,
+  Button,
   Card,
   CardContent,
-  Divider,
   Container,
-  Chip,
-  Stack,
-  useTheme,
-  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Divider,
+  Grid,
   Paper,
+  Skeleton,
+  Stack,
+  Typography,
+  useTheme,
 } from "@mui/material";
-import {
-  Person,
-  Groups,
-  Edit,
-  CheckCircle,
-  Pending,
-  Cancel,
-  FitnessCenter,
-  People,
-  Schedule,
-} from "@mui/icons-material";
-import { BoxNoMargin } from "@/app/_features/components/Styled";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { useParams, useRouter } from "next/navigation";
+import React, { useState } from "react";
+
+dayjs.extend(customParseFormat);
+
+// Reusable Confirmation Dialog Component
+interface ConfirmationDialogProps {
+  open: boolean;
+  title: string;
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+  confirmText?: string;
+  cancelText?: string;
+  severity?: "error" | "warning" | "info" | "success";
+}
+
+export const ConfirmationDialog = ({
+  open,
+  title,
+  message,
+  onConfirm,
+  onCancel,
+  confirmText = "Confirm",
+  cancelText = "Cancel",
+  severity = "warning",
+}: ConfirmationDialogProps) => {
+  const theme = useTheme();
+  const severityColors = {
+    error: theme.palette.error.main,
+    warning: theme.palette.warning.main,
+    info: theme.palette.info.main,
+    success: theme.palette.success.main,
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onCancel}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      maxWidth="sm"
+      fullWidth
+    >
+      <DialogTitle
+        id="alert-dialog-title"
+        sx={{ display: "flex", alignItems: "center" }}
+      >
+        <Warning
+          fontSize="large"
+          sx={{
+            color: severityColors[severity],
+            mr: 2,
+          }}
+        />
+        {title}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          {message}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions sx={{ p: 3 }}>
+        <Button onClick={onCancel} variant="text" sx={{ minWidth: 100 }}>
+          {cancelText}
+        </Button>
+        <Button
+          onClick={onConfirm}
+          variant="contained"
+          sx={{ minWidth: 100 }}
+          autoFocus
+        >
+          {confirmText}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 interface AppointmentDetails {
   numberOfUsers: string;
@@ -37,99 +124,173 @@ interface AppointmentDetails {
   isIndividual: boolean;
   date: string;
   duration: string;
-  location: string;
+  location?: string;
+  notes?: string;
 }
+
+const statusColors = {
+  confirmed: "success",
+  pending: "warning",
+  cancelled: "error",
+};
 
 const Page = () => {
   const theme = useTheme();
+  const router = useRouter();
+  const { userAppointmentId } = useParams<{ userAppointmentId: string }>();
+  const post = usePostAuth();
+  const get = useGet<AppointmentDetails>(
+    AppointmentApi.GET_BY_ID + userAppointmentId
+  );
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
-  // Sample appointment data
-  const appointment: AppointmentDetails = {
-    numberOfUsers: "3",
-    status: "confirmed",
-    trainerName: "John Doe",
-    trainerId: "trainer123",
-    isIndividual: false,
-    date: "Friday, June 10, 2023 at 2:00 PM",
-    duration: "60 minutes",
-    location: "Main Gym - Station 3",
+  const appointment = get?.data;
+
+  const handleOpenCancelDialog = () => {
+    setCancelDialogOpen(true);
   };
 
-  const getStatusIcon = () => {
-    switch (appointment.status.toLowerCase()) {
-      case "confirmed":
-        return <CheckCircle sx={{ color: "#fff" }} fontSize="small" />;
-      case "pending":
-        return <Pending color="warning" fontSize="small" />;
-      case "cancelled":
-        return <Cancel color="error" fontSize="small" />;
-      default:
-        return <CheckCircle color="secondary" fontSize="small" />;
+  const handleCloseCancelDialog = () => {
+    setCancelDialogOpen(false);
+  };
+
+  async function handleCancelAppointment() {
+    try {
+      await post.post(`${AppointmentApi.CANCEL_BY_ID}${userAppointmentId}`);
+      handleCloseCancelDialog();
+    } catch (error) {
+      console.error("Failed to cancel appointment:", error);
     }
+  }
+
+  const handleBack = () => {
+    router.back();
   };
 
-  const getStatusChip = () => {
+  if (get.loading) {
     return (
-      <Chip
-        label={
-          appointment.status.charAt(0).toUpperCase() +
-          appointment.status.slice(1)
-        }
-        size="small"
-        sx={{
-          borderColor: null,
-          color: "white",
-          fontWeight: 600,
-          textTransform: "capitalize",
-        }}
-      />
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Skeleton
+          variant="rectangular"
+          width="100%"
+          height={120}
+          sx={{ mb: 3 }}
+        />
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={8}>
+            <Skeleton variant="rectangular" width="100%" height={300} />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Skeleton variant="rectangular" width="100%" height={200} />
+          </Grid>
+        </Grid>
+      </Container>
     );
-  };
+  }
+
+  if (get.error) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4, textAlign: "center" }}>
+        <Typography variant="h5" color="error" gutterBottom>
+          Failed to load appointment details
+        </Typography>
+        <Button
+          variant="outlined"
+          onClick={handleBack}
+          startIcon={<ArrowBack />}
+          sx={{ mt: 2 }}
+        >
+          Go Back
+        </Button>
+      </Container>
+    );
+  }
 
   return (
     <BoxNoMargin>
-      {/* Simplified Header */}
-      <Box sx={{ backgroundColor: theme.palette.primary.main, py: 4 }}>
+      {/* Confirmation Dialog for Cancellation */}
+      <ConfirmationDialog
+        open={cancelDialogOpen}
+        title="Cancel Appointment"
+        message={`Are you sure you want to cancel your session with ${
+          appointment?.trainerName
+        } on ${formatDate(appointment?.date)}?`}
+        onConfirm={handleCancelAppointment}
+        onCancel={handleCloseCancelDialog}
+        confirmText="Yes, Cancel"
+        cancelText="No, Keep It"
+        severity="warning"
+      />
+
+      {/* Header with back button and status */}
+      <Container
+        sx={{
+          backgroundColor: theme.palette.primary.main,
+          py: 4,
+          position: "relative",
+        }}
+      >
         <Container maxWidth="lg">
           <Stack
             direction="row"
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography
-              variant="h4"
-              component="h1"
-              color="white"
-              fontWeight={700}
-            >
-              Training Session
+            <Typography variant="h4" color="white" fontWeight={700}>
+              Training Session Details
             </Typography>
-            {getStatusChip()}
+            <Button
+              startIcon={<ArrowBack />}
+              sx={{
+                color: "white",
+                mb: 2,
+                "&:hover": {
+                  backgroundColor: "rgba(255,255,255,0.1)",
+                },
+              }}
+              onClick={handleBack}
+            >
+              Back
+            </Button>
           </Stack>
+
           <Typography variant="subtitle1" color="white" mt={1}>
-            {appointment.date}
+            {formatDate(appointment?.date)}
           </Typography>
         </Container>
-      </Box>
+      </Container>
 
       {/* Main Content */}
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Container maxWidth="lg" sx={{ py: 5 }}>
         <Grid container spacing={3}>
-          {/* Primary Content */}
+          {/* Left Panel - Session Details */}
           <Grid item xs={12} md={8}>
-            <Card variant="outlined" sx={{ borderRadius: 2 }}>
-              <CardContent sx={{ p: 3 }}>
-                <Typography variant="h6" fontWeight={600} mb={2}>
+            <Card
+              variant="outlined"
+              sx={{
+                borderRadius: 3,
+                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.05)",
+              }}
+            >
+              <CardContent sx={{ p: 4 }}>
+                <Typography variant="h5" fontWeight={700} gutterBottom>
                   Session Details
                 </Typography>
 
-                <Grid container spacing={2} mt={1}>
+                <Grid container spacing={2} mt={2}>
+                  <Grid item xs={12} sm={6}>
+                    <DetailItem
+                      icon={<PendingActions fontSize="small" />}
+                      label="Status"
+                      value={appointment?.status || "Main Gym Studio"}
+                    />
+                  </Grid>
                   <Grid item xs={12} sm={6}>
                     <DetailItem
                       icon={<FitnessCenter fontSize="small" />}
-                      label="Type"
+                      label="Session Type"
                       value={
-                        appointment.isIndividual
+                        appointment?.isIndividual
                           ? "Individual Training"
                           : "Group Training"
                       }
@@ -139,8 +300,8 @@ const Page = () => {
                     <DetailItem
                       icon={<People fontSize="small" />}
                       label="Participants"
-                      value={`${appointment.numberOfUsers} ${
-                        appointment.isIndividual ? "person" : "people"
+                      value={`${appointment?.numberOfUsers || "N/A"} ${
+                        appointment?.isIndividual ? "person" : "people"
                       }`}
                     />
                   </Grid>
@@ -148,84 +309,144 @@ const Page = () => {
                     <DetailItem
                       icon={<Schedule fontSize="small" />}
                       label="Duration"
-                      value={appointment.duration}
+                      value={
+                        appointment?.duration
+                          ? `${Math.round(
+                              Number(appointment.duration) / 60
+                            )} mins`
+                          : "N/A"
+                      }
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <DetailItem
                       icon={<Person fontSize="small" />}
                       label="Location"
-                      value={appointment.location}
+                      value={appointment?.location || "Iron Path Studio"}
                     />
                   </Grid>
                 </Grid>
 
-                <Divider sx={{ my: 3 }} />
+                {appointment?.notes && (
+                  <>
+                    <Divider sx={{ my: 3 }} />
+                    <Box>
+                      <Typography
+                        variant="subtitle2"
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        Additional Notes
+                      </Typography>
+                      <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
+                        <Typography>{appointment.notes}</Typography>
+                      </Paper>
+                    </Box>
+                  </>
+                )}
 
-                <Box sx={{ display: "flex", gap: 2 }}>
+                <Divider sx={{ my: 4 }} />
+
+                <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
                   <Button
                     variant="contained"
                     startIcon={<Edit />}
-                    onClick={() => {
-                      /* Handle edit functionality */
-                    }}
+                    disabled={
+                      appointment?.status?.toLowerCase() === "cancelled"
+                    }
                   >
-                    Edit Appointment
+                    Edit
                   </Button>
                   <Button
+                    onClick={handleOpenCancelDialog}
                     variant="outlined"
-                    onClick={() => {
-                      /* Handle cancel functionality */
-                    }}
+                    color="error"
+                    disabled={
+                      appointment?.status?.toLowerCase() === "cancelled"
+                    }
                   >
                     Cancel Session
                   </Button>
-                </Box>
+                </Stack>
               </CardContent>
             </Card>
           </Grid>
 
-          {/* Trainer Sidebar */}
-          {/* Trainer Sidebar */}
+          {/* Right Panel - Trainer Info */}
           <Grid item xs={12} md={4}>
-            <Card variant="outlined" sx={{ borderRadius: 2 }}>
-              <CardContent sx={{ p: 3 }}>
-                <Typography variant="h6" fontWeight={600} mb={2}>
-                  Your Trainer
-                </Typography>
+            <Stack spacing={3}>
+              <Card
+                variant="outlined"
+                sx={{
+                  borderRadius: 3,
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.05)",
+                }}
+              >
+                <CardContent sx={{ p: 4 }}>
+                  <Typography variant="h5" fontWeight={700} gutterBottom>
+                    Your Trainer
+                  </Typography>
 
-                <Stack direction="row" spacing={2} alignItems="center" mb={2}>
-                  <Avatar
-                    sx={{
-                      width: 64,
-                      height: 64,
-                      bgcolor: theme.palette.primary.main,
-                      fontSize: "1.5rem",
-                    }}
+                  <Stack direction="row" spacing={2} alignItems="center" mb={3}>
+                    <Avatar
+                      sx={{
+                        width: 72,
+                        height: 72,
+                        bgcolor: theme.palette.primary.main,
+                        fontSize: "1.75rem",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {appointment?.trainerName?.charAt(0) || "T"}
+                    </Avatar>
+                    <Box>
+                      <Typography variant="h6" fontWeight={600}>
+                        {appointment?.trainerName || "Trainer Name"}
+                      </Typography>
+                    </Box>
+                  </Stack>
+
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={() =>
+                      window.location.assign(
+                        `/trainers/${appointment?.trainerId}`
+                      )
+                    }
+                    sx={{ mb: 2 }}
                   >
-                    {appointment.trainerName.charAt(0)}
-                  </Avatar>
-                  <Box>
-                    <Typography fontWeight={600}>
-                      {appointment.trainerName}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Certified Fitness Trainer
-                    </Typography>
-                  </Box>
-                </Stack>
+                    View Full Profile
+                  </Button>
+                </CardContent>
+              </Card>
 
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={() =>
-                    window.location.assign(`/trainers/${appointment.trainerId}`)
-                  }
-                >
-                  View Profile
-                </Button>
-              </CardContent>
-            </Card>
+              {/* Help Card */}
+              <Card
+                variant="outlined"
+                sx={{
+                  borderRadius: 3,
+                  backgroundColor: theme.palette.grey[50],
+                }}
+              >
+                <CardContent sx={{ p: 3 }}>
+                  <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+                    Need Help?
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" mb={2}>
+                    Contact our support team for any questions about your
+                    session.
+                  </Typography>
+                  <Button
+                    variant="text"
+                    size="small"
+                    onClick={() => router.push("/contact")}
+                  >
+                    Contact Support
+                  </Button>
+                </CardContent>
+              </Card>
+            </Stack>
           </Grid>
         </Grid>
       </Container>
@@ -233,7 +454,6 @@ const Page = () => {
   );
 };
 
-// Reusable detail item component
 const DetailItem = ({
   icon,
   label,
@@ -243,18 +463,43 @@ const DetailItem = ({
   label: string;
   value: string;
 }) => (
-  <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
-    <Stack direction="row" spacing={1.5} alignItems="center">
-      <Box sx={{ color: "primary.main" }}>{icon}</Box>
-      <Box>
-        <Typography variant="subtitle2" color="text.secondary">
-          {label}
-        </Typography>
-        <Typography variant="body1" fontWeight={500}>
-          {value}
-        </Typography>
-      </Box>
-    </Stack>
+  <Paper
+    variant="outlined"
+    sx={{
+      p: 2.5,
+      borderRadius: 2,
+      display: "flex",
+      alignItems: "center",
+      height: "100%",
+      transition: "all 0.2s ease",
+      "&:hover": {
+        borderColor: "primary.main",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.05)",
+      },
+    }}
+  >
+    <Avatar
+      sx={{
+        mr: 2,
+        color: "white",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "primary.light",
+        borderRadius: "50%",
+      }}
+    >
+      {icon}
+    </Avatar>
+    <Box></Box>
+    <Box>
+      <Typography variant="subtitle2" color="text.secondary" fontSize={12}>
+        {label}
+      </Typography>
+      <Typography variant="body1" fontWeight={600}>
+        {value || "N/A"}
+      </Typography>
+    </Box>
   </Paper>
 );
 

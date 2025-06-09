@@ -33,9 +33,9 @@ const adminItem = [
 const userItems = [
   { title: "Početak", path: "/" },
   { title: "Usluge", path: "/services" },
+  { title: "Narudžbe", path: "/user_appointments" },
   { title: "Kontakt", path: "/contact" },
   { title: "O nama", path: "/about_us" },
-  { title: "Narudžbe", path: "/user_appointments" },
 ];
 
 export default function Navbar() {

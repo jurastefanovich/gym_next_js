@@ -11,7 +11,7 @@ export interface UsePostResult<T> {
   loading: boolean;
   post: (
     url: string,
-    body: any,
+    body?: any,
     config?: AxiosRequestConfig
   ) => Promise<T | null>;
 }
