@@ -17,7 +17,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useGet } from "@/app/hooks/useGet";
 import { usePostAuth } from "@/app/hooks/usePost";
 import { ServicesApi } from "@/app/_features/enums/ApiPaths";
-import { ServiceDetail } from "@/app/_features/utils/Interfaces";
+import { ServiceCRUD, ServiceDetail } from "@/app/_features/utils/Interfaces";
 import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { ConfirmationDialog } from "@/app/user_appointments/[userAppointmentId]/page";
 import { ArrowBack } from "@mui/icons-material";
@@ -39,7 +39,7 @@ const EditServicePage = () => {
     data: service,
     loading,
     error,
-  } = useGet<ServiceDetail>(ServicesApi.GET_BY_ID + serviceId);
+  } = useGet<ServiceCRUD>(ServicesApi.GET_BY_ID + serviceId);
   const post = usePostAuth();
 
   const [form, setForm] = useState({
@@ -58,7 +58,7 @@ const EditServicePage = () => {
         title: service.title,
         description: service.description,
         duration: String(service.duration),
-        maxUsersPerGroupSession: String(3),
+        maxUsersPerGroupSession: String(service.maxUsersPerGroupSession),
         trainerRequired: service.needsTrainer,
         individual: service.individual,
       });

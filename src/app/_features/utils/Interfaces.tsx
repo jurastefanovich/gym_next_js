@@ -77,6 +77,10 @@ export interface ServiceDetail extends ServiceDto {
   individual: boolean;
 }
 
+export interface ServiceCRUD extends ServiceDetail {
+  maxUsersPerGroupSession: number;
+}
+
 export interface ServiceTableDto extends ServiceDto {
   maxUsersPerGroupSession: number;
 }

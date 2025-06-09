@@ -20,6 +20,7 @@ export function usePut<T = any>(): UsePutResult<T> {
     setLoading(true);
     try {
       const response: AxiosResponse<T> = await axios.put<T>(url, body, config);
+      showMessage("Action completed!", "success");
       setData(response.data);
     } catch (err: any) {
       showMessage(

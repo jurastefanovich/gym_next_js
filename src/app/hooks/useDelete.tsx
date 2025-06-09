@@ -21,6 +21,7 @@ export function useDelete<T = any>(): UseDeleteResult<T> {
     try {
       const response: AxiosResponse<T> = await axios.delete<T>(url, config);
       setData(response.data);
+      showMessage("Action completed!", "success");
     } catch (err: any) {
       showMessage(
         err?.response?.data?.message || err.message || "Something went wrong"

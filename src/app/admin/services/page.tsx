@@ -20,11 +20,12 @@ import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { useGet } from "@/app/hooks/useGet";
 import { ServicesApi } from "@/app/_features/enums/ApiPaths";
 import { ServiceTableDto } from "@/app/_features/utils/Interfaces";
+import MyLoader from "@/app/components/MyLoader";
 
 const AdminServicesPage = () => {
   const router = useRouter();
   const get = useGet<ServiceTableDto[]>(ServicesApi.ALL);
-  const dummyServices: ServiceTableDto[] | undefined = get.data;
+  const dummyServices = get.data ?? [];
 
   const handleAddService = () => {
     router.push("/admin/services/new");
@@ -36,7 +37,7 @@ const AdminServicesPage = () => {
   };
 
   if (get.loading) {
-    return <Typography>Loading...</Typography>;
+    return <MyLoader/>;
   }
 
   return (
@@ -96,7 +97,11 @@ const AdminServicesPage = () => {
                   </TableCell>
                   <TableCell>{formatDuration(svc.duration)}</TableCell>
                   <TableCell>
-                    <Chip label={svc.maxUsersPerGroupSession} size="small" />
+                    {svc.maxUsersPerGroupSession > 0 ? (
+                      <Chip label={svc.maxUsersPerGroupSession} size="small" />
+                    ) : (
+                      "No Limit"
+                    )}
                   </TableCell>
                   <TableCell align="right">
                     <Button

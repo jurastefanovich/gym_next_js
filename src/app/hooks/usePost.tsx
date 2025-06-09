@@ -65,6 +65,7 @@ export function usePostAuth<T = any>(): UsePostResult<T> {
         body,
         authHeaders
       );
+      showMessage("Action completed!", "success");
       setData(response.data);
       return response.data;
     } catch (err: any) {
