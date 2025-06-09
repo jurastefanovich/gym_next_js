@@ -24,6 +24,7 @@ import CreateAppointmentButton from "./components/CreateAppointmentButton";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import HistoryIcon from "@mui/icons-material/History";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
+import { useRouter } from "next/navigation";
 
 type AppointmentDTO = {
   id: number;
@@ -42,6 +43,7 @@ const statusColors = {
 
 export default function Page() {
   const theme = useTheme();
+  const router = useRouter();
   const get = useGet<AppointmentDTO[]>(AppointmentApi.GET_ALL);
   const [tab, setTab] = useState(0);
   const now = dayjs();
@@ -63,6 +65,10 @@ export default function Page() {
     (app) => app.status === "DONE"
   );
 
+  const handleCardClick = (appointmentId: number) => {
+    router.push(`/user_appointments/${appointmentId}`);
+  };
+
   const renderAppointmentCard = (appointment: AppointmentDTO) => (
     <Card
       key={appointment.id}
@@ -73,8 +79,10 @@ export default function Page() {
         "&:hover": {
           transform: "translateY(-2px)",
           boxShadow: theme.shadows[2],
+          cursor: "pointer",
         },
       }}
+      onClick={() => handleCardClick(appointment.id)}
     >
       <CardContent>
         <Stack spacing={1.5}>
