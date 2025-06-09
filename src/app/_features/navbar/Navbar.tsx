@@ -25,7 +25,7 @@ const defaultItems = [
 ];
 const adminItem = [
   { title: "Početak", path: "/" },
-  { title: "Usluge", path: "/services" },
+  { title: "Usluge", path: "/admin/services" },
   { title: "Kontakt", path: "/contact" },
   { title: "O nama", path: "/about_us" },
   { title: "Narudžbe", path: "/user_appointments" },
@@ -51,7 +51,7 @@ export default function Navbar() {
   );
 
   function getNavItems() {
-    return hasToken ? userItems : defaultItems;
+    return hasToken ? adminItem : defaultItems;
   }
 
   function redirect(path: string) {

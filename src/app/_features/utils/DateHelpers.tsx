@@ -13,3 +13,7 @@ export const formatDate = (dateString?: string) => {
     return dateString;
   }
 };
+
+export const formatDateForInput = (date: string) => {
+  return dayjs(date).format("YYYY-MM-DDTHH:mm");
+};

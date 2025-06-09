@@ -52,13 +52,17 @@ export default function Page() {
   const appointments: AppointmentDTO[] = Array.isArray(get.data)
     ? get.data
     : [];
-  console.log(get.data);
-  const upcomingAppointments = appointments?.filter((app) =>
-    dayjs(app.date, "DD/MM/YYYY, HH:mm").isAfter(now)
+
+  const upcomingAppointments = appointments?.filter(
+    (app) =>
+      dayjs(app.date, "DD/MM/YYYY, HH:mm").isAfter(now) &&
+      app.status !== "CANCELLED"
   );
 
-  const pastAppointments = appointments?.filter((app) =>
-    dayjs(app.date, "DD/MM/YYYY, HH:mm").isBefore(now)
+  const pastAppointments = appointments?.filter(
+    (app) =>
+      dayjs(app.date, "DD/MM/YYYY, HH:mm").isBefore(now) ||
+      app.status === "CANCELLED"
   );
 
   const completedAppointments = appointments?.filter(

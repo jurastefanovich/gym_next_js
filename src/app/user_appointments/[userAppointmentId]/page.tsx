@@ -354,6 +354,11 @@ const Page = () => {
                     disabled={
                       appointment?.status?.toLowerCase() === "cancelled"
                     }
+                    onClick={() =>
+                      router.push(
+                        `/user_appointments/edit/${userAppointmentId}`
+                      )
+                    }
                   >
                     Edit
                   </Button>

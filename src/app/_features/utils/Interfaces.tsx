@@ -76,3 +76,7 @@ export interface ServiceDetail extends ServiceDto {
   needsTrainer: boolean;
   individual: boolean;
 }
+
+export interface ServiceTableDto extends ServiceDto {
+  maxUsersPerGroupSession: number;
+}
