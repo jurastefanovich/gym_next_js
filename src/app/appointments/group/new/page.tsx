@@ -56,7 +56,7 @@ const CreateGroupAppointmentPage = () => {
   const post = usePost();
 
   // Fetch available services and trainers
-  const { data: services } = useGet<ServiceOption[]>(ServicesApi.ALL);
+  const { data: services } = useGet<ServiceOption[]>(ServicesApi.GET_ALL_GROUP);
   const { data: trainers } = useGet<TrainerDto[]>(TrainerApi.GET_ALL);
 
   // Form state

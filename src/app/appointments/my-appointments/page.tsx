@@ -25,6 +25,7 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import HistoryIcon from "@mui/icons-material/History";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import { useRouter } from "next/navigation";
+import { Background } from "@/app/_features/enums/Colors";
 
 type AppointmentDTO = {
   id: number;
@@ -36,8 +37,8 @@ type AppointmentDTO = {
 
 const statusColors = {
   PENDING: "warning",
-  CONFIRMED: "success",
-  CANCELLED: "error",
+  ACTIVE: "primary",
+  CANCELLED: "primary",
   DONE: "info",
 } as const;
 
@@ -82,7 +83,7 @@ export default function Page() {
         transition: "transform 0.2s",
         "&:hover": {
           transform: "translateY(-2px)",
-          boxShadow: theme.shadows[2],
+          border: `1px solid ${Background.PRIMARY}`,
           cursor: "pointer",
         },
       }}
@@ -93,15 +94,16 @@ export default function Page() {
           <Typography variant="h6" fontWeight={600}>
             {appointment.serviceTitle}
           </Typography>
-
           <Divider sx={{ my: 1 }} />
-
           <Stack direction="row" spacing={2} alignItems="center">
             <Typography variant="body2" color="text.secondary">
               <strong>Date:</strong> {appointment.date}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              <strong>Trainer:</strong> {appointment.trainerName}
+              <strong>Number of participants:</strong> {appointment.trainerName}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              <strong>Duration:</strong> {appointment.id}
             </Typography>
           </Stack>
 
@@ -109,8 +111,11 @@ export default function Page() {
             <Chip
               label={appointment.status}
               color={
-                statusColors[appointment.status as keyof typeof statusColors] ||
-                "default"
+                statusColors[
+                  String(
+                    appointment.status
+                  ).toUpperCase() as keyof typeof statusColors
+                ]
               }
               size="small"
             />

@@ -27,7 +27,6 @@ export function usePost<T = any>(): UsePostResult<T> {
     try {
       const response: AxiosResponse<T> = await axios.post<T>(url, body, config);
       setData(response.data);
-      showMessage("Action completed!", "success");
       return response.data;
     } catch (err: any) {
       showMessage(

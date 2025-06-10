@@ -9,6 +9,8 @@ import {
   ArrowBack,
   Edit,
   FitnessCenter,
+  LocationOn,
+  Notes,
   PendingActions,
   People,
   Person,
@@ -21,6 +23,7 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   Container,
   Dialog,
   DialogActions,
@@ -39,6 +42,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { ParticipantsList } from "./component/ParticipantsList";
 
 dayjs.extend(customParseFormat);
 
@@ -118,6 +122,7 @@ export const ConfirmationDialog = ({
 
 interface AppointmentDetails {
   numberOfUsers: string;
+  maxNumberOfUsers: number;
   status: string;
   trainerName: string;
   trainerId: string;
@@ -129,13 +134,12 @@ interface AppointmentDetails {
 }
 
 const statusColors = {
-  confirmed: "success",
+  active: "primary",
   pending: "warning",
   cancelled: "error",
 };
 
 const Page = () => {
-  const theme = useTheme();
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const post = usePostAuth();
@@ -206,7 +210,6 @@ const Page = () => {
 
   return (
     <BoxNoMargin>
-      {/* Confirmation Dialog for Cancellation */}
       <ConfirmationDialog
         open={cancelDialogOpen}
         title="Cancel Appointment"
@@ -220,152 +223,210 @@ const Page = () => {
         severity="warning"
       />
 
-      {/* Header with back button and status */}
-      <Container
-        sx={{
-          backgroundColor: theme.palette.primary.main,
-          py: 4,
-          position: "relative",
-        }}
-      >
-        <Container maxWidth="lg">
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography variant="h4" color="white" fontWeight={700}>
-              Training Session Details
-            </Typography>
-            <Button
-              startIcon={<ArrowBack />}
-              sx={{
-                color: "white",
-                mb: 2,
-                "&:hover": {
-                  backgroundColor: "rgba(255,255,255,0.1)",
-                },
-              }}
-              onClick={handleBack}
-            >
-              Back
-            </Button>
-          </Stack>
+      <HeaderSection
+        title="Training Session Details"
+        date={appointment?.date}
+        onBack={handleBack}
+      />
 
-          <Typography variant="subtitle1" color="white" mt={1}>
-            {formatDate(appointment?.date)}
-          </Typography>
-        </Container>
-      </Container>
-
-      {/* Main Content */}
-      <Container maxWidth="lg" sx={{ py: 5 }}>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
         <Grid container spacing={3}>
-          {/* Left Panel - Session Details */}
-          <Grid item xs={12}>
-            <Card
-              variant="outlined"
-              sx={{
-                borderRadius: 3,
-                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.05)",
-              }}
-            >
-              <CardContent sx={{ p: 4 }}>
-                <Typography variant="h5" fontWeight={700} gutterBottom>
-                  Session Details
-                </Typography>
+          {/* Main Content Column */}
+          <Grid item xs={12} lg={8}>
+            <SessionDetailsCard
+              appointment={appointment}
+              onEdit={() => router.push(`/user_appointments/edit/${id}`)}
+              onCancel={handleOpenCancelDialog}
+            />
+          </Grid>
 
-                <Grid container spacing={2} mt={2}>
-                  <Grid item xs={12} sm={6}>
-                    <DetailItem
-                      icon={<PendingActions fontSize="small" />}
-                      label="Status"
-                      value={appointment?.status || "Main Gym Studio"}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <DetailItem
-                      icon={<FitnessCenter fontSize="small" />}
-                      label="Session Type"
-                      value={
-                        appointment?.isIndividual
-                          ? "Individual Training"
-                          : "Group Training"
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <DetailItem
-                      icon={<People fontSize="small" />}
-                      label="Participants"
-                      value={`${appointment?.numberOfUsers || "N/A"} ${
-                        appointment?.isIndividual ? "person" : "people"
-                      }`}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <DetailItem
-                      icon={<Schedule fontSize="small" />}
-                      label="Duration"
-                      value={
-                        appointment?.duration
-                          ? `${Math.round(
-                              Number(appointment.duration) / 60
-                            )} mins`
-                          : "N/A"
-                      }
-                    />
-                  </Grid>
-                </Grid>
-
-                {appointment?.notes && (
-                  <>
-                    <Divider sx={{ my: 3 }} />
-                    <Box>
-                      <Typography
-                        variant="subtitle2"
-                        color="text.secondary"
-                        gutterBottom
-                      >
-                        Additional Notes
-                      </Typography>
-                      <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
-                        <Typography>{appointment.notes}</Typography>
-                      </Paper>
-                    </Box>
-                  </>
-                )}
-
-                <Divider sx={{ my: 4 }} />
-
-                <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
-                  <Button
-                    variant="contained"
-                    startIcon={<Edit />}
-                    disabled={
-                      appointment?.status?.toLowerCase() === "cancelled"
-                    }
-                    onClick={() => router.push(`/user_appointments/edit/${id}`)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    onClick={handleOpenCancelDialog}
-                    variant="outlined"
-                    color="error"
-                    disabled={
-                      appointment?.status?.toLowerCase() === "cancelled"
-                    }
-                  >
-                    Cancel Session
-                  </Button>
-                </Stack>
-              </CardContent>
-            </Card>
+          {/* Sidebar Column */}
+          <Grid item xs={12} lg={4}>
+            <Stack spacing={3}>
+              <ParticipantsList
+                maxParticipants={appointment?.maxNumberOfUsers}
+              />
+            </Stack>
           </Grid>
         </Grid>
       </Container>
     </BoxNoMargin>
+  );
+};
+
+const HeaderSection = ({
+  title,
+  date,
+  onBack,
+}: {
+  title: string;
+  date?: string;
+  onBack: () => void;
+}) => {
+  const theme = useTheme();
+
+  return (
+    <Box
+      sx={{
+        backgroundColor: theme.palette.primary.main,
+        py: 4,
+        position: "relative",
+        color: "white",
+      }}
+    >
+      <Container maxWidth="xl">
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Box>
+            <Typography variant="h4" fontWeight={700}>
+              {title}
+            </Typography>
+            <Typography variant="subtitle1" mt={1}>
+              {date ? formatDate(date) : "Loading date..."}
+            </Typography>
+          </Box>
+          <Button
+            startIcon={<ArrowBack />}
+            sx={{
+              color: "white",
+              "&:hover": {
+                backgroundColor: "rgba(255,255,255,0.1)",
+              },
+            }}
+            onClick={onBack}
+          >
+            Back
+          </Button>
+        </Stack>
+      </Container>
+    </Box>
+  );
+};
+
+const SessionDetailsCard = ({
+  appointment,
+  onEdit,
+  onCancel,
+}: {
+  appointment?: AppointmentDetails;
+  onEdit: () => void;
+  onCancel: () => void;
+}) => {
+  const isCancelled = appointment?.status?.toLowerCase() === "cancelled";
+
+  return (
+    <Card
+      variant="outlined"
+      sx={{
+        borderRadius: 3,
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.05)",
+        height: "100%",
+      }}
+    >
+      <CardContent sx={{ p: 4 }}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Typography variant="h5" fontWeight={700}>
+            Session Details
+          </Typography>
+          {appointment?.status && (
+            <Chip
+              label={appointment.status}
+              color={
+                statusColors[
+                  appointment.status.toLowerCase() as keyof typeof statusColors
+                ] || "default"
+              }
+              sx={{ textTransform: "capitalize" }}
+            />
+          )}
+        </Stack>
+
+        <Grid container spacing={2} mt={2}>
+          <DetailItem
+            icon={<FitnessCenter />}
+            label="Session Type"
+            value={
+              appointment?.isIndividual
+                ? "Individual Training"
+                : "Group Training"
+            }
+          />
+
+          <DetailItem
+            icon={<Schedule />}
+            label="Duration"
+            value={
+              appointment?.duration
+                ? `${Math.round(Number(appointment.duration)) / 60} mins`
+                : "N/A"
+            }
+          />
+
+          <DetailItem
+            icon={<People />}
+            label="Participants"
+            value={`${appointment?.numberOfUsers || 0} / ${
+              appointment?.maxNumberOfUsers || "N/A"
+            }`}
+          />
+
+          {appointment?.location && (
+            <DetailItem
+              icon={<LocationOn />}
+              label="Location"
+              value={appointment.location}
+            />
+          )}
+        </Grid>
+
+        {appointment?.notes && (
+          <>
+            <Divider sx={{ my: 3 }} />
+            <Box>
+              <Typography
+                variant="subtitle2"
+                color="text.secondary"
+                gutterBottom
+              >
+                <Notes sx={{ verticalAlign: "middle", mr: 1 }} />
+                Additional Notes
+              </Typography>
+              <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
+                <Typography>{appointment.notes}</Typography>
+              </Paper>
+            </Box>
+          </>
+        )}
+
+        <Divider sx={{ my: 4 }} />
+
+        <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
+          <Button
+            variant="contained"
+            startIcon={<Edit />}
+            disabled={isCancelled}
+            onClick={onEdit}
+          >
+            Edit
+          </Button>
+          <Button
+            onClick={onCancel}
+            variant="outlined"
+            color="error"
+            disabled={isCancelled}
+          >
+            Cancel Session
+          </Button>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 };
 
@@ -378,44 +439,43 @@ const DetailItem = ({
   label: string;
   value: string;
 }) => (
-  <Paper
-    variant="outlined"
-    sx={{
-      p: 2.5,
-      borderRadius: 2,
-      display: "flex",
-      alignItems: "center",
-      height: "100%",
-      transition: "all 0.2s ease",
-      "&:hover": {
-        borderColor: "primary.main",
-        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.05)",
-      },
-    }}
-  >
-    <Avatar
+  <Grid item xs={12} sm={6}>
+    <Paper
+      variant="outlined"
       sx={{
-        mr: 2,
-        color: "white",
+        p: 2.5,
+        borderRadius: 2,
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "primary.light",
-        borderRadius: "50%",
+        height: "100%",
+        transition: "all 0.2s ease",
+        "&:hover": {
+          borderColor: "primary.main",
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.05)",
+        },
       }}
     >
-      {icon}
-    </Avatar>
-    <Box></Box>
-    <Box>
-      <Typography variant="subtitle2" color="text.secondary" fontSize={12}>
-        {label}
-      </Typography>
-      <Typography variant="body1" fontWeight={600}>
-        {value || "N/A"}
-      </Typography>
-    </Box>
-  </Paper>
+      <Avatar
+        sx={{
+          mr: 2,
+          color: "white",
+          bgcolor: "primary.light",
+          width: 40,
+          height: 40,
+        }}
+      >
+        {icon}
+      </Avatar>
+      <Box>
+        <Typography variant="subtitle2" color="text.secondary">
+          {label}
+        </Typography>
+        <Typography variant="body1" fontWeight={600}>
+          {value || "N/A"}
+        </Typography>
+      </Box>
+    </Paper>
+  </Grid>
 );
 
 export default Page;
