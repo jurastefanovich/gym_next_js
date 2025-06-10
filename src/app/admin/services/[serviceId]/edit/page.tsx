@@ -21,16 +21,19 @@ import { ServiceCRUD, ServiceDetail } from "@/app/_features/utils/Interfaces";
 import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { ConfirmationDialog } from "@/app/user_appointments/[userAppointmentId]/page";
 import { ArrowBack } from "@mui/icons-material";
+import { usePut } from "@/app/hooks/usePut";
+import { useDelete } from "@/app/hooks/useDelete";
 
 const EditServicePage = () => {
   const { serviceId } = useParams<{ serviceId: string }>();
   const router = useRouter();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-
+  const del = useDelete();
   const openDeleteDialog = () => setDeleteDialogOpen(true);
   const closeDeleteDialog = () => setDeleteDialogOpen(false);
-  const handleDelete = () => {
-    // call delete endpoint…
+
+  const handleDelete = async () => {
+    await del.deleteRequest(ServicesApi.DELETE_BY_ID + serviceId);
     closeDeleteDialog();
     router.push("/admin/services");
   };
@@ -40,7 +43,7 @@ const EditServicePage = () => {
     loading,
     error,
   } = useGet<ServiceCRUD>(ServicesApi.GET_BY_ID + serviceId);
-  const post = usePostAuth();
+  const put = usePut();
 
   const [form, setForm] = useState({
     title: "",
@@ -70,16 +73,22 @@ const EditServicePage = () => {
     setForm((f) => ({ ...f, [name]: value }));
   };
 
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setForm((f) => ({ ...f, [name]: checked }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await post.post(ServicesApi.UPDATE_BY_ID + serviceId, {
+      await put.put(ServicesApi.UPDATE_BY_ID + serviceId, {
         title: form.title,
         description: form.description,
-        duration: Number(form.duration),
+        durationSeconds: Number(form.duration),
+        individual: Boolean(form.individual),
+        trainerRequired: Boolean(form.trainerRequired),
         maxUsersPerGroupSession: Number(form.maxUsersPerGroupSession),
       });
-      router.push("/admin/services");
     } catch (err) {
       console.error("Failed to update service", err);
     }
@@ -160,7 +169,7 @@ const EditServicePage = () => {
                   control={
                     <Checkbox
                       checked={form.individual}
-                      // onChange={handleCheckboxChange}
+                      onChange={handleCheckboxChange}
                       name="individual"
                     />
                   }
@@ -172,7 +181,7 @@ const EditServicePage = () => {
                   control={
                     <Checkbox
                       checked={form.trainerRequired}
-                      // onChange={handleCheckboxChange}
+                      onChange={handleCheckboxChange}
                       name="trainerRequired"
                     />
                   }

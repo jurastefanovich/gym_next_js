@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import services from "@/app/_features/dummyData/services.json";
 import ServiceRow from "./components/ServiceRow";
 import { Background } from "../_features/enums/Colors";
 import { BoxNoMargin } from "../_features/components/Styled";

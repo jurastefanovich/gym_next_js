@@ -24,11 +24,12 @@ const defaultItems = [
   { title: "O nama", path: "/about_us" },
 ];
 const adminItem = [
-  { title: "Početak", path: "/" },
-  { title: "Usluge", path: "/admin/services" },
-  { title: "Kontakt", path: "/contact" },
-  { title: "O nama", path: "/about_us" },
-  { title: "Narudžbe", path: "/user_appointments" },
+  { title: "Home", path: "/" },
+  { title: "Services", path: "/admin/services" },
+  { title: "Sessions", path: "/appointments/group" },
+  { title: "My Appointments", path: "/appointments/my-appointments" },
+  { title: "Contact", path: "/contact" },
+  { title: "About Us", path: "/about_us" },
 ];
 const userItems = [
   { title: "Početak", path: "/" },
@@ -67,7 +68,7 @@ export default function Navbar() {
       <AppBar
         sx={{
           boxShadow: "none",
-          bgcolor: "white", // Make the navbar transparent
+          bgcolor: Background.PRIMARY, // Make the navbar transparent
         }}
       >
         <Toolbar
@@ -79,9 +80,8 @@ export default function Navbar() {
         >
           <IconButton
             edge="start"
-            color="primary"
             aria-label="menu"
-            sx={{ display: { xs: "flex" } }}
+            sx={{ display: { xs: "flex" }, color: "white" }}
             onClick={handleDrawerToggle}
           >
             <MenuIcon />

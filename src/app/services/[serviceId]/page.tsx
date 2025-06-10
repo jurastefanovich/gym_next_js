@@ -121,7 +121,7 @@ export default function ServicePage() {
         </Stack>
 
         <Stack spacing={4}>
-          <Box>
+          {/* <Box>
             {isLoggedIn ? (
               <Button
                 variant="contained"
@@ -151,17 +151,17 @@ export default function ServicePage() {
                 Login to book service
               </Button>
             )}
-          </Box>
-          {service && (
+          </Box> */}
+          {/* {service && (
             <BookingStepperDialog
               open={bookingDialogOpen}
               onClose={() => setBookingDialogOpen(false)}
               service={service}
               serviceId={Number(serviceId)}
             />
-          )}
+          )} */}
           {/* Trainer Section - Only show if needsTrainer is true */}
-          {service?.needsTrainer && service?.trainer && (
+          {/* {service?.needsTrainer && service?.trainer && (
             <Stack spacing={4}>
               <Typography
                 variant="h4"
@@ -184,7 +184,7 @@ export default function ServicePage() {
                 </Grid>
               </Grid>
             </Stack>
-          )}
+          )} */}
         </Stack>
       </Container>
     </BoxNoMargin>

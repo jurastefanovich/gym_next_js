@@ -84,3 +84,12 @@ export interface ServiceCRUD extends ServiceDetail {
 export interface ServiceTableDto extends ServiceDto {
   maxUsersPerGroupSession: number;
 }
+
+export interface GroupAppointmentTableDto {
+  id: number;
+  serviceTitle: string;
+  date: string;
+  duration: number;
+  currentParticipants: number;
+  maxParticipants: number;
+}
