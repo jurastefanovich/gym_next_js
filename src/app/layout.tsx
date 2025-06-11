@@ -36,7 +36,7 @@ const theme = createTheme({
       main: CRIMSON_RED,
     },
     secondary: {
-      main: "#007bff",
+      main: "#fff",
     },
   },
   typography: {

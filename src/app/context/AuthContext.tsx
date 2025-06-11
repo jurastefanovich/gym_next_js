@@ -10,28 +10,25 @@ import React, {
 import { useGet } from "@/app/hooks/useGet";
 import { ProfileResponse } from "../_features/utils/Interfaces";
 import { UserApi } from "../_features/enums/ApiPaths";
+import MyLoader from "../components/MyLoader";
 
 interface AuthContextType {
-  user: ProfileResponse | null;
-  setUser: (user: ProfileResponse | null) => void;
+  refetch: (user: ProfileResponse | null) => void;
   loading: boolean;
+  data: ProfileResponse | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<ProfileResponse | null>(null);
+  const { data, loading, refetch } = useGet<ProfileResponse>(UserApi.PROFILE);
 
-  const { data, loading } = useGet<ProfileResponse>(UserApi.PROFILE); // call /me or similar to fetch user info
-
-  useEffect(() => {
-    if (data) {
-      setUser(data);
-    }
-  }, [data]);
+  if (loading) {
+    return <MyLoader />;
+  }
 
   return (
-    <AuthContext.Provider value={{ user, setUser, loading }}>
+    <AuthContext.Provider value={{ loading, data, refetch }}>
       {children}
     </AuthContext.Provider>
   );

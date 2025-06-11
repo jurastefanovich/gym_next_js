@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   Avatar,
   Box,
@@ -8,17 +8,12 @@ import {
   Container,
   Divider,
   Grid,
-  Paper,
-  Typography,
+  Typography
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import UserStats from "../components/UserStats";
-import { useGet } from "../hooks/useGet";
-import { ProfileResponse } from "../_features/utils/Interfaces";
-import { UserApi } from "../_features/enums/ApiPaths";
+import { useAuth } from "../context/AuthContext";
 
 export default function Profile() {
-  const get = useGet<ProfileResponse>(UserApi.PROFILE);
+  const get = useAuth();
   const user = get.data;
 
   return (

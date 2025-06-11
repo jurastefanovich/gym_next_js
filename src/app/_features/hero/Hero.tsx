@@ -1,9 +1,10 @@
 "use client";
 import { Box, Typography, Button } from "@mui/material";
-import { styled } from "@mui/system";
+import { Stack, styled } from "@mui/system";
 import Link from "next/link";
 import { Names } from "../enums/Text";
 import { getAccessToken } from "../utils/LocalStorageHelpers";
+import { ArrowForward } from "@mui/icons-material";
 
 const HeroSection = styled(Box)(({ theme }) => ({
   position: "relative",
@@ -61,9 +62,29 @@ function AuthButton() {
     return null;
   } else {
     return (
-      <Link href="/login" passHref legacyBehavior>
-        <HeroButton variant="contained">Start training</HeroButton>
-      </Link>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={2}
+        justifyContent="center"
+      >
+        <Button
+          variant="outlined"
+          size="large"
+          color="inherit"
+          endIcon={<ArrowForward />}
+          href="/services"
+        >
+          Explore Services
+        </Button>
+        <Button
+          variant="contained"
+          size="large"
+          endIcon={<ArrowForward />}
+          href="/signup"
+        >
+          Join Now
+        </Button>
+      </Stack>
     );
   }
 }

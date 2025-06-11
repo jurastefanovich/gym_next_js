@@ -55,7 +55,9 @@ interface UserDto extends UserBasic {
   initials: string;
 }
 
-export interface ProfileResponse extends UserDto {}
+export interface ProfileResponse extends UserDto {
+  role: string;
+}
 
 export interface TrainerDto extends UserDto {}
 

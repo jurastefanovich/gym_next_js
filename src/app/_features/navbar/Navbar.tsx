@@ -16,12 +16,13 @@ import { useRouter, usePathname } from "next/navigation";
 import { Background } from "../enums/Colors";
 import AvatarMenu from "../components/AvatarMenu";
 import { getAccessToken } from "../utils/LocalStorageHelpers";
+import { useAuth } from "@/app/context/AuthContext";
 
 const defaultItems = [
-  { title: "Početak", path: "/" },
-  { title: "Usluge", path: "/services" },
-  { title: "Kontakt", path: "/contact" },
-  { title: "O nama", path: "/about_us" },
+  { title: "Home", path: "/" },
+  { title: "Services", path: "/services" },
+  { title: "Contact", path: "/contact" },
+  { title: "About us", path: "/about_us" },
 ];
 const adminItem = [
   { title: "Home", path: "/" },
@@ -32,17 +33,18 @@ const adminItem = [
   { title: "About Us", path: "/about_us" },
 ];
 const userItems = [
-  { title: "Početak", path: "/" },
-  { title: "Usluge", path: "/services" },
-  { title: "Narudžbe", path: "/user_appointments" },
-  { title: "Kontakt", path: "/contact" },
-  { title: "O nama", path: "/about_us" },
+  { title: "Home", path: "/" },
+  { title: "Services", path: "/services" },
+  { title: "Appointments", path: "/user_appointments" },
+  { title: "Contact", path: "/contact" },
+  { title: "About Us", path: "/about_us" },
 ];
 
 export default function Navbar() {
   const path = usePathname();
   const hasToken = getAccessToken();
-  const navItems = getNavItems();
+  const user = useAuth();
+
   const router = useRouter();
   const isLogin = path.toLowerCase() === "/login";
   const isSignUp = path.toLowerCase() === "/signup";
@@ -51,9 +53,13 @@ export default function Navbar() {
     theme.breakpoints.down("sm")
   );
 
-  function getNavItems() {
-    return hasToken ? adminItem : defaultItems;
-  }
+  const navItems = React.useMemo(() => {
+    if (!hasToken) return defaultItems;
+    if (user?.data?.role === "ADMIN" || user?.data?.role === "TRAINER")
+      return adminItem;
+    if (user?.data?.role === "USER") return userItems;
+    return defaultItems;
+  }, [user?.data?.role, hasToken, user?.loading]);
 
   function redirect(path: string) {
     router.push(path);
@@ -91,10 +97,19 @@ export default function Navbar() {
           ) : (
             <Box>
               {!isLogin ? (
-                <Button onClick={() => redirect("/login")}>Login</Button>
+                <Button
+                  sx={{ color: "white" }}
+                  onClick={() => redirect("/login")}
+                >
+                  Login
+                </Button>
               ) : null}
               {!isSignUp ? (
-                <Button variant="outlined" onClick={() => redirect("/signup")}>
+                <Button
+                  variant="outlined"
+                  sx={{ color: "white" }}
+                  onClick={() => redirect("/signup")}
+                >
                   Sign Up
                 </Button>
               ) : null}
@@ -114,6 +129,7 @@ export default function Navbar() {
           "& .MuiDrawer-paper": {
             width: 250,
             boxSizing: "border-box",
+            bgcolor: Background.PRIMARY,
           },
         }}
       >
@@ -121,6 +137,7 @@ export default function Navbar() {
           {navItems.map((item) => (
             <Button
               key={item.title}
+              color="secondary"
               onClick={() => {
                 redirect(item.path);
                 setOpenDrawer(false); // Close the drawer after navigation

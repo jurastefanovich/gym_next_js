@@ -1,7 +1,14 @@
 "use client";
 import { LockOpenOutlined } from "@mui/icons-material";
-import { Button, Container, Link, TextField, Typography } from "@mui/material";
-import { styled } from "@mui/system";
+import {
+  Button,
+  CircularProgress,
+  Container,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { Stack, styled } from "@mui/system";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Text } from "../_features/enums/Colors";
@@ -95,7 +102,7 @@ type AuthFormFields = {
 
 export default function SignUp() {
   useRedirectIfAuthenticated();
-  const { post } = usePost<RegResponse>();
+  const { post, loading } = usePost<RegResponse>();
   const router = useRouter();
 
   const [formFields, setFormFields] = React.useState<AuthFormFields>({});
@@ -143,6 +150,7 @@ export default function SignUp() {
             fullWidth
             label="First Name"
             variant="outlined"
+            size="small"
             value={formFields.firstName?.value || ""}
             onChange={(e) =>
               updateField("firstName", { value: e.target.value })
@@ -153,6 +161,7 @@ export default function SignUp() {
           <TextField
             fullWidth
             label="Last Name"
+            size="small"
             variant="outlined"
             value={formFields.lastName?.value || ""}
             onChange={(e) => updateField("lastName", { value: e.target.value })}
@@ -162,6 +171,7 @@ export default function SignUp() {
           <TextField
             fullWidth
             label="Username"
+            size="small"
             variant="outlined"
             value={formFields.username?.value || ""}
             onChange={(e) => updateField("username", { value: e.target.value })}
@@ -171,6 +181,7 @@ export default function SignUp() {
           <TextField
             fullWidth
             label="Birthdate"
+            size="small"
             variant="outlined"
             value={formFields.birthdate?.value || ""}
             onChange={(e) =>
@@ -181,6 +192,7 @@ export default function SignUp() {
           />
           <TextField
             fullWidth
+            size="small"
             label="Email"
             variant="outlined"
             value={formFields.email?.value || ""}
@@ -190,6 +202,7 @@ export default function SignUp() {
           />
           <TextField
             fullWidth
+            size="small"
             label="Password"
             variant="outlined"
             type="password"
@@ -200,6 +213,7 @@ export default function SignUp() {
           />
           <TextField
             fullWidth
+            size="small"
             label="Confirm Password"
             variant="outlined"
             type="password"
@@ -210,7 +224,19 @@ export default function SignUp() {
             margin="normal"
             required
           />
-          <button type="submit">Sign Up</button>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            disabled={loading}
+            sx={{ mt: 2 }}
+          >
+            {loading ? <CircularProgress size={24} /> : "Sign Up"}
+          </Button>
+          <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+            Already have an account? <Link href="/login">Login</Link>
+          </Typography>
         </form>
       </FormContainer>
     </Root>

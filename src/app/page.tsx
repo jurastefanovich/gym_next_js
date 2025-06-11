@@ -38,43 +38,22 @@ const featuredServices = [
   {
     title: "Personal Training",
     description: "One-on-one coaching tailored to your fitness goals",
-    icon: <DirectionsRun color="primary" fontSize="large" />,
+    icon: <DirectionsRun sx={{ color: "white" }} fontSize="large" />,
   },
   {
     title: "Group Classes",
     description: "Fun, motivating workouts with our fitness community",
-    icon: <People color="primary" fontSize="large" />,
+    icon: <People sx={{ color: "white" }} fontSize="large" />,
   },
   {
     title: "Yoga Studio",
     description: "Improve flexibility and find your inner peace",
-    icon: <SelfImprovement color="primary" fontSize="large" />,
+    icon: <SelfImprovement sx={{ color: "white" }} fontSize="large" />,
   },
   {
     title: "Swimming Pool",
     description: "Olympic-sized pool for all your aquatic workouts",
-    icon: <Pool color="primary" fontSize="large" />,
-  },
-];
-
-const testimonials = [
-  {
-    name: "Sarah Johnson",
-    role: "Member for 3 years",
-    quote: "The trainers here changed my life. I've never felt stronger!",
-    avatar: "/images/testimonials/sarah.jpg",
-  },
-  {
-    name: "Michael Chen",
-    role: "Member for 1 year",
-    quote: "Best gym facilities in town with an amazing community vibe.",
-    avatar: "/images/testimonials/michael.jpg",
-  },
-  {
-    name: "Emma Rodriguez",
-    role: "New member",
-    quote: "I was nervous to join but everyone made me feel so welcome!",
-    avatar: "/images/testimonials/emma.jpg",
+    icon: <Pool sx={{ color: "white" }} fontSize="large" />,
   },
 ];
 
@@ -94,11 +73,10 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <BoxNoMargin sx={{bgcolor: Background.DARK}}>
+      <BoxNoMargin sx={{ bgcolor: Background.DARK }}>
         {/* Hero Section */}
         <Box
           sx={{
-            background: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/gym-hero.jpg')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             color: "white",
@@ -119,29 +97,6 @@ export default function Home() {
               Join Iron Path today and start your fitness journey with our
               expert trainers
             </Typography>
-            <Stack
-              direction={{ xs: "column", sm: "row" }}
-              spacing={2}
-              justifyContent="center"
-            >
-              <Button
-                variant="contained"
-                size="large"
-                endIcon={<ArrowForward />}
-                href="/services"
-              >
-                Explore Services
-              </Button>
-              <Button
-                variant="outlined"
-                size="large"
-                color="inherit"
-                endIcon={<ArrowForward />}
-                href="/signup"
-              >
-                Join Now
-              </Button>
-            </Stack>
           </Container>
         </Box>
 
@@ -152,7 +107,7 @@ export default function Home() {
               variant="h4"
               component="h2"
               gutterBottom
-              sx={{ fontWeight: 600 }}
+              sx={{ fontWeight: 600, color: "white" }}
             >
               Why Choose Iron Path?
             </Typography>
@@ -165,7 +120,10 @@ export default function Home() {
                 mb: 4,
               }}
             />
-            <Typography variant="body1" sx={{ maxWidth: 800, mx: "auto" }}>
+            <Typography
+              variant="body1"
+              sx={{ maxWidth: 800, color: "white", mx: "auto" }}
+            >
               We offer world-class facilities, expert trainers, and a supportive
               community to help you achieve your fitness goals.
             </Typography>
@@ -176,6 +134,7 @@ export default function Home() {
               <Grid item xs={12} sm={6} md={3} key={index}>
                 <Card
                   sx={{
+                    bgcolor: Background.PRIMARY,
                     height: "100%",
                     display: "flex",
                     flexDirection: "column",
@@ -191,16 +150,21 @@ export default function Home() {
                 >
                   <Box sx={{ mb: 2 }}>{service.icon}</Box>
                   <CardContent>
-                    <Typography variant="h5" gutterBottom>
+                    <Typography variant="h5" gutterBottom color="secondary">
                       {service.title}
                     </Typography>
-                    <Typography variant="body1" sx={{ mb: 2 }}>
+                    <Typography
+                      variant="body1"
+                      color="secondary"
+                      sx={{ mb: 2 }}
+                    >
                       {service.description}
                     </Typography>
                     <Button
                       variant="text"
                       endIcon={<ArrowForward />}
                       href="/services"
+                      color="secondary"
                     >
                       Learn More
                     </Button>
@@ -243,72 +207,6 @@ export default function Home() {
           </Container>
         </Box>
 
-        {/* Testimonials */}
-        <Container maxWidth="lg" sx={{ py: 8 }}>
-          <Box sx={{ textAlign: "center", mb: 6 }}>
-            <Typography
-              variant="h4"
-              component="h2"
-              gutterBottom
-              sx={{ fontWeight: 600 }}
-            >
-              What Our Members Say
-            </Typography>
-            <Divider
-              sx={{
-                width: 100,
-                height: 4,
-                backgroundColor: theme.palette.primary.main,
-                mx: "auto",
-                mb: 4,
-              }}
-            />
-          </Box>
-
-          <Grid container spacing={4}>
-            {testimonials.map((testimonial, index) => (
-              <Grid item xs={12} md={4} key={index}>
-                <Paper
-                  elevation={0}
-                  sx={{
-                    p: 4,
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: 2,
-                  }}
-                >
-                  <Typography
-                    variant="body1"
-                    sx={{ mb: 3, fontStyle: "italic" }}
-                  >
-                    "{testimonial.quote}"
-                  </Typography>
-                  <Box
-                    sx={{ display: "flex", alignItems: "center", mt: "auto" }}
-                  >
-                    <Avatar
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                      sx={{ width: 56, height: 56, mr: 2 }}
-                    />
-                    <Box>
-                      <Typography variant="subtitle1" fontWeight={600}>
-                        {testimonial.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {testimonial.role}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Paper>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-
         {/* CTA Section */}
         <Box
           sx={{
@@ -324,9 +222,6 @@ export default function Home() {
             <Typography variant="h3" gutterBottom sx={{ fontWeight: 700 }}>
               Ready to Start Your Fitness Journey?
             </Typography>
-            <Typography variant="h5" sx={{ mb: 4 }}>
-              Get your free 7-day trial pass today
-            </Typography>
             <Button
               variant="contained"
               size="large"
@@ -334,7 +229,7 @@ export default function Home() {
               href="/signup"
               sx={{ px: 6 }}
             >
-              Claim Your Free Trial
+              Join Now
             </Button>
           </Container>
         </Box>

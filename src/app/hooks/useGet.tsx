@@ -22,8 +22,8 @@ export function useGet<T = any>(
   const { showMessage } = useSnackbar();
 
   const fetchData = useCallback(async () => {
-    if (!url) return;
     const token = getAccessToken();
+    if (!url || !token) return;
     const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
 
     setLoading(true);
