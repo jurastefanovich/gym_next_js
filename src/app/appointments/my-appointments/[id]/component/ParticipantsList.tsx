@@ -37,9 +37,11 @@ export const ParticipantsList = ({
   const get = useGet<Participant[]>(AppointmentApi.GET_ALL_PARTICIPANTS + id);
   const participants = get.data || [];
   const router = useRouter();
+
   function navigateToUser(id: number) {
     router.push("/users/user/" + id);
   }
+  
   return (
     <Card
       variant="outlined"

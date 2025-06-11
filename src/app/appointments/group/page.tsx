@@ -103,7 +103,9 @@ const GroupAppointmentsPage = () => {
                 <TableRow key={appt?.id} hover>
                   <TableCell>{appt?.serviceTitle}</TableCell>
                   <TableCell>{appt?.date}</TableCell>
-                  <TableCell>{`${Math.round(appt?.duration/60)} min`}</TableCell>
+                  <TableCell>{`${Math.round(
+                    appt?.duration / 60
+                  )} min`}</TableCell>
                   <TableCell>
                     <Chip
                       label={`${appt.currentParticipants}/${appt.maxParticipants}`}
