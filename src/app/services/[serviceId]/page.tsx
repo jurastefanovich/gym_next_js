@@ -46,11 +46,11 @@ export default function ServicePage() {
   const hasMoreAppointments = appointments.length > 4;
 
   function handleViewDetails(appointmentId: string) {
-    route.push("/appointments/group/" + appointmentId)
+    route.push("/appointments/group/" + appointmentId);
   }
 
   return (
-    <BoxNoMargin sx={{ bgcolor: Background.LIGHT, pt: 8, pb: 12 }}>
+    <BoxNoMargin sx={{ pt: 8, pb: 12 }}>
       <Container maxWidth="lg" sx={{ marginTop: 4 }}>
         {/* Header Section */}
         <Grid container sx={{ mb: 6 }}>

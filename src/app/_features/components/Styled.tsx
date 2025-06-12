@@ -7,6 +7,7 @@ export const BoxNoMargin = styled(Box)({
   minHeight: "100vh",
   padding: 100,
   margin: 0,
+  background: "linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)",
 });
 const Root = styled("div")({
   display: "flex",
