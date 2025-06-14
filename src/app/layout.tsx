@@ -67,13 +67,8 @@ export default function RootLayout({
             <ThemeProvider theme={theme}>
               <CssBaseline />
               <Navbar />
-              <Box
-                sx={{
-                  minHeight: "50vh",
-                }}
-              >
-                {children}
-              </Box>
+              <Box sx={{ ...(theme) => theme.mixins.toolbar }} />
+              {children}
               <Footer />
             </ThemeProvider>
           </AuthProvider>

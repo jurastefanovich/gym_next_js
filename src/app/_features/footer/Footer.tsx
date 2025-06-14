@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, Link, Grid, Stack } from "@mui/material"; // MUI components for typography and links
 import { Background, Text } from "../enums/Colors";
 import Image from "next/image";
+import { GymValues } from "../enums/GymData";
 
 const Footer = () => {
   return (
@@ -46,14 +47,14 @@ const Footer = () => {
               color={Text.PRIMARY}
               fontWeight={"bold"}
             >
-              Email: contact@yourdomain.com
+              Email: {GymValues.supportMail}
             </Typography>
             <Typography
               variant="body2"
               color={Text.PRIMARY}
               fontWeight={"bold"}
             >
-              Phone: (123) 456-7890
+              Phone: {GymValues.phoneNumber}
             </Typography>
           </Stack>
         </Grid>
@@ -90,7 +91,7 @@ const Footer = () => {
         sx={{ mt: 2 }}
         color={Text.PRIMARY}
       >
-        © {new Date().getFullYear()} Your Company Name. All rights reserved.
+        © {new Date().getFullYear()} Jura Štefanović
       </Typography>
     </Stack>
   );

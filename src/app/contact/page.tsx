@@ -35,16 +35,29 @@ import {
   getAccessToken,
   isLoggedIn,
 } from "../_features/utils/LocalStorageHelpers";
+import { GymValues } from "../_features/enums/GymData";
+import { useAuth } from "../context/AuthContext";
 
 const ContactPage = () => {
   const theme = useTheme();
   const loggedIn = isLoggedIn();
-  const [name, setName] = useState(loggedIn ? "User Name" : "");
-  const [email, setEmail] = useState(loggedIn ? "user@example.com" : "");
+  const user = useAuth();
+  const data = user.data;
+
   const [message, setMessage] = useState("");
   const [subject, setSubject] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const post = usePost();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  React.useEffect(() => {
+    if (loggedIn && data) {
+      setName(`${data.firstName} ${data.lastName}`);
+      setEmail(data.email);
+    }
+  }, [loggedIn, data]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,19 +67,19 @@ const ContactPage = () => {
     {
       icon: <Email color="primary" />,
       title: "Email Us",
-      value: "support@fitnessapp.com",
+      value: GymValues.supportMail,
       action: "Send us an email",
     },
     {
       icon: <Phone color="primary" />,
       title: "Call Us",
-      value: "+1 (555) 123-4567",
+      value: GymValues.phoneNumber,
       action: "Call our support line",
     },
     {
       icon: <LocationOn color="primary" />,
       title: "Visit Us",
-      value: "123 Fitness Street, Health City, HC 12345",
+      value: GymValues.location,
       action: "Get directions",
     },
     {
@@ -259,10 +272,10 @@ const ContactPage = () => {
                         sx={{
                           p: 3,
                           borderRadius: 2,
-                          "&:hover": {
-                            borderColor: "primary.main",
-                            backgroundColor: "action.hover",
-                          },
+                          // "&:hover": {
+                          //   borderColor: "primary.main",
+                          //   backgroundColor: "action.hover",
+                          // },
                         }}
                       >
                         <Box display="flex" alignItems="flex-start">
@@ -287,7 +300,7 @@ const ContactPage = () => {
                             >
                               {method.value}
                             </Typography>
-                            {method.action && (
+                            {/* {method.action && (
                               <Button
                                 variant="text"
                                 size="small"
@@ -296,7 +309,7 @@ const ContactPage = () => {
                               >
                                 {method.action}
                               </Button>
-                            )}
+                            )} */}
                           </Box>
                         </Box>
                       </Paper>

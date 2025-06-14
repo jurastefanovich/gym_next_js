@@ -47,26 +47,27 @@ export default function Page() {
   const get = useGet<AppointmentDTO[]>(AppointmentApi.GET_ALL);
   const [tab, setTab] = useState(0);
   const now = dayjs();
-
+  console.log(get);
   const isLoading = get.loading;
-  const appointments: AppointmentDTO[] = Array.isArray(get.data)
-    ? get.data
-    : [];
-
-  const upcomingAppointments = appointments?.filter(
-    (app) =>
-      dayjs(app.date, "DD/MM/YYYY, HH:mm").isAfter(now) &&
-      app.status !== "CANCELLED"
-  );
+  const appointments: AppointmentDTO[] = get.data ?? [];
+  const upcomingAppointments = appointments?.filter((app) => {
+    const parsed = dayjs(app.date, "DD/MM/YYYY, HH:mm");
+    return (
+      parsed.isValid() &&
+      parsed.isAfter(now) &&
+      app.status?.toUpperCase() !== "CANCELLED"
+    );
+  });
 
   const pastAppointments = appointments?.filter(
     (app) =>
-      dayjs(app.date, "DD/MM/YYYY, HH:mm").isBefore(now) ||
-      app.status === "CANCELLED"
+      dayjs(app.date).isBefore(now) ||
+      String(app.status).toUpperCase() === "CANCELLED" ||
+      String(app.status).toUpperCase() === "DONE"
   );
 
   const completedAppointments = appointments?.filter(
-    (app) => app.status === "DONE"
+    (app) => String(app.status).toUpperCase() === "DONE"
   );
 
   const handleCardClick = (appointmentId: number) => {
@@ -134,10 +135,6 @@ export default function Page() {
         <Typography variant="h6" color="text.secondary">
           You don't have any appointments yet
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-          Schedule your first appointment to get started
-        </Typography>
-        <CreateAppointmentButton />
       </Stack>
     </Paper>
   );

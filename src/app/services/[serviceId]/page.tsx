@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { Background } from "@/app/_features/enums/Colors";
-import { useGet } from "@/app/hooks/useGet";
+import { useGet, useGetNoAuth } from "@/app/hooks/useGet";
 import { ServiceDetail } from "@/app/_features/utils/Interfaces";
 import { AppointmentApi, ServicesApi } from "@/app/_features/enums/ApiPaths";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -32,7 +32,8 @@ interface Appointment {
 
 export default function ServicePage() {
   const { serviceId } = useParams();
-  const get = useGet<ServiceDetail>(ServicesApi.GET_BY_ID + serviceId);
+  const get = useGetNoAuth<ServiceDetail>(ServicesApi.GET_BY_ID + serviceId);
+  const isLoggedIn = getAccessToken();
   const getAppointments = useGet<Appointment[]>(
     AppointmentApi.GET_FOR_SERVICE + serviceId
   );
@@ -46,7 +47,7 @@ export default function ServicePage() {
   const hasMoreAppointments = appointments.length > 4;
 
   function handleViewDetails(appointmentId: string) {
-    route.push("/appointments/group/" + appointmentId);
+    route.push("/user_appointments/" + appointmentId);
   }
 
   return (
@@ -144,7 +145,7 @@ export default function ServicePage() {
             <Typography variant="h5" sx={{ fontWeight: 600 }}>
               Available Appointments
             </Typography>
-            {hasMoreAppointments && (
+            {hasMoreAppointments && isLoggedIn && (
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <Button variant="text" size="large">
                   View All Appointments
@@ -154,7 +155,7 @@ export default function ServicePage() {
           </Stack>
           <Divider />
 
-          {visibleAppointments.length > 0 ? (
+          {visibleAppointments?.length > 0 && isLoggedIn ? (
             <>
               <Grid container gap={1} justifyContent={"center"}>
                 {visibleAppointments.map((appointment) => (
@@ -273,7 +274,9 @@ export default function ServicePage() {
             </>
           ) : (
             <Typography variant="body1">
-              No available appointments at this time.
+              {!isLoggedIn
+                ? "You need to create an account or login to view any available appointments"
+                : "No available appointments at this time."}
             </Typography>
           )}
         </Stack>

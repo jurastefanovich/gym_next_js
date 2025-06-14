@@ -109,13 +109,13 @@ const AddServicePage = () => {
         <Card>
           <CardContent>
             <form onSubmit={handleSubmit}>
-              <Stack spacing={4}>
+              <Stack>
                 <Typography variant="h5" sx={{ fontWeight: 600 }}>
                   Service Details
                 </Typography>
                 <Divider />
 
-                <Grid container spacing={3}>
+                <Grid container mt={2} spacing={3}>
                   {/* Title */}
                   <Grid item xs={12}>
                     <TextField
@@ -154,6 +154,7 @@ const AddServicePage = () => {
                       onChange={handleChange}
                       required
                       variant="outlined"
+                      disabled={form.individual}
                     />
                   </Grid>
 
@@ -168,6 +169,7 @@ const AddServicePage = () => {
                       onChange={handleChange}
                       required
                       variant="outlined"
+                      disabled={form.individual}
                     />
                   </Grid>
 

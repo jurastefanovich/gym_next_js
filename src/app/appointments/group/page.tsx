@@ -65,13 +65,13 @@ const GroupAppointmentsPage = () => {
         alignItems="center"
         mb={3}
       >
-        <Typography variant="h4">Group Appointments</Typography>
+        <Typography variant="h4">Sessions</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           onClick={handleAddAppointment}
         >
-          New Appointment
+          New Session
         </Button>
       </Stack>
 
@@ -134,7 +134,7 @@ const GroupAppointmentsPage = () => {
               {dummyAppointments.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} align="center">
-                    No group appointments available.
+                    No sessions available.
                   </TableCell>
                 </TableRow>
               )}

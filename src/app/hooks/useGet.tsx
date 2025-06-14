@@ -54,3 +54,43 @@ export function useGet<T = any>(
 
   return { data, loading, error, refetch: fetchData };
 }
+
+export function useGetNoAuth<T = any>(
+  url: string | null,
+  config?: AxiosRequestConfig
+): UseGetResult<T> {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const { showMessage } = useSnackbar();
+
+  const fetchData = useCallback(async () => {
+    if (!url) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response: AxiosResponse<T> = await axios.get<T>(url, {
+        ...config,
+        headers: {
+          ...config?.headers,
+        },
+      });
+      setData(response.data);
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.message || err.message || "Something went wrong";
+      setError(message);
+      showMessage(message, "error");
+    } finally {
+      setLoading(false);
+    }
+  }, [url, config]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return { data, loading, error, refetch: fetchData };
+}

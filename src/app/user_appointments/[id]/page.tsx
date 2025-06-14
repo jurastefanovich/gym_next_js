@@ -6,43 +6,36 @@ import { formatDate } from "@/app/_features/utils/DateHelpers";
 import { useGet } from "@/app/hooks/useGet";
 import { usePostAuth } from "@/app/hooks/usePost";
 import {
-  ArrowBack,
-  Edit,
-  FitnessCenter,
-  LocationOn,
-  Notes,
-  PendingActions,
-  People,
-  Person,
-  Schedule,
-  Warning,
+    Add,
+    ArrowBack,
+    FitnessCenter,
+    People,
+    Schedule,
+    Warning
 } from "@mui/icons-material";
 import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Divider,
-  Grid,
-  Paper,
-  Skeleton,
-  Stack,
-  Typography,
-  useTheme,
+    Avatar,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Divider,
+    Grid,
+    Paper,
+    Stack,
+    Typography,
+    useTheme
 } from "@mui/material";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { ParticipantsList } from "@/app/appointments/my-appointments/[id]/component/ParticipantsList";
 
 dayjs.extend(customParseFormat);
 
@@ -121,9 +114,9 @@ export const ConfirmationDialog = ({
 };
 
 interface AppointmentDetails {
-  numberOfUsers: string;
-  maxNumberOfUsers: number;
+  numberOfUsers: number;
   status: string;
+  serviceTitle: string;
   trainerName: string;
   trainerId: string;
   isIndividual: boolean;
@@ -131,15 +124,12 @@ interface AppointmentDetails {
   duration: string;
   location?: string;
   notes?: string;
+  included?: boolean;
+  maxNumberOfUsers: number;
 }
 
-const statusColors = {
-  active: "primary",
-  pending: "warning",
-  cancelled: "error",
-};
-
 const Page = () => {
+  const theme = useTheme();
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const post = usePostAuth();
@@ -158,37 +148,22 @@ const Page = () => {
 
   async function handleCancelAppointment() {
     try {
-      await post.post(`${AppointmentApi.CANCEL_BY_ID}${id}`);
+      await post.post(`${AppointmentApi.LEAVE_SESSION}${id}`);
       handleCloseCancelDialog();
+      get.refetch();
     } catch (error) {
-      console.error("Failed to cancel appointment:", error);
+      console.error("Failed to leave session:", error);
     }
+  }
+
+  async function handleJoin() {
+    await post.post(`${AppointmentApi.JOIN_SESSION}${id}`);
+    get.refetch();
   }
 
   const handleBack = () => {
     router.back();
   };
-
-  if (get.loading) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Skeleton
-          variant="rectangular"
-          width="100%"
-          height={120}
-          sx={{ mb: 3 }}
-        />
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <Skeleton variant="rectangular" width="100%" height={300} />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Skeleton variant="rectangular" width="100%" height={200} />
-          </Grid>
-        </Grid>
-      </Container>
-    );
-  }
 
   if (get.error) {
     return (
@@ -210,212 +185,248 @@ const Page = () => {
 
   return (
     <BoxNoMargin>
+      {/* Confirmation Dialog for Cancellation */}
       <ConfirmationDialog
         open={cancelDialogOpen}
-        title="Cancel Appointment"
-        message={`Are you sure you want to cancel your session with ${
+        title="Leave Session"
+        message={`Are you sure you want to leave your session with ${
           appointment?.trainerName
         } on ${formatDate(appointment?.date)}?`}
         onConfirm={handleCancelAppointment}
         onCancel={handleCloseCancelDialog}
-        confirmText="Yes, Cancel"
-        cancelText="No, Keep It"
+        confirmText="Yes, Leave"
+        cancelText="No, Stay"
         severity="warning"
       />
 
-      <HeaderSection
-        title="Training Session Details"
-        date={appointment?.date}
-        onBack={handleBack}
-      />
+      {/* Header with back button and status */}
+      <Container
+        sx={{
+          backgroundColor: theme.palette.primary.main,
+          py: 4,
+          position: "relative",
+        }}
+      >
+        <Container maxWidth="lg">
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h4" color="white" fontWeight={700}>
+              Training Session Details
+            </Typography>
+            <Button
+              startIcon={<ArrowBack />}
+              sx={{
+                color: "white",
+                mb: 2,
+                "&:hover": {
+                  backgroundColor: "rgba(255,255,255,0.1)",
+                },
+              }}
+              onClick={handleBack}
+            >
+              Back
+            </Button>
+          </Stack>
 
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+          <Typography variant="subtitle1" color="white" mt={1}>
+            {formatDate(appointment?.date)}
+          </Typography>
+        </Container>
+      </Container>
+
+      {/* Main Content */}
+      <Container maxWidth="lg" sx={{ py: 5 }}>
         <Grid container spacing={3}>
-          {/* Main Content Column */}
-          <Grid item xs={12} lg={8}>
-            <SessionDetailsCard
-              appointment={appointment}
-              onCancel={handleOpenCancelDialog}
-            />
+          {/* Left Panel - Session Details */}
+          <Grid item xs={12} md={8}>
+            <Card
+              variant="outlined"
+              sx={{
+                borderRadius: 3,
+                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.05)",
+              }}
+            >
+              <CardContent sx={{ p: 4 }}>
+                <Typography variant="h5" fontWeight={700} gutterBottom>
+                  Session Details
+                </Typography>
+
+                <Grid container spacing={2} mt={2}>
+                  <Grid item xs={12} sm={6}>
+                    <DetailItem
+                      icon={<FitnessCenter fontSize="small" />}
+                      label="Service"
+                      value={appointment?.serviceTitle || "N/A"}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <DetailItem
+                      icon={<FitnessCenter fontSize="small" />}
+                      label="Session Type"
+                      value={
+                        appointment?.isIndividual
+                          ? "Individual Training"
+                          : "Group Training"
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <DetailItem
+                      icon={<People fontSize="small" />}
+                      label="Participants"
+                      value={`${
+                        `${String(appointment?.numberOfUsers)} / ${String(
+                          appointment?.maxNumberOfUsers
+                        )}` || "N/A"
+                      } ${appointment?.isIndividual ? "person" : "people"}`}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <DetailItem
+                      icon={<Schedule fontSize="small" />}
+                      label="Duration"
+                      value={
+                        appointment?.duration
+                          ? `${Math.round(
+                              Number(appointment.duration) / 60
+                            )} mins`
+                          : "N/A"
+                      }
+                    />
+                  </Grid>
+                </Grid>
+
+                {appointment?.notes && (
+                  <>
+                    <Divider sx={{ my: 3 }} />
+                    <Box>
+                      <Typography
+                        variant="subtitle2"
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        Additional Notes
+                      </Typography>
+                      <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
+                        <Typography>{appointment.notes}</Typography>
+                      </Paper>
+                    </Box>
+                  </>
+                )}
+
+                <Divider sx={{ my: 4 }} />
+
+                <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
+                  {appointment?.included ? (
+                    <Button
+                      onClick={() => handleOpenCancelDialog()}
+                      variant="outlined"
+                      color="error"
+                      disabled={
+                        appointment?.status?.toLowerCase() === "cancelled"
+                      }
+                    >
+                      Leave Session
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      endIcon={<Add />}
+                      disabled={
+                        appointment?.status?.toLowerCase() === "cancelled"
+                      }
+                      onClick={() => handleJoin()}
+                    >
+                      Join
+                    </Button>
+                  )}
+                </Stack>
+              </CardContent>
+            </Card>
           </Grid>
 
-          {/* Sidebar Column */}
-          <Grid item xs={12} lg={4}>
+          {/* Right Panel - Trainer Info */}
+          <Grid item xs={12} md={4}>
             <Stack spacing={3}>
-              <ParticipantsList
-                maxParticipants={appointment?.maxNumberOfUsers}
-              />
+              <Card
+                variant="outlined"
+                sx={{
+                  borderRadius: 3,
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.05)",
+                }}
+              >
+                <CardContent sx={{ p: 4 }}>
+                  <Typography variant="h5" fontWeight={700} gutterBottom>
+                    Your Trainer
+                  </Typography>
+
+                  <Stack direction="row" spacing={2} alignItems="center" mb={3}>
+                    <Avatar
+                      sx={{
+                        width: 72,
+                        height: 72,
+                        bgcolor: theme.palette.primary.main,
+                        fontSize: "1.75rem",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {appointment?.trainerName?.charAt(0) || "T"}
+                    </Avatar>
+                    <Box>
+                      <Typography variant="h6" fontWeight={600}>
+                        {appointment?.trainerName || "Trainer Name"}
+                      </Typography>
+                    </Box>
+                  </Stack>
+
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={() =>
+                      window.location.assign(
+                        `/trainers/${appointment?.trainerId}`
+                      )
+                    }
+                    sx={{ mb: 2 }}
+                  >
+                    View Full Profile
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Help Card */}
+              <Card
+                variant="outlined"
+                sx={{
+                  borderRadius: 3,
+                  backgroundColor: theme.palette.grey[50],
+                }}
+              >
+                <CardContent sx={{ p: 3 }}>
+                  <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+                    Need Help?
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" mb={2}>
+                    Contact our support team for any questions about your
+                    session.
+                  </Typography>
+                  <Button
+                    variant="text"
+                    size="small"
+                    onClick={() => router.push("/contact")}
+                  >
+                    Contact Support
+                  </Button>
+                </CardContent>
+              </Card>
             </Stack>
           </Grid>
         </Grid>
       </Container>
     </BoxNoMargin>
-  );
-};
-
-const HeaderSection = ({
-  title,
-  date,
-  onBack,
-}: {
-  title: string;
-  date?: string;
-  onBack: () => void;
-}) => {
-  const theme = useTheme();
-
-  return (
-    <Box
-      sx={{
-        backgroundColor: theme.palette.primary.main,
-        py: 4,
-        position: "relative",
-        color: "white",
-      }}
-    >
-      <Container maxWidth="xl">
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Box>
-            <Typography variant="h4" fontWeight={700}>
-              {title}
-            </Typography>
-            <Typography variant="subtitle1" mt={1}>
-              {date ? formatDate(date) : "Loading date..."}
-            </Typography>
-          </Box>
-          <Button
-            startIcon={<ArrowBack />}
-            sx={{
-              color: "white",
-              "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.1)",
-              },
-            }}
-            onClick={onBack}
-          >
-            Back
-          </Button>
-        </Stack>
-      </Container>
-    </Box>
-  );
-};
-
-const SessionDetailsCard = ({
-  appointment,
-  onCancel,
-}: {
-  appointment?: AppointmentDetails;
-  onCancel: () => void;
-}) => {
-  const isCancelled = appointment?.status?.toLowerCase() === "cancelled";
-
-  return (
-    <Card
-      variant="outlined"
-      sx={{
-        borderRadius: 3,
-        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.05)",
-        height: "100%",
-      }}
-    >
-      <CardContent sx={{ p: 4 }}>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Typography variant="h5" fontWeight={700}>
-            Session Details
-          </Typography>
-          {appointment?.status && (
-            <Chip
-              label={appointment.status}
-              color={
-                statusColors[
-                  appointment.status.toLowerCase() as keyof typeof statusColors
-                ] || "default"
-              }
-              sx={{ textTransform: "capitalize" }}
-            />
-          )}
-        </Stack>
-
-        <Grid container spacing={2} mt={2}>
-          <DetailItem
-            icon={<FitnessCenter />}
-            label="Session Type"
-            value={
-              appointment?.isIndividual
-                ? "Individual Training"
-                : "Group Training"
-            }
-          />
-
-          <DetailItem
-            icon={<Schedule />}
-            label="Duration"
-            value={
-              appointment?.duration
-                ? `${Math.round(Number(appointment.duration)) / 60} mins`
-                : "N/A"
-            }
-          />
-
-          <DetailItem
-            icon={<People />}
-            label="Participants"
-            value={`${appointment?.numberOfUsers || 0} / ${
-              appointment?.maxNumberOfUsers || "N/A"
-            }`}
-          />
-
-          {appointment?.location && (
-            <DetailItem
-              icon={<LocationOn />}
-              label="Location"
-              value={appointment.location}
-            />
-          )}
-        </Grid>
-
-        {appointment?.notes && (
-          <>
-            <Divider sx={{ my: 3 }} />
-            <Box>
-              <Typography
-                variant="subtitle2"
-                color="text.secondary"
-                gutterBottom
-              >
-                <Notes sx={{ verticalAlign: "middle", mr: 1 }} />
-                Additional Notes
-              </Typography>
-              <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
-                <Typography>{appointment.notes}</Typography>
-              </Paper>
-            </Box>
-          </>
-        )}
-
-        <Divider sx={{ my: 4 }} />
-
-        <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
-          <Button
-            onClick={onCancel}
-            variant="outlined"
-            color="error"
-            disabled={isCancelled}
-          >
-            Cancel Session
-          </Button>
-        </Stack>
-      </CardContent>
-    </Card>
   );
 };
 
@@ -428,43 +439,44 @@ const DetailItem = ({
   label: string;
   value: string;
 }) => (
-  <Grid item xs={12} sm={6}>
-    <Paper
-      variant="outlined"
+  <Paper
+    variant="outlined"
+    sx={{
+      p: 2.5,
+      borderRadius: 2,
+      display: "flex",
+      alignItems: "center",
+      height: "100%",
+      transition: "all 0.2s ease",
+      "&:hover": {
+        borderColor: "primary.main",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.05)",
+      },
+    }}
+  >
+    <Avatar
       sx={{
-        p: 2.5,
-        borderRadius: 2,
+        mr: 2,
+        color: "white",
         display: "flex",
         alignItems: "center",
-        height: "100%",
-        transition: "all 0.2s ease",
-        "&:hover": {
-          borderColor: "primary.main",
-          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.05)",
-        },
+        justifyContent: "center",
+        backgroundColor: "primary.light",
+        borderRadius: "50%",
       }}
     >
-      <Avatar
-        sx={{
-          mr: 2,
-          color: "white",
-          bgcolor: "primary.light",
-          width: 40,
-          height: 40,
-        }}
-      >
-        {icon}
-      </Avatar>
-      <Box>
-        <Typography variant="subtitle2" color="text.secondary">
-          {label}
-        </Typography>
-        <Typography variant="body1" fontWeight={600}>
-          {value || "N/A"}
-        </Typography>
-      </Box>
-    </Paper>
-  </Grid>
+      {icon}
+    </Avatar>
+    <Box></Box>
+    <Box>
+      <Typography variant="subtitle2" color="text.secondary" fontSize={12}>
+        {label}
+      </Typography>
+      <Typography variant="body1" fontWeight={600}>
+        {value || "N/A"}
+      </Typography>
+    </Box>
+  </Paper>
 );
 
 export default Page;

@@ -4,12 +4,12 @@ import ServiceRow from "./components/ServiceRow";
 import { Background } from "../_features/enums/Colors";
 import { BoxNoMargin } from "../_features/components/Styled";
 import { Grid, Container, Typography } from "@mui/material";
-import { useGet } from "../hooks/useGet";
+import { useGet, useGetNoAuth } from "../hooks/useGet";
 import { ServiceDto } from "../_features/utils/Interfaces";
 import { ServicesApi } from "../_features/enums/ApiPaths";
 
 export default function Page() {
-  const get = useGet<ServiceDto[]>(ServicesApi.ALL);
+  const get = useGetNoAuth<ServiceDto[]>(ServicesApi.ALL);
 
   return (
     <BoxNoMargin sx={{ bgcolor: Background.DARK }}>

@@ -3,14 +3,15 @@
 import React, {
   createContext,
   useContext,
-  useState,
   useEffect,
+  useState,
   ReactNode,
 } from "react";
 import { useGet } from "@/app/hooks/useGet";
 import { ProfileResponse } from "../_features/utils/Interfaces";
 import { UserApi } from "../_features/enums/ApiPaths";
 import MyLoader from "../components/MyLoader";
+import { useRouter } from "next/navigation";
 
 interface AuthContextType {
   refetch: (user: ProfileResponse | null) => void;
@@ -21,7 +22,25 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { data, loading, refetch } = useGet<ProfileResponse>(UserApi.PROFILE);
+  const { data, loading, error, refetch } = useGet<ProfileResponse>(
+    UserApi.PROFILE
+  );
+  const router = useRouter();
+
+  useEffect(() => {
+    // If network error or unauthorized, log out
+    if (error) {
+      const isNetworkError = error?.request && !error?.response;
+      const isUnauthorized = error?.response?.status === 401;
+
+      if (isNetworkError || isUnauthorized) {
+        console.warn("Logging out due to error:", error.message || error);
+        // Optionally clear token/localStorage here
+        localStorage.clear(); // or remove token
+        router.push("/");
+      }
+    }
+  }, [error, router]);
 
   if (loading) {
     return <MyLoader />;

@@ -46,6 +46,7 @@ const EditServicePage = () => {
     data: service,
     loading,
     error,
+    refetch
   } = useGet<ServiceCRUD>(ServicesApi.GET_BY_ID + serviceId);
   const put = usePut();
 
@@ -93,6 +94,7 @@ const EditServicePage = () => {
         trainerRequired: Boolean(form.trainerRequired),
         maxUsersPerGroupSession: Number(form.maxUsersPerGroupSession),
       });
+      refetch()
     } catch (err) {
       console.error("Failed to update service", err);
     }
@@ -197,6 +199,7 @@ const EditServicePage = () => {
                       onChange={handleChange}
                       required
                       variant="outlined"
+                      disabled={form.individual} // <-- Disable if individual is true
                     />
                   </Grid>
 
@@ -211,6 +214,7 @@ const EditServicePage = () => {
                       onChange={handleChange}
                       required
                       variant="outlined"
+                      disabled={form.individual} // <-- Disable if individual is true
                     />
                   </Grid>
 

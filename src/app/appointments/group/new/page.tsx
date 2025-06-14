@@ -34,14 +34,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 
-interface ServiceOption {
+export interface ServiceOption {
   id: string;
   title: string;
   duration: number;
   maxUsersPerGroupSession: number;
 }
 
-interface TrainerDto {
+export interface TrainerDto {
   id: number;
   firstName: string;
   lastName: string;
@@ -63,7 +63,7 @@ const CreateGroupAppointmentPage = () => {
   const [formData, setFormData] = useState({
     serviceId: "",
     trainerId: "",
-    startTime: dayjs(),
+    startTime: dayjs().add(1, "days"),
     notes: "",
   });
 
@@ -187,8 +187,9 @@ const CreateGroupAppointmentPage = () => {
                     setFormData({ ...formData, startTime: newValue });
                   }
                 }}
+                timeSteps={{ minutes: 30 }}
                 disablePast
-                minDateTime={dayjs()}
+                minDateTime={dayjs().add(1, "day")}
                 slotProps={{
                   textField: {
                     fullWidth: true,
@@ -205,7 +206,7 @@ const CreateGroupAppointmentPage = () => {
             {selectedService && (
               <TextField
                 label="Duration"
-                value={`${Math.round(selectedService.duration) / 60} minutes`}
+                value={`${Math.round(selectedService.duration / 60)} minutes`}
                 disabled
                 fullWidth
               />
