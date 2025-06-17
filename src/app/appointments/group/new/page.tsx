@@ -93,19 +93,14 @@ const CreateGroupAppointmentPage = () => {
       return;
     }
 
-    try {
-      const payload = {
-        serviceId: Number(formData.serviceId), // Convert to number to match Long
-        trainerId: Number(formData.trainerId), // Convert to number to match Long
-        dateTime: formData.startTime.toISOString(), // Changed from startTime to dateTime
-        description: formData.notes || null, // Changed from notes to description
-      };
-      console.log(AppointmentApi.CREATE_GROUP_APPOINTMENT);
-      console.log(payload);
-      await post.post(AppointmentApi.CREATE_GROUP_APPOINTMENT, payload);
-    } catch (error) {
-      console.error("Failed to create group appointment:", error);
-    }
+    const payload = {
+      serviceId: Number(formData.serviceId), // Convert to number to match Long
+      trainerId: Number(formData.trainerId), // Convert to number to match Long
+      dateTime: formData.startTime.toISOString(), // Changed from startTime to dateTime
+      description: formData.notes || null, // Changed from notes to description
+    };
+
+    await post.post(AppointmentApi.CREATE_GROUP_APPOINTMENT, payload);
   };
 
   const handleCancel = () => {
@@ -120,7 +115,7 @@ const CreateGroupAppointmentPage = () => {
         alignItems="center"
         mb={3}
       >
-        <Typography variant="h4">Create Group Appointment</Typography>
+        <Typography variant="h4">Create Session</Typography>
         <Button
           startIcon={<ArrowBack />}
           variant="outlined"

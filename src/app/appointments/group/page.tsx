@@ -14,8 +14,9 @@ import {
   Stack,
   Chip,
   TablePagination,
+  Alert,
 } from "@mui/material";
-import { Add as AddIcon } from "@mui/icons-material";
+import { Add as AddIcon, ArrowBack } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { useGet } from "@/app/hooks/useGet";
@@ -51,6 +52,26 @@ const GroupAppointmentsPage = () => {
     return <MyLoader />;
   }
 
+  if (get.error) {
+    return (
+      <BoxNoMargin>
+        <Stack spacing={2}>
+          <Box>
+            <Button
+              variant="outlined"
+              startIcon={<ArrowBack />}
+              onClick={() => router.back()}
+            >
+              Go Back
+            </Button>
+          </Box>
+          <Alert severity="error" sx={{ mb: 2 }}>
+            Failed to load session details
+          </Alert>
+        </Stack>
+      </BoxNoMargin>
+    );
+  }
   // Calculate paginated data
   const paginatedAppointments = dummyAppointments.slice(
     page * rowsPerPage,

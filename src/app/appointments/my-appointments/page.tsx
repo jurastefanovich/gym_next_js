@@ -15,6 +15,8 @@ import {
   Paper,
   Divider,
   useTheme,
+  Button,
+  Alert,
 } from "@mui/material";
 import dayjs from "dayjs";
 import { BoxNoMargin } from "@/app/_features/components/Styled";
@@ -26,6 +28,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import { useRouter } from "next/navigation";
 import { Background } from "@/app/_features/enums/Colors";
+import { ArrowBack } from "@mui/icons-material";
 
 type AppointmentDTO = {
   id: number;
@@ -73,6 +76,27 @@ export default function Page() {
   const handleCardClick = (appointmentId: number) => {
     router.push(`/appointments/my-appointments/${appointmentId}`);
   };
+
+  if (get.error) {
+    return (
+      <BoxNoMargin>
+        <Stack spacing={2}>
+          <Box>
+            <Button
+              variant="outlined"
+              startIcon={<ArrowBack />}
+              onClick={() => router.back()}
+            >
+              Go Back
+            </Button>
+          </Box>
+          <Alert severity="error" sx={{ mb: 2 }}>
+            Failed to load session details
+          </Alert>
+        </Stack>
+      </BoxNoMargin>
+    );
+  }
 
   const renderAppointmentCard = (appointment: AppointmentDTO) => (
     <Card

@@ -39,11 +39,11 @@ const adminItem = [
   { title: "Home", path: "/", icon: <HomeIcon /> },
   { title: "Services", path: "/admin/services", icon: <ServicesIcon /> },
   { title: "Sessions", path: "/appointments/group", icon: <SessionsIcon /> },
-  {
-    title: "My Appointments",
-    path: "/appointments/my-appointments",
-    icon: <AppointmentsIcon />,
-  },
+  // {
+  //   title: "My Appointments",
+  //   path: "/appointments/my-appointments",
+  //   icon: <AppointmentsIcon />,
+  // },
   { title: "Dashboard", path: "/admin/dashboard", icon: <DashboardIcon /> },
 ];
 

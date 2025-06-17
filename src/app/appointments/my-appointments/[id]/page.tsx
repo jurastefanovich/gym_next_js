@@ -18,6 +18,7 @@ import {
   Warning,
 } from "@mui/icons-material";
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -192,19 +193,22 @@ const Page = () => {
 
   if (get.error) {
     return (
-      <Container maxWidth="lg" sx={{ py: 4, textAlign: "center" }}>
-        <Typography variant="h5" color="error" gutterBottom>
-          Failed to load appointment details
-        </Typography>
-        <Button
-          variant="outlined"
-          onClick={handleBack}
-          startIcon={<ArrowBack />}
-          sx={{ mt: 2 }}
-        >
-          Go Back
-        </Button>
-      </Container>
+      <BoxNoMargin>
+        <Stack spacing={2}>
+          <Box>
+            <Button
+              variant="outlined"
+              startIcon={<ArrowBack />}
+              onClick={() => router.back()}
+            >
+              Go Back
+            </Button>
+          </Box>
+          <Alert severity="error" sx={{ mb: 2 }}>
+            Failed to load session details
+          </Alert>
+        </Stack>
+      </BoxNoMargin>
     );
   }
 
@@ -235,7 +239,7 @@ const Page = () => {
           <Grid item xs={12} lg={8}>
             <SessionDetailsCard
               appointment={appointment}
-              onEdit={() => router.push(`/user_appointments/edit/${id}`)}
+              onEdit={() => router.push(`/appointments/group/edit/${id}`)}
               onCancel={handleOpenCancelDialog}
             />
           </Grid>

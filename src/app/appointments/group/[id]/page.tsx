@@ -9,6 +9,7 @@ import { usePostAuth } from "@/app/hooks/usePost";
 import {
   ArrowBack,
   Cancel,
+  Done,
   Edit,
   FitnessCenter,
   LocationOn,
@@ -18,6 +19,7 @@ import {
   Warning,
 } from "@mui/icons-material";
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -171,10 +173,13 @@ const Page = () => {
   const handleOnEdit = () => {
     router.push("/appointments/group/edit/" + id);
   };
+  const handleFinishAppointment = () => {
+    router.push("/appointments/group/finish/" + id);
+  };
 
   if (get.loading) {
     return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      <BoxNoMargin>
         <Skeleton
           variant="rectangular"
           width="100%"
@@ -189,25 +194,28 @@ const Page = () => {
             <Skeleton variant="rectangular" width="100%" height={200} />
           </Grid>
         </Grid>
-      </Container>
+      </BoxNoMargin>
     );
   }
 
   if (get.error) {
     return (
-      <Container maxWidth="lg" sx={{ py: 4, textAlign: "center" }}>
-        <Typography variant="h5" color="error" gutterBottom>
-          Failed to load appointment details
-        </Typography>
-        <Button
-          variant="outlined"
-          onClick={handleBack}
-          startIcon={<ArrowBack />}
-          sx={{ mt: 2 }}
-        >
-          Go Back
-        </Button>
-      </Container>
+      <BoxNoMargin>
+        <Stack spacing={2}>
+          <Box>
+            <Button
+              variant="outlined"
+              startIcon={<ArrowBack />}
+              onClick={() => router.back()}
+            >
+              Go Back
+            </Button>
+          </Box>
+          <Alert severity="error" sx={{ mb: 2 }}>
+            Failed to load session details
+          </Alert>
+        </Stack>
+      </BoxNoMargin>
     );
   }
 
@@ -240,6 +248,7 @@ const Page = () => {
               onEdit={handleOnEdit}
               appointment={appointment}
               onCancel={handleOpenCancelDialog}
+              onFinish={handleFinishAppointment}
             />
           </Grid>
 
@@ -313,10 +322,12 @@ const SessionDetailsCard = ({
   appointment,
   onCancel,
   onEdit,
+  onFinish,
 }: {
   appointment?: AppointmentDetails;
   onCancel: () => void;
   onEdit: () => void;
+  onFinish: () => void;
 }) => {
   const isCancelled = appointment?.status?.toLowerCase() === "cancelled";
 
@@ -417,20 +428,37 @@ const SessionDetailsCard = ({
           flexWrap="wrap"
           useFlexGap
         >
-          <Button
-            startIcon={<Edit />}
-            onClick={onEdit}
-            variant="contained"
-            color="error"
-            disabled={isCancelled}
+          <Stack
+            direction="row"
+            justifyContent={"space-between"}
+            spacing={2}
+            flexWrap="wrap"
+            useFlexGap
           >
-            Edit
-          </Button>
+            <Button
+              startIcon={<Edit />}
+              onClick={onEdit}
+              variant="contained"
+              color="secondary"
+              disabled={isCancelled}
+            >
+              Edit
+            </Button>
+            <Button
+              startIcon={<Done />}
+              onClick={onFinish}
+              variant="contained"
+              color="primary"
+              disabled={isCancelled}
+            >
+              Finish
+            </Button>
+          </Stack>
           <Button
             startIcon={<Cancel />}
             onClick={onCancel}
             variant="outlined"
-            color="error"
+            color="primary"
             disabled={isCancelled}
           >
             Cancel Session
