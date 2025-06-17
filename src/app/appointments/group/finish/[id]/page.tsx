@@ -1,19 +1,23 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { BoxNoMargin } from "@/app/_features/components/Styled";
+import { AppointmentApi } from "@/app/_features/enums/ApiPaths";
+import { usePostAuth } from "@/app/hooks/usePost";
+import { usePut } from "@/app/hooks/usePut";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import EditIcon from "@mui/icons-material/Edit";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SaveIcon from "@mui/icons-material/Save";
 import {
-  Box,
-  Typography,
-  Paper,
-  Grid,
-  TextField,
-  Divider,
-  Button,
   Accordion,
-  AccordionSummary,
   AccordionDetails,
-  IconButton,
-  Tooltip,
+  AccordionSummary,
+  Box,
+  Button,
   Chip,
+  Grid,
+  IconButton,
+  Paper,
   Stack,
   Table,
   TableBody,
@@ -21,13 +25,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
+  Tooltip,
+  Typography,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import SaveIcon from "@mui/icons-material/Save";
-import EditIcon from "@mui/icons-material/Edit";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { BoxNoMargin } from "@/app/_features/components/Styled";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 // Dummy data
 const session = {
@@ -69,6 +72,9 @@ const FinishSessionPage: React.FC = () => {
       Record<string, typeof defaultExerciseFields & { modified?: boolean }>
     >
   >({});
+  const { id } = useParams();
+  const put = usePut();
+
   const [editing, setEditing] = useState<{
     userId: number | null;
     exercise: string | null;
@@ -161,10 +167,11 @@ const FinishSessionPage: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    console.log("Submitting finished session data:");
-    console.log(userExerciseData);
-    // Replace with actual API call
-    alert("Session data saved successfully!");
+    const object = {
+      userExerciseData: userExerciseData,
+      exerciseDefaults: exerciseDefaults,
+    };
+    put.put(AppointmentApi.FINISH + id, object);
   };
 
   return (
@@ -258,17 +265,6 @@ const FinishSessionPage: React.FC = () => {
               <Typography sx={{ width: "33%", flexShrink: 0 }}>
                 {user.name}
               </Typography>
-              <Chip
-                label={user.level}
-                size="small"
-                color={
-                  user.level === "Beginner"
-                    ? "primary"
-                    : user.level === "Intermediate"
-                    ? "secondary"
-                    : "success"
-                }
-              />
             </AccordionSummary>
             <AccordionDetails>
               {serviceExercises.map((exercise) => (

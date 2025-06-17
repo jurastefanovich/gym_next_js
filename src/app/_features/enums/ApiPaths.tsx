@@ -40,7 +40,9 @@ export enum AppointmentApi {
   LEAVE_SESSION = `${APPOINTMENT_CONTROLLER}/group/cancel/`,
   JOIN_SESSION = `${APPOINTMENT_CONTROLLER}/group/join/`,
   GET_ALL_FOR_TRAINER = `${APPOINTMENT_CONTROLLER}/trainer`,
-  GET_ALL_PARTICIPANTS = `${APPOINTMENT_CONTROLLER}/participants/`
+  GET_ALL_PARTICIPANTS = `${APPOINTMENT_CONTROLLER}/participants/`,
+  FINISH = `${APPOINTMENT_CONTROLLER}/finish/`
+
 }
 
 export enum TrainerApi {
