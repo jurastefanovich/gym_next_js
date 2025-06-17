@@ -38,13 +38,22 @@ const defaultItems = [
 const adminItem = [
   { title: "Home", path: "/", icon: <HomeIcon /> },
   { title: "Services", path: "/admin/services", icon: <ServicesIcon /> },
-  { title: "Sessions", path: "/appointments/group", icon: <SessionsIcon /> },
   // {
   //   title: "My Appointments",
   //   path: "/appointments/my-appointments",
   //   icon: <AppointmentsIcon />,
   // },
   { title: "Dashboard", path: "/admin/dashboard", icon: <DashboardIcon /> },
+];
+const trainerItem = [
+  { title: "Home", path: "/", icon: <HomeIcon /> },
+  { title: "Services", path: "/admin/services", icon: <ServicesIcon /> },
+  { title: "Sessions", path: "/appointments/group", icon: <SessionsIcon /> },
+  // {
+  //   title: "My Appointments",
+  //   path: "/appointments/my-appointments",
+  //   icon: <AppointmentsIcon />,
+  // },
 ];
 
 const userItems = [
@@ -71,8 +80,10 @@ export default function Navbar() {
 
   const navItems = React.useMemo(() => {
     if (!hasToken) return defaultItems;
-    if (user?.data?.role === "ADMIN" || user?.data?.role === "TRAINER")
-      return adminItem;
+    if (user?.data?.role === "ADMIN") return adminItem;
+    if (user?.data?.role === "TRAINER") {
+      return trainerItem;
+    }
     if (user?.data?.role === "USER") return userItems;
     return defaultItems;
   }, [user?.data?.role, hasToken, user?.loading]);
