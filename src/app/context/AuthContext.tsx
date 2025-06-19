@@ -12,6 +12,7 @@ import { ProfileResponse } from "../_features/utils/Interfaces";
 import { UserApi } from "../_features/enums/ApiPaths";
 import MyLoader from "../components/MyLoader";
 import { useRouter } from "next/navigation";
+import { GENERAL } from "../_features/enums/Routes";
 
 interface AuthContextType {
   refetch: (user: ProfileResponse | null) => void;
@@ -37,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.warn("Logging out due to error:", error.message || error);
         // Optionally clear token/localStorage here
         localStorage.clear(); // or remove token
-        router.push("/");
+        router.push(GENERAL.HOME);
       }
     }
   }, [error, router]);

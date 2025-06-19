@@ -24,6 +24,7 @@ import { AppointmentApi } from "@/app/_features/enums/ApiPaths";
 import { GroupAppointmentTableDto } from "@/app/_features/utils/Interfaces";
 import MyLoader from "@/app/components/MyLoader";
 import { useState } from "react";
+import { ADMIN_ROUTES } from "@/app/_features/enums/Routes";
 
 const GroupAppointmentsPage = () => {
   const router = useRouter();
@@ -34,7 +35,7 @@ const GroupAppointmentsPage = () => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
 
   const handleAddAppointment = () => {
-    router.push("/appointments/group/new");
+    router.push(ADMIN_ROUTES.ADD_SESSION);
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {

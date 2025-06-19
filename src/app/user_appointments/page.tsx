@@ -25,6 +25,7 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import HistoryIcon from "@mui/icons-material/History";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import { useRouter } from "next/navigation";
+import { USER_ROUTES } from "../_features/enums/Routes";
 
 type AppointmentDTO = {
   id: number;
@@ -71,7 +72,7 @@ export default function Page() {
   );
 
   const handleCardClick = (appointmentId: number) => {
-    router.push(`/user_appointments/${appointmentId}`);
+    router.push(`${USER_ROUTES.APPOINTMENTS}${appointmentId}`);
   };
 
   const renderAppointmentCard = (appointment: AppointmentDTO) => (

@@ -21,6 +21,7 @@ import { useGet } from "@/app/hooks/useGet";
 import { ServicesApi } from "@/app/_features/enums/ApiPaths";
 import { ServiceTableDto } from "@/app/_features/utils/Interfaces";
 import MyLoader from "@/app/components/MyLoader";
+import { ADMIN_ROUTES } from "@/app/_features/enums/Routes";
 
 const AdminServicesPage = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const AdminServicesPage = () => {
   const dummyServices = get.data ?? [];
 
   const handleAddService = () => {
-    router.push("/admin/services/new");
+    router.push(ADMIN_ROUTES.ADD_SERVICE);
   };
 
   const formatDuration = (secs: number) => {
@@ -37,7 +38,7 @@ const AdminServicesPage = () => {
   };
 
   if (get.loading) {
-    return <MyLoader/>;
+    return <MyLoader />;
   }
 
   return (

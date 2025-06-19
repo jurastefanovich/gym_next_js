@@ -29,6 +29,7 @@ import DoneAllIcon from "@mui/icons-material/DoneAll";
 import { useRouter } from "next/navigation";
 import { Background } from "@/app/_features/enums/Colors";
 import { ArrowBack } from "@mui/icons-material";
+import { ADMIN_ROUTES } from "@/app/_features/enums/Routes";
 
 type AppointmentDTO = {
   id: number;
@@ -74,7 +75,7 @@ export default function Page() {
   );
 
   const handleCardClick = (appointmentId: number) => {
-    router.push(`/appointments/my-appointments/${appointmentId}`);
+    router.push(`${ADMIN_ROUTES.MY_APPOINTMENTS}${appointmentId}`);
   };
 
   if (get.error) {

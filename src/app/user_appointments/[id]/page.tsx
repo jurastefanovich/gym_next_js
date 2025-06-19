@@ -2,35 +2,36 @@
 
 import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { AppointmentApi } from "@/app/_features/enums/ApiPaths";
+import { GENERAL } from "@/app/_features/enums/Routes";
 import { formatDate } from "@/app/_features/utils/DateHelpers";
 import { useGet } from "@/app/hooks/useGet";
 import { usePostAuth } from "@/app/hooks/usePost";
 import {
-    Add,
-    ArrowBack,
-    FitnessCenter,
-    People,
-    Schedule,
-    Warning
+  Add,
+  ArrowBack,
+  FitnessCenter,
+  People,
+  Schedule,
+  Warning,
 } from "@mui/icons-material";
 import {
-    Avatar,
-    Box,
-    Button,
-    Card,
-    CardContent,
-    Container,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Divider,
-    Grid,
-    Paper,
-    Stack,
-    Typography,
-    useTheme
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Divider,
+  Grid,
+  Paper,
+  Stack,
+  Typography,
+  useTheme,
 } from "@mui/material";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -416,7 +417,7 @@ const Page = () => {
                   <Button
                     variant="text"
                     size="small"
-                    onClick={() => router.push("/contact")}
+                    onClick={() => router.push(GENERAL.CONTACT)}
                   >
                     Contact Support
                   </Button>

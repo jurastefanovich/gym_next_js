@@ -22,6 +22,7 @@ import { ArrowBack, People } from "@mui/icons-material";
 import ServiceMessage from "./components/ServiceMessage";
 import { useState } from "react";
 import { getAccessToken } from "@/app/_features/utils/LocalStorageHelpers";
+import { USER_ROUTES } from "@/app/_features/enums/Routes";
 
 interface Appointment {
   id: string;
@@ -47,7 +48,7 @@ export default function ServicePage() {
   const hasMoreAppointments = appointments.length > 4;
 
   function handleViewDetails(appointmentId: string) {
-    route.push("/user_appointments/" + appointmentId);
+    route.push(USER_ROUTES.APPOINTMENTS + appointmentId);
   }
 
   return (

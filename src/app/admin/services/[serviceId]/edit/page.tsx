@@ -27,6 +27,7 @@ import { ArrowBack } from "@mui/icons-material";
 import { usePut } from "@/app/hooks/usePut";
 import { useDelete } from "@/app/hooks/useDelete";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { ADMIN_ROUTES } from "@/app/_features/enums/Routes";
 
 const EditServicePage = () => {
   const { serviceId } = useParams<{ serviceId: string }>();
@@ -39,14 +40,14 @@ const EditServicePage = () => {
   const handleDelete = async () => {
     await del.deleteRequest(ServicesApi.DELETE_BY_ID + serviceId);
     closeDeleteDialog();
-    router.push("/admin/services");
+    router.push(ADMIN_ROUTES.SERVICES);
   };
 
   const {
     data: service,
     loading,
     error,
-    refetch
+    refetch,
   } = useGet<ServiceCRUD>(ServicesApi.GET_BY_ID + serviceId);
   const put = usePut();
 
@@ -94,7 +95,7 @@ const EditServicePage = () => {
         trainerRequired: Boolean(form.trainerRequired),
         maxUsersPerGroupSession: Number(form.maxUsersPerGroupSession),
       });
-      refetch()
+      refetch();
     } catch (err) {
       console.error("Failed to update service", err);
     }

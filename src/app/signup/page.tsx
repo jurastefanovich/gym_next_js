@@ -15,6 +15,7 @@ import { Text } from "../_features/enums/Colors";
 import { AuthInput, RegResponse } from "../_features/utils/Interfaces";
 import { usePost } from "../hooks/usePost";
 import { useRedirectIfAuthenticated } from "../hooks/useRedirectIfAuthenticated";
+import { GENERAL } from "../_features/enums/Routes";
 
 const Root = styled("div")({
   display: "flex",
@@ -136,7 +137,7 @@ export default function SignUp() {
     const res = await post("http://localhost:8080/auth/register", obj);
 
     if (res) {
-      router.push("/login");
+      router.push(GENERAL.LOGIN);
     }
   };
 
