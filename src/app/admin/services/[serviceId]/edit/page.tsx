@@ -15,6 +15,7 @@ import {
   Divider,
   Card,
   CardContent,
+  Autocomplete,
 } from "@mui/material";
 import { useParams, useRouter } from "next/navigation";
 import { useGet } from "@/app/hooks/useGet";
@@ -36,6 +37,8 @@ const EditServicePage = () => {
   const del = useDelete();
   const openDeleteDialog = () => setDeleteDialogOpen(true);
   const closeDeleteDialog = () => setDeleteDialogOpen(false);
+  const exercisesGet = useGet<string>(ServicesApi.GET_EXERCISES);
+  const availableExercises = exercisesGet?.data ?? [];
 
   const handleDelete = async () => {
     await del.deleteRequest(ServicesApi.DELETE_BY_ID + serviceId);
@@ -58,6 +61,7 @@ const EditServicePage = () => {
     maxUsersPerGroupSession: "",
     trainerRequired: false,
     individual: false,
+    exercises: [] as string[],
   });
 
   // Populate form when service loads
@@ -70,6 +74,7 @@ const EditServicePage = () => {
         maxUsersPerGroupSession: String(service.maxUsersPerGroupSession),
         trainerRequired: service.needsTrainer,
         individual: service.individual,
+        exercises: service.exercises ?? [], // <- Make sure this matches backend shape
       });
     }
   }, [service]);
@@ -91,10 +96,12 @@ const EditServicePage = () => {
         title: form.title,
         description: form.description,
         durationSeconds: Number(form.duration),
-        individual: Boolean(form.individual),
-        trainerRequired: Boolean(form.trainerRequired),
+        individual: form.individual,
+        trainerRequired: form.trainerRequired,
         maxUsersPerGroupSession: Number(form.maxUsersPerGroupSession),
+        exercises: form.exercises, // <- Include exercises here
       });
+
       refetch();
     } catch (err) {
       console.error("Failed to update service", err);
@@ -245,6 +252,27 @@ const EditServicePage = () => {
                       }
                       label="Is Trainer Required"
                     />
+                  </Grid>
+                  <Grid item xs={12}>
+                    {exercisesGet.loading ? (
+                      <Typography>Loading exercises...</Typography>
+                    ) : (
+                      <Autocomplete
+                        multiple
+                        options={availableExercises}
+                        value={form.exercises}
+                        onChange={(_, newValue) =>
+                          setForm((prev) => ({ ...prev, exercises: newValue }))
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Select Exercises"
+                            placeholder="Exercises"
+                          />
+                        )}
+                      />
+                    )}
                   </Grid>
                 </Grid>
 

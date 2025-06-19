@@ -26,6 +26,7 @@ export enum ServicesApi {
   UPDATE_BY_ID = `${SERVICES_CONTROLLER}/`,
   POST_NEW = `${SERVICES_CONTROLLER}`,
   DELETE_BY_ID = `${SERVICES_CONTROLLER}/`,
+  GET_EXERCISES = `${SERVICES_CONTROLLER}/exercises`,
 }
 
 export enum AppointmentApi {
@@ -41,8 +42,7 @@ export enum AppointmentApi {
   JOIN_SESSION = `${APPOINTMENT_CONTROLLER}/group/join/`,
   GET_ALL_FOR_TRAINER = `${APPOINTMENT_CONTROLLER}/trainer`,
   GET_ALL_PARTICIPANTS = `${APPOINTMENT_CONTROLLER}/participants/`,
-  FINISH = `${APPOINTMENT_CONTROLLER}/finish/`
-
+  FINISH = `${APPOINTMENT_CONTROLLER}/finish/`,
 }
 
 export enum TrainerApi {
