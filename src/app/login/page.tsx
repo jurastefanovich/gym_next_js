@@ -18,6 +18,7 @@ import { useRedirectIfAuthenticated } from "../hooks/useRedirectIfAuthenticated"
 import { setLoginData } from "../_features/utils/LocalStorageHelpers";
 import { LoginData } from "../_features/utils/Interfaces";
 import { AuthApi } from "../_features/enums/ApiPaths";
+import { GENERAL } from "../_features/enums/Routes";
 const Icon = styled(LockOutlined)({
   fontSize: "4rem",
   color: Text.SECONDARY,
@@ -94,7 +95,7 @@ export default function LoginForm() {
 
     if (response) {
       setLoginData(response);
-      router.push("/"); // redirect after login
+      router.push(GENERAL.HOME); // redirect after login
     }
   };
 

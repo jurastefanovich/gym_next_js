@@ -1,29 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import { useAuth } from "@/app/context/AuthContext";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
+import SettingsIcon from "@mui/icons-material/Settings";
 import {
   Avatar,
+  Box,
+  CircularProgress,
+  Divider,
   IconButton,
-  Popover,
-  MenuItem,
   ListItemIcon,
   ListItemText,
-  Box,
-  Typography,
-  Divider,
-  Badge,
-  CircularProgress,
+  MenuItem,
+  Popover,
+  Typography
 } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
-import LogoutIcon from "@mui/icons-material/Logout";
-import SettingsIcon from "@mui/icons-material/Settings";
 import { useRouter } from "next/navigation";
-import { logout, removeToken } from "../utils/LocalStorageHelpers";
-import { useGet } from "@/app/hooks/useGet";
-import { ProfileResponse } from "../utils/Interfaces";
-import { UserApi } from "../enums/ApiPaths";
+import React, { useState } from "react";
 import { Background } from "../enums/Colors";
-import { useAuth } from "@/app/context/AuthContext";
+import { GENERAL } from "../enums/Routes";
+import { logout } from "../utils/LocalStorageHelpers";
 
 const AvatarMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -39,18 +36,18 @@ const AvatarMenu: React.FC = () => {
   };
 
   const handleProfile = () => {
-    router.push("/profile");
+    router.push(GENERAL.PROFILE);
     handleClose();
   };
 
   const handleSettings = () => {
-    router.push("/settings");
+    router.push(GENERAL.SETTINGS);
     handleClose();
   };
 
   const handleLogout = () => {
     logout();
-    router.push("/");
+    router.push(GENERAL.HOME);
     handleClose();
   };
 

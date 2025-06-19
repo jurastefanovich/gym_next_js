@@ -1,6 +1,7 @@
 "use client";
 
 import { AppointmentApi } from "@/app/_features/enums/ApiPaths";
+import { ADMIN_ROUTES } from "@/app/_features/enums/Routes";
 import { useGet } from "@/app/hooks/useGet";
 import { Person } from "@mui/icons-material";
 import {
@@ -39,9 +40,9 @@ export const ParticipantsList = ({
   const router = useRouter();
 
   function navigateToUser(id: number) {
-    router.push("/users/user/" + id);
+    router.push(ADMIN_ROUTES.USER + id);
   }
-  
+
   return (
     <Card
       variant="outlined"

@@ -33,6 +33,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
+import { ADMIN_ROUTES } from "@/app/_features/enums/Routes";
 
 export interface ServiceOption {
   id: string;
@@ -104,7 +105,7 @@ const CreateGroupAppointmentPage = () => {
   };
 
   const handleCancel = () => {
-    router.push("/appointments/group");
+    router.push(ADMIN_ROUTES.SESSIONS);
   };
 
   return (

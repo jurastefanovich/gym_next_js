@@ -2,6 +2,7 @@
 
 import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { AppointmentApi } from "@/app/_features/enums/ApiPaths";
+import { ADMIN_ROUTES } from "@/app/_features/enums/Routes";
 import { formatDate } from "@/app/_features/utils/DateHelpers";
 import { ParticipantsList } from "@/app/appointments/my-appointments/[id]/component/ParticipantsList";
 import { useGet } from "@/app/hooks/useGet";
@@ -171,10 +172,10 @@ const Page = () => {
   };
 
   const handleOnEdit = () => {
-    router.push("/appointments/group/edit/" + id);
+    router.push(ADMIN_ROUTES.EDIT_SESSION + id);
   };
   const handleFinishAppointment = () => {
-    router.push("/appointments/group/finish/" + id);
+    router.push(ADMIN_ROUTES.FINISH_SESSION + id);
   };
 
   if (get.loading) {

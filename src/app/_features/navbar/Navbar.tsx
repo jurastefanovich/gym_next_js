@@ -1,72 +1,28 @@
 "use client";
 
-import * as React from "react";
+import { useAuth } from "@/app/context/AuthContext";
+import { Menu as MenuIcon } from "@mui/icons-material";
 import {
   AppBar,
-  Avatar,
   Box,
   Button,
   Drawer,
   IconButton,
   Toolbar,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
-import { Menu as MenuIcon } from "@mui/icons-material";
-import { useRouter, usePathname } from "next/navigation";
-import { Background } from "../enums/Colors";
+import { usePathname, useRouter } from "next/navigation";
+import * as React from "react";
 import AvatarMenu from "../components/AvatarMenu";
-import { getAccessToken } from "../utils/LocalStorageHelpers";
-import { useAuth } from "@/app/context/AuthContext";
+import { Background } from "../enums/Colors";
 import {
-  Home as HomeIcon,
-  MiscellaneousServices as ServicesIcon,
-  ContactMail as ContactIcon,
-  Info as AboutIcon,
-  Event as AppointmentsIcon,
-  Dashboard as DashboardIcon,
-  Groups as SessionsIcon,
-} from "@mui/icons-material";
-
-const defaultItems = [
-  { title: "Home", path: "/", icon: <HomeIcon /> },
-  { title: "Services", path: "/services", icon: <ServicesIcon /> },
-  { title: "Contact", path: "/contact", icon: <ContactIcon /> },
-  { title: "About us", path: "/about_us", icon: <AboutIcon /> },
-];
-
-const adminItem = [
-  { title: "Home", path: "/", icon: <HomeIcon /> },
-  { title: "Services", path: "/admin/services", icon: <ServicesIcon /> },
-  // {
-  //   title: "My Appointments",
-  //   path: "/appointments/my-appointments",
-  //   icon: <AppointmentsIcon />,
-  // },
-  { title: "Dashboard", path: "/admin/dashboard", icon: <DashboardIcon /> },
-];
-const trainerItem = [
-  { title: "Home", path: "/", icon: <HomeIcon /> },
-  { title: "Services", path: "/admin/services", icon: <ServicesIcon /> },
-  { title: "Sessions", path: "/appointments/group", icon: <SessionsIcon /> },
-  // {
-  //   title: "My Appointments",
-  //   path: "/appointments/my-appointments",
-  //   icon: <AppointmentsIcon />,
-  // },
-];
-
-const userItems = [
-  { title: "Home", path: "/", icon: <HomeIcon /> },
-  { title: "Services", path: "/services", icon: <ServicesIcon /> },
-  {
-    title: "Appointments",
-    path: "/user_appointments",
-    icon: <AppointmentsIcon />,
-  },
-  { title: "Contact", path: "/contact", icon: <ContactIcon /> },
-  { title: "About Us", path: "/about_us", icon: <AboutIcon /> },
-];
+  ADMIN_NAV,
+  DEFAULT_NAV,
+  GENERAL,
+  TRAINER_NAV,
+  USER_NAV,
+} from "../enums/Routes";
+import { getAccessToken } from "../utils/LocalStorageHelpers";
 
 export default function Navbar() {
   const path = usePathname();
@@ -74,18 +30,18 @@ export default function Navbar() {
   const user = useAuth();
 
   const router = useRouter();
-  const isLogin = path.toLowerCase() === "/login";
-  const isSignUp = path.toLowerCase() === "/signup";
+  const isLogin = path.toLowerCase() === GENERAL.LOGIN;
+  const isSignUp = path.toLowerCase() === GENERAL.SIGNUP;
   const [openDrawer, setOpenDrawer] = React.useState(false);
 
   const navItems = React.useMemo(() => {
-    if (!hasToken) return defaultItems;
-    if (user?.data?.role === "ADMIN") return adminItem;
+    if (!hasToken) return DEFAULT_NAV;
+    if (user?.data?.role === "ADMIN") return ADMIN_NAV;
     if (user?.data?.role === "TRAINER") {
-      return trainerItem;
+      return TRAINER_NAV;
     }
-    if (user?.data?.role === "USER") return userItems;
-    return defaultItems;
+    if (user?.data?.role === "USER") return USER_NAV;
+    return DEFAULT_NAV;
   }, [user?.data?.role, hasToken, user?.loading]);
 
   function redirect(path: string) {

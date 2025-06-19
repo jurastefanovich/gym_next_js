@@ -22,6 +22,7 @@ import { ServicesApi } from "@/app/_features/enums/ApiPaths";
 import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { ArrowBack } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { ADMIN_ROUTES } from "@/app/_features/enums/Routes";
 
 const AddServicePage = () => {
   const router = useRouter();
@@ -57,7 +58,7 @@ const AddServicePage = () => {
         individual: form.individual,
         trainerRequired: form.trainerRequired,
       });
-      router.push("/admin/services");
+      router.push(ADMIN_ROUTES.SERVICES);
     } catch (err) {
       console.error("Failed to create service", err);
     }

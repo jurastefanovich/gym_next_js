@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { GENERAL } from "@/app/_features/enums/Routes";
 
 interface TrainerContainerProps {
   id: number;
@@ -48,7 +49,7 @@ const TrainerContainer: React.FC<TrainerContainerProps> = ({
         <Button
           variant="text"
           size="small"
-          onClick={() => redirect(`/trainers/${id}`)}
+          onClick={() => redirect(`${GENERAL.TRAINER_ID}${id}`)}
         >
           View More
         </Button>
