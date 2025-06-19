@@ -12,22 +12,24 @@ import {
   Container,
   Stack,
   Divider,
-  Chip,
   Card,
   CardContent,
+  Autocomplete,
+  LinearProgress,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { usePostAuth } from "@/app/hooks/usePost";
 import { ServicesApi } from "@/app/_features/enums/ApiPaths";
 import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { ArrowBack } from "@mui/icons-material";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { ADMIN_ROUTES } from "@/app/_features/enums/Routes";
+import { useGet } from "@/app/hooks/useGet";
 
 const AddServicePage = () => {
   const router = useRouter();
   const post = usePostAuth();
-
+  const get = useGet<string>(ServicesApi.GET_EXERCISES);
+  const availableExercises = get?.data ?? [];
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -35,20 +37,22 @@ const AddServicePage = () => {
     maxUsersPerGroupSession: "",
     individual: false,
     trainerRequired: false,
+    exercises: [] as string[],
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setForm((f) => ({ ...f, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
-    setForm((f) => ({ ...f, [name]: checked }));
+    setForm((prev) => ({ ...prev, [name]: checked }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       await post.post(ServicesApi.POST_NEW, {
         title: form.title,
@@ -57,19 +61,19 @@ const AddServicePage = () => {
         maxUsersPerGroupSession: Number(form.maxUsersPerGroupSession),
         individual: form.individual,
         trainerRequired: form.trainerRequired,
+        exercises: form.exercises,
       });
+
       router.push(ADMIN_ROUTES.SERVICES);
-    } catch (err) {
-      console.error("Failed to create service", err);
+    } catch (error) {
+      console.error("Failed to create service", error);
     }
   };
 
   return (
     <BoxNoMargin sx={{ bgcolor: "background.default", pt: 8, pb: 12 }}>
       <Container maxWidth="lg" sx={{ marginTop: 4 }}>
-        {/* Header Section */}
         <Grid container sx={{ mb: 6 }}>
-          {/* Left Column - Service Info */}
           <Grid item xs={12} md={11}>
             <Stack
               direction="row"
@@ -92,7 +96,6 @@ const AddServicePage = () => {
             </Stack>
           </Grid>
 
-          {/* Right Column - Back Button */}
           <Grid item xs={12} md={1}>
             <Button
               startIcon={<ArrowBack />}
@@ -106,7 +109,6 @@ const AddServicePage = () => {
           </Grid>
         </Grid>
 
-        {/* Form Section */}
         <Card>
           <CardContent>
             <form onSubmit={handleSubmit}>
@@ -117,20 +119,18 @@ const AddServicePage = () => {
                 <Divider />
 
                 <Grid container mt={2} spacing={3}>
-                  {/* Title */}
                   <Grid item xs={12}>
                     <TextField
                       label="Title"
                       name="title"
                       fullWidth
+                      required
                       value={form.title}
                       onChange={handleChange}
-                      required
                       variant="outlined"
                     />
                   </Grid>
 
-                  {/* Description */}
                   <Grid item xs={12}>
                     <TextField
                       label="Description"
@@ -144,37 +144,34 @@ const AddServicePage = () => {
                     />
                   </Grid>
 
-                  {/* Duration (seconds) */}
                   <Grid item xs={12} sm={6}>
                     <TextField
                       label="Duration (seconds)"
                       name="durationSeconds"
                       type="number"
                       fullWidth
+                      required
                       value={form.durationSeconds}
                       onChange={handleChange}
-                      required
                       variant="outlined"
                       disabled={form.individual}
                     />
                   </Grid>
 
-                  {/* Max Users per Group */}
                   <Grid item xs={12} sm={6}>
                     <TextField
                       label="Max Users per Group"
                       name="maxUsersPerGroupSession"
                       type="number"
                       fullWidth
+                      required
                       value={form.maxUsersPerGroupSession}
                       onChange={handleChange}
-                      required
                       variant="outlined"
                       disabled={form.individual}
                     />
                   </Grid>
 
-                  {/* Checkboxes */}
                   <Grid item xs={12} sm={6}>
                     <FormControlLabel
                       control={
@@ -188,6 +185,7 @@ const AddServicePage = () => {
                       label="Is Individual Session"
                     />
                   </Grid>
+
                   <Grid item xs={12} sm={6}>
                     <FormControlLabel
                       control={
@@ -201,6 +199,28 @@ const AddServicePage = () => {
                       label="Is Trainer Required"
                     />
                   </Grid>
+
+                  <Grid item xs={12}>
+                    {get.loading ? (
+                      <LinearProgress />
+                    ) : (
+                      <Autocomplete
+                        multiple
+                        options={availableExercises}
+                        value={form.exercises}
+                        onChange={(_, newValue) =>
+                          setForm((prev) => ({ ...prev, exercises: newValue }))
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Select Exercises"
+                            placeholder="Exercises"
+                          />
+                        )}
+                      />
+                    )}
+                  </Grid>
                 </Grid>
 
                 <Box mt={4}>
@@ -210,7 +230,7 @@ const AddServicePage = () => {
                     alignItems="center"
                     spacing={2}
                   >
-                    <div></div> {/* Empty spacer for alignment */}
+                    <div />
                     <Stack direction="row" spacing={2}>
                       <Button
                         variant="outlined"

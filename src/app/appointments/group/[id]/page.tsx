@@ -2,7 +2,7 @@
 
 import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { AppointmentApi } from "@/app/_features/enums/ApiPaths";
-import { ADMIN_ROUTES } from "@/app/_features/enums/Routes";
+import { ADMIN_ROUTES, USER_ROUTES } from "@/app/_features/enums/Routes";
 import { formatDate } from "@/app/_features/utils/DateHelpers";
 import { ParticipantsList } from "@/app/appointments/my-appointments/[id]/component/ParticipantsList";
 import { useGet } from "@/app/hooks/useGet";
@@ -43,6 +43,7 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -128,7 +129,9 @@ interface AppointmentDetails {
   status: string;
   trainerName: string;
   trainerId: string;
+  serviceTitle: string;
   isIndividual: boolean;
+  serviceId: number;
   date: string;
   duration: string;
   location?: string;
@@ -149,6 +152,7 @@ const Page = () => {
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
   const appointment = get?.data;
+  console.log(appointment);
 
   const handleOpenCancelDialog = () => {
     setCancelDialogOpen(true);
@@ -366,6 +370,15 @@ const SessionDetailsCard = ({
         <Grid container spacing={2} mt={2}>
           <DetailItem
             icon={<FitnessCenter />}
+            label="Service"
+            link={`${USER_ROUTES.SERVICES}/${appointment?.serviceId}`}
+            value={
+              appointment?.serviceTitle ? appointment?.serviceTitle : "N/A"
+            }
+          />
+
+          <DetailItem
+            icon={<FitnessCenter />}
             label="Session Type"
             value={
               appointment?.isIndividual
@@ -474,48 +487,62 @@ const DetailItem = ({
   icon,
   label,
   value,
+  link,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
-}) => (
-  <Grid item xs={12} sm={6}>
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2.5,
-        borderRadius: 2,
-        display: "flex",
-        alignItems: "center",
-        height: "100%",
-        transition: "all 0.2s ease",
-        "&:hover": {
-          borderColor: "primary.main",
-          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.05)",
-        },
-      }}
-    >
-      <Avatar
+  link?: string;
+}) => {
+  const navigate = useRouter(); // for react-router-dom
+
+  const clickable = Boolean(link);
+
+  return (
+    <Grid item xs={12} sm={6}>
+      <Paper
+        variant="outlined"
+        onClick={() => {
+          if (clickable && link) navigate.push(link);
+        }}
         sx={{
-          mr: 2,
-          color: "white",
-          bgcolor: "primary.light",
-          width: 40,
-          height: 40,
+          p: 2.5,
+          borderRadius: 2,
+          display: "flex",
+          alignItems: "center",
+          height: "100%",
+          cursor: clickable ? "pointer" : "default",
+          transition: "all 0.2s ease",
+          ...(clickable && {
+            "&:hover": {
+              borderColor: "primary.main",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.05)",
+            },
+          }),
         }}
       >
-        {icon}
-      </Avatar>
-      <Box>
-        <Typography variant="subtitle2" color="text.secondary">
-          {label}
-        </Typography>
-        <Typography variant="body1" fontWeight={600}>
-          {value || "N/A"}
-        </Typography>
-      </Box>
-    </Paper>
-  </Grid>
-);
+        <Avatar
+          sx={{
+            mr: 2,
+            color: "white",
+            bgcolor: "primary.light",
+            width: 40,
+            height: 40,
+          }}
+        >
+          {icon}
+        </Avatar>
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary">
+            {label}
+          </Typography>
+          <Typography variant="body1" fontWeight={600}>
+            {value || "N/A"}
+          </Typography>
+        </Box>
+      </Paper>
+    </Grid>
+  );
+};
 
 export default Page;

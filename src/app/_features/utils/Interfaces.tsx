@@ -81,6 +81,7 @@ export interface ServiceDetail extends ServiceDto {
 
 export interface ServiceCRUD extends ServiceDetail {
   maxUsersPerGroupSession: number;
+  exercises: string[];
 }
 
 export interface ServiceTableDto extends ServiceDto {
