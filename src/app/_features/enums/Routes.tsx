@@ -10,6 +10,7 @@ import {
   Dashboard as DashboardIcon,
   Groups as SessionsIcon,
 } from "@mui/icons-material";
+import { CalendarIcon } from "@mui/x-date-pickers";
 
 export enum GENERAL {
   HOME = "/",
@@ -20,6 +21,7 @@ export enum GENERAL {
   PROFILE = "/profile",
   SETTINGS = "/settings",
   TRAINER_ID = "/trainers/",
+  CALENDAR = "/calendar",
 }
 
 export enum ADMIN_ROUTES {
@@ -45,6 +47,11 @@ const BASE_ITEMS = {
     title: "Services",
     path: USER_ROUTES.SERVICES,
     icon: <ServicesIcon />,
+  },
+  CALENDAR: {
+    title: "Calendar",
+    path: GENERAL.CALENDAR,
+    icon: <CalendarIcon />,
   },
   SERVICES_ADMIN: {
     title: "Services",
@@ -81,6 +88,7 @@ export const DEFAULT_NAV = [
 export const ADMIN_NAV = [
   BASE_ITEMS.HOME,
   BASE_ITEMS.SERVICES_ADMIN,
+  BASE_ITEMS.CALENDAR,
   BASE_ITEMS.DASHBOARD,
   BASE_ITEMS.ABOUT,
 ];
@@ -89,6 +97,7 @@ export const TRAINER_NAV = [
   BASE_ITEMS.HOME,
   BASE_ITEMS.SERVICES_ADMIN,
   BASE_ITEMS.SESSIONS,
+  BASE_ITEMS.CALENDAR,
   BASE_ITEMS.ABOUT,
 ];
 
@@ -96,6 +105,7 @@ export const USER_NAV = [
   BASE_ITEMS.HOME,
   BASE_ITEMS.SERVICES_USER,
   BASE_ITEMS.APPOINTMENTS,
+  BASE_ITEMS.CALENDAR,
   BASE_ITEMS.CONTACT,
   BASE_ITEMS.ABOUT,
 ];
