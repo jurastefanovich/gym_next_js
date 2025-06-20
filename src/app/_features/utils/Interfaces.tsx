@@ -96,3 +96,18 @@ export interface GroupAppointmentTableDto {
   currentParticipants: number;
   maxParticipants: number;
 }
+
+// types/FinishSessionDto.ts
+export interface FinishUser extends UserDto {
+  name: string
+}
+export interface FinishSessionDto {
+  id: number;
+  serviceName: string;
+  date: string;
+  trainer: string;
+  serviceTitle: string;
+  notes: string;
+  users: FinishUser[];
+  exercises: string[];
+}
