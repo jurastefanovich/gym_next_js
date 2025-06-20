@@ -2,19 +2,22 @@
 
 import { BoxNoMargin } from "@/app/_features/components/Styled";
 import { AppointmentApi } from "@/app/_features/enums/ApiPaths";
-import { GENERAL } from "@/app/_features/enums/Routes";
+import { GENERAL, USER_ROUTES } from "@/app/_features/enums/Routes";
 import { formatDate } from "@/app/_features/utils/DateHelpers";
+import { DetailItem } from "@/app/appointments/group/[id]/page";
 import { useGet } from "@/app/hooks/useGet";
 import { usePostAuth } from "@/app/hooks/usePost";
 import {
   Add,
   ArrowBack,
+  ErrorOutline,
   FitnessCenter,
   People,
   Schedule,
   Warning,
 } from "@mui/icons-material";
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -119,6 +122,7 @@ interface AppointmentDetails {
   status: string;
   serviceTitle: string;
   trainerName: string;
+  serviceId: number;
   trainerId: string;
   isIndividual: boolean;
   date: string;
@@ -148,16 +152,16 @@ const Page = () => {
   };
 
   async function handleCancelAppointment() {
-    try {
-      await post.post(`${AppointmentApi.LEAVE_SESSION}${id}`);
-      handleCloseCancelDialog();
-      get.refetch();
-    } catch (error) {
-      console.error("Failed to leave session:", error);
-    }
+    await post.post(`${AppointmentApi.LEAVE_SESSION}${id}`);
+    handleCloseCancelDialog();
+    get.refetch();
   }
-
+  const isFull =
+    Number(get.data?.numberOfUsers) >= Number(get.data?.maxNumberOfUsers);
   async function handleJoin() {
+    if (isFull) {
+      return;
+    }
     await post.post(`${AppointmentApi.JOIN_SESSION}${id}`);
     get.refetch();
   }
@@ -256,48 +260,45 @@ const Page = () => {
                 </Typography>
 
                 <Grid container spacing={2} mt={2}>
-                  <Grid item xs={12} sm={6}>
-                    <DetailItem
-                      icon={<FitnessCenter fontSize="small" />}
-                      label="Service"
-                      value={appointment?.serviceTitle || "N/A"}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <DetailItem
-                      icon={<FitnessCenter fontSize="small" />}
-                      label="Session Type"
-                      value={
-                        appointment?.isIndividual
-                          ? "Individual Training"
-                          : "Group Training"
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <DetailItem
-                      icon={<People fontSize="small" />}
-                      label="Participants"
-                      value={`${
-                        `${String(appointment?.numberOfUsers)} / ${String(
-                          appointment?.maxNumberOfUsers
-                        )}` || "N/A"
-                      } ${appointment?.isIndividual ? "person" : "people"}`}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <DetailItem
-                      icon={<Schedule fontSize="small" />}
-                      label="Duration"
-                      value={
-                        appointment?.duration
-                          ? `${Math.round(
-                              Number(appointment.duration) / 60
-                            )} mins`
-                          : "N/A"
-                      }
-                    />
-                  </Grid>
+                  <DetailItem
+                    icon={<FitnessCenter />}
+                    label="Service"
+                    link={`${USER_ROUTES.SERVICES}/${appointment?.serviceId}`}
+                    value={
+                      appointment?.serviceTitle
+                        ? appointment?.serviceTitle
+                        : "N/A"
+                    }
+                  />
+                  <DetailItem
+                    icon={<FitnessCenter fontSize="small" />}
+                    label="Session Type"
+                    value={
+                      appointment?.isIndividual
+                        ? "Individual Training"
+                        : "Group Training"
+                    }
+                  />
+                  <DetailItem
+                    icon={<People fontSize="small" />}
+                    label="Participants"
+                    value={`${
+                      `${String(appointment?.numberOfUsers)} / ${String(
+                        appointment?.maxNumberOfUsers
+                      )}` || "N/A"
+                    } ${appointment?.isIndividual ? "person" : "people"}`}
+                  />
+                  <DetailItem
+                    icon={<Schedule fontSize="small" />}
+                    label="Duration"
+                    value={
+                      appointment?.duration
+                        ? `${Math.round(
+                            Number(appointment.duration) / 60
+                          )} mins`
+                        : "N/A"
+                    }
+                  />
                 </Grid>
 
                 {appointment?.notes && (
@@ -319,32 +320,58 @@ const Page = () => {
                 )}
 
                 <Divider sx={{ my: 4 }} />
-
-                <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
-                  {appointment?.included ? (
-                    <Button
-                      onClick={() => handleOpenCancelDialog()}
-                      variant="outlined"
+                {isFull ? (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      p: 1.5,
+                      mb: 2,
+                      borderRadius: 1,
+                      backgroundColor: (theme) =>
+                        theme.palette.error.light + "20", // 20% opacity
+                      border: "1px solid",
+                      borderColor: "error.main",
+                    }}
+                  >
+                    <ErrorOutline color="error" sx={{ fontSize: 20 }} />
+                    <Typography
+                      variant="body2"
                       color="error"
-                      disabled={
-                        appointment?.status?.toLowerCase() === "cancelled"
-                      }
+                      sx={{ fontWeight: 500 }}
                     >
-                      Leave Session
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      endIcon={<Add />}
-                      disabled={
-                        appointment?.status?.toLowerCase() === "cancelled"
-                      }
-                      onClick={() => handleJoin()}
-                    >
-                      Join
-                    </Button>
-                  )}
-                </Stack>
+                      This session is fully booked. Please choose another time
+                      slot.
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
+                    {appointment?.included ? (
+                      <Button
+                        onClick={() => handleOpenCancelDialog()}
+                        variant="outlined"
+                        color="error"
+                        disabled={
+                          appointment?.status?.toLowerCase() === "cancelled"
+                        }
+                      >
+                        Leave Session
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        endIcon={<Add />}
+                        disabled={
+                          appointment?.status?.toLowerCase() === "cancelled"
+                        }
+                        onClick={() => handleJoin()}
+                      >
+                        Join
+                      </Button>
+                    )}
+                  </Stack>
+                )}
               </CardContent>
             </Card>
           </Grid>
@@ -430,54 +457,5 @@ const Page = () => {
     </BoxNoMargin>
   );
 };
-
-const DetailItem = ({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) => (
-  <Paper
-    variant="outlined"
-    sx={{
-      p: 2.5,
-      borderRadius: 2,
-      display: "flex",
-      alignItems: "center",
-      height: "100%",
-      transition: "all 0.2s ease",
-      "&:hover": {
-        borderColor: "primary.main",
-        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.05)",
-      },
-    }}
-  >
-    <Avatar
-      sx={{
-        mr: 2,
-        color: "white",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "primary.light",
-        borderRadius: "50%",
-      }}
-    >
-      {icon}
-    </Avatar>
-    <Box></Box>
-    <Box>
-      <Typography variant="subtitle2" color="text.secondary" fontSize={12}>
-        {label}
-      </Typography>
-      <Typography variant="body1" fontWeight={600}>
-        {value || "N/A"}
-      </Typography>
-    </Box>
-  </Paper>
-);
 
 export default Page;

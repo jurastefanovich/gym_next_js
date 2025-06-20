@@ -483,7 +483,7 @@ const SessionDetailsCard = ({
   );
 };
 
-const DetailItem = ({
+export const DetailItem = ({
   icon,
   label,
   value,

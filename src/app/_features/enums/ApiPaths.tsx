@@ -43,6 +43,7 @@ export enum AppointmentApi {
   GET_ALL_FOR_TRAINER = `${APPOINTMENT_CONTROLLER}/trainer`,
   GET_ALL_PARTICIPANTS = `${APPOINTMENT_CONTROLLER}/participants/`,
   FINISH = `${APPOINTMENT_CONTROLLER}/finish/`,
+  GET_FOR_CALENDAR = `${APPOINTMENT_CONTROLLER}/calendar`,
 }
 
 export enum TrainerApi {
