@@ -211,22 +211,11 @@ const FinishSessionPage: React.FC = () => {
   const stopEditing = () => setEditing({ userId: null, exercise: null });
 
   const handleSubmit = () => {
-    const payload = {
-      sessionId: Number(id),
-      userResults: Object.entries(userExerciseData).map(([uid, exs]) => ({
-        userId: +uid,
-        exercises: Object.entries(exs).map(([type, vals]) => ({
-          type,
-          sets: vals.sets,
-          reps: vals.reps,
-          weight: vals.weight,
-          duration: vals.duration,
-          restTime: vals.restTime,
-        })),
-      })),
-      defaultValues: exerciseDefaults,
+    const object = {
+      userExerciseData: userExerciseData,
+      exerciseDefaults: exerciseDefaults,
     };
-    put.put(`${AppointmentApi.FINISH}${id}`, payload);
+    put.put(AppointmentApi.FINISH + id, object);
   };
 
   const toggleUserExpand = (userId: number) => {
