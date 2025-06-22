@@ -1,5 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {
   Accordion,
@@ -23,6 +23,10 @@ import {
   Typography,
   LinearProgress,
   Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
@@ -34,6 +38,7 @@ import { useGet } from "@/app/hooks/useGet";
 import { usePut } from "@/app/hooks/usePut";
 import { FinishSessionDto, FinishUser } from "@/app/_features/utils/Interfaces";
 import { Background } from "@/app/_features/enums/Colors";
+import { ArrowBack } from "@mui/icons-material";
 
 interface Session {
   id: number;
@@ -88,6 +93,16 @@ const FinishSessionPage: React.FC = () => {
     Record<number, string | null>
   >({});
 
+  const [openDialog, setOpenDialog] = useState(false);
+  const router = useRouter();
+
+  const handleBack = () => setOpenDialog(true);
+  const handleConfirmBack = () => {
+    setOpenDialog(false);
+    router.back(); // or router.push("/your-route");
+  };
+  const handleCancelBack = () => setOpenDialog(false);
+
   const [editing, setEditing] = useState<{
     userId: number | null;
     exercise: string | null;
@@ -114,7 +129,7 @@ const FinishSessionPage: React.FC = () => {
     const mappedExercises: ExerciseDef[] = data.exercises.map((ex) => ({
       name: ex,
     }));
-    console.log(data)
+
     setSession({
       id: data.id,
       serviceName: data.serviceTitle,
@@ -241,9 +256,6 @@ const FinishSessionPage: React.FC = () => {
       .join(" ");
   }
 
-
-  console.log(session)
-
   return (
     <BoxNoMargin
       sx={{
@@ -259,17 +271,35 @@ const FinishSessionPage: React.FC = () => {
           borderRadius: "12px",
         }}
       >
-        <Typography
-          variant="h4"
-          gutterBottom
-          sx={{
-            color: "primary.main",
-            fontWeight: 600,
-            mb: 3,
-          }}
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={2}
         >
-          Complete Training Session
-        </Typography>
+          <Typography
+            variant="h4"
+            gutterBottom
+            sx={{
+              color: "primary.main",
+              fontWeight: 600,
+              mb: 3,
+            }}
+          >
+            Complete Training Session
+          </Typography>
+          <Button
+            startIcon={<ArrowBack />}
+            variant="outlined"
+            onClick={handleBack}
+            sx={{
+              textTransform: "none",
+              borderRadius: "8px",
+            }}
+          >
+            Back
+          </Button>
+        </Stack>
 
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={4}>
@@ -678,6 +708,20 @@ const FinishSessionPage: React.FC = () => {
           </Button>
         </Box>
       </Paper>
+      <Dialog open={openDialog} onClose={handleCancelBack}>
+        <DialogTitle>Leave Page?</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to go back? Unsaved changes will be lost.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelBack}>Cancel</Button>
+          <Button onClick={handleConfirmBack} color="error" variant="contained">
+            Leave
+          </Button>
+        </DialogActions>
+      </Dialog>
     </BoxNoMargin>
   );
 };
