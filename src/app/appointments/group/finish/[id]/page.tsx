@@ -242,63 +242,109 @@ const FinishSessionPage: React.FC = () => {
   }
 
   return (
-    <BoxNoMargin sx={{ backgroundColor: "#f5f5f5" }}>
-      <Paper sx={{ p: 3, mb: 4, backgroundColor: "background.paper" }}>
-        <Typography variant="h4" gutterBottom sx={{ color: "primary.main" }}>
+    <BoxNoMargin
+      sx={{
+        bgcolor: Background.DARK,
+      }}
+    >
+      {/* Session Header */}
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "background.paper",
+          borderRadius: "12px",
+        }}
+      >
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            color: "primary.main",
+            fontWeight: 600,
+            mb: 3,
+          }}
+        >
           Complete Training Session
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6} lg={4}>
             <Box
               sx={{
-                p: 2,
-                backgroundColor: "grey.100",
-                borderRadius: 1,
+                p: 3,
+                borderRadius: "8px",
                 borderLeft: "4px solid",
                 borderColor: "primary.main",
+                height: "100%",
               }}
             >
-              <Typography variant="subtitle1" color="text.secondary">
-                Service
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 2, fontWeight: "medium" }}>
-                {session?.serviceName}
-              </Typography>
+              <Stack spacing={2}>
+                <Box>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    Service
+                  </Typography>
+                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                    {session?.serviceName}
+                  </Typography>
+                </Box>
 
-              <Typography variant="subtitle1" color="text.secondary">
-                Date
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 2, fontWeight: "medium" }}>
-                {session?.date}
-              </Typography>
+                <Box>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    Date & Time
+                  </Typography>
+                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                    {session?.date}
+                  </Typography>
+                </Box>
 
-              <Typography variant="subtitle1" color="text.secondary">
-                Coach
-              </Typography>
-              <Typography variant="body1" sx={{ fontWeight: "medium" }}>
-                {`${session?.coach.firstName} ${session?.coach.lastName}`}
-              </Typography>
+                <Box>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    Coach
+                  </Typography>
+                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                    {`${session?.coach.firstName} ${session?.coach.lastName}`}
+                  </Typography>
+                </Box>
+              </Stack>
             </Box>
           </Grid>
         </Grid>
       </Paper>
 
       {/* Default Exercise Values */}
-      <Paper sx={{ p: 3, mb: 4, backgroundColor: "background.paper" }}>
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "background.paper",
+          borderRadius: "12px",
+        }}
+      >
         <Box
           sx={{
             display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: { xs: "flex-start", sm: "center" },
             mb: 3,
-            p: 2,
-            borderRadius: 1,
+            gap: 2,
           }}
         >
-          <Typography variant="h5" sx={{ color: "primary.main" }}>
-            Default Exercise Values
-          </Typography>
+          <Box>
+            <Typography
+              variant="h5"
+              sx={{
+                color: "primary.main",
+                fontWeight: 600,
+              }}
+            >
+              Default Exercise Values
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Set default values applied to all non-customized users
+            </Typography>
+          </Box>
           <Button
             variant="contained"
             onClick={applyDefaults}
@@ -307,218 +353,310 @@ const FinishSessionPage: React.FC = () => {
               JSON.stringify(exerciseDefaults)
             }
             sx={{
-              backgroundColor: "primary.dark",
+              backgroundColor: "primary.main",
               "&:hover": {
-                backgroundColor: "primary.main",
+                backgroundColor: "primary.dark",
               },
+              px: 4,
+              py: 1.5,
+              borderRadius: "8px",
             }}
           >
             Apply Defaults
           </Button>
         </Box>
 
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Set default values that will be applied to all users who haven't been
-          customized.
-        </Typography>
-
-        {serviceExercises.map((ex) => (
-          <Accordion key={ex.name} sx={{ mb: 2 }}>
-            <AccordionSummary
-              sx={{ bgcolor: Background.PRIMARY, color: "white" }}
-              expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
+        <Stack spacing={2} sx={{ mt: 3 }}>
+          {serviceExercises.map((ex) => (
+            <Accordion
+              key={ex.name}
+              sx={{
+                mb: 2,
+                borderRadius: "8px !important",
+                overflow: "hidden",
+                "&:before": {
+                  display: "none",
+                },
+              }}
             >
-              <Typography sx={{ flexGrow: 1, fontWeight: "medium" }}>
-                {ex.name}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid container spacing={2}>
-                {Object.keys(defaultExerciseFields).map((field) => (
-                  <Grid item xs={6} sm={4} md={3} lg={2} key={field}>
-                    <TextField
-                      label={normalizeFieldName(field)}
-                      type="number"
-                      fullWidth
-                      size="small"
-                      inputProps={{ min: 0 }}
-                      value={pendingDefaults[ex.name]?.[field] ?? ""}
-                      onChange={(e) =>
-                        handlePendingDefaultChange(
-                          ex.name,
-                          field,
-                          e.target.value
-                        )
-                      }
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </AccordionDetails>
-          </Accordion>
-        ))}
+              <AccordionSummary
+                sx={{
+                  bgcolor: Background.PRIMARY,
+                  color: "white",
+                }}
+                expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
+              >
+                <Typography
+                  sx={{
+                    flexGrow: 1,
+                    fontWeight: 500,
+                    fontSize: "1.1rem",
+                  }}
+                >
+                  {ex.name}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails sx={{ p: 3 }}>
+                <Grid container spacing={2}>
+                  {Object.keys(defaultExerciseFields).map((field) => (
+                    <Grid item xs={6} sm={4} md={3} lg={2} key={field}>
+                      <TextField
+                        label={normalizeFieldName(field)}
+                        type="number"
+                        fullWidth
+                        size="small"
+                        inputProps={{ min: 0 }}
+                        value={pendingDefaults[ex.name]?.[field] ?? ""}
+                        onChange={(e) =>
+                          handlePendingDefaultChange(
+                            ex.name,
+                            field,
+                            e.target.value
+                          )
+                        }
+                        sx={{
+                          "& .MuiOutlinedInput-root": {
+                            borderRadius: "8px",
+                          },
+                        }}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </Stack>
       </Paper>
 
       {/* User Exercise Data */}
-      <Paper sx={{ p: 3, backgroundColor: "background.paper" }}>
-        <Typography variant="h5" gutterBottom sx={{ color: "primary.main" }}>
-          User Exercise Data
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Review and customize exercise parameters for each user.
-        </Typography>
-
-        {usersInSession.map((user) => (
-          <Accordion
-            key={user.id}
-            sx={{ mb: 2 }}
-            expanded={expandedUser === user.id}
-            onChange={() => toggleUserExpand(user.id)}
+      <Paper
+        sx={{
+          p: 3,
+          backgroundColor: "background.paper",
+          borderRadius: "12px",
+        }}
+      >
+        <Box sx={{ mb: 3 }}>
+          <Typography
+            variant="h5"
+            sx={{
+              color: "primary.main",
+              fontWeight: 600,
+              mb: 1,
+            }}
           >
-            <AccordionSummary
-              sx={{ bgcolor: Background.PRIMARY, color: "white" }}
-              expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
+            Participant Exercises
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Review and customize parameters for each participant
+          </Typography>
+        </Box>
+
+        <Stack spacing={2}>
+          {usersInSession.map((user) => (
+            <Accordion
+              key={user.id}
+              sx={{
+                mb: 2,
+                borderRadius: "8px !important",
+                overflow: "hidden",
+                "&:before": {
+                  display: "none",
+                },
+              }}
+              expanded={expandedUser === user.id}
+              onChange={() => toggleUserExpand(user.id)}
             >
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <Typography variant="subtitle1" sx={{ fontWeight: "medium" }}>
-                  {user.name}
-                </Typography>
-                {Object.values(userExerciseData[user.id] || {}).some(
-                  (ex) => ex.modified
-                ) && (
-                  <Chip
-                    icon={<CheckCircleIcon fontSize="small" />}
-                    label="Customized"
-                    size="small"
-                    color="success"
-                  />
-                )}
-              </Stack>
-            </AccordionSummary>
-            <AccordionDetails>
-              {serviceExercises.map((ex) => (
-                <Accordion
-                  key={ex.name}
-                  sx={{ mb: 2 }}
-                  expanded={expandedExercises[user.id] === ex.name}
-                  onChange={() => toggleExerciseExpand(user.id, ex.name)}
-                >
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <Typography sx={{ fontWeight: "medium" }}>
-                        {ex.name}
-                      </Typography>
-                      {userExerciseData[user.id]?.[ex.name]?.modified && (
-                        <Chip
-                          icon={<CheckCircleIcon fontSize="small" />}
-                          label="Customized"
-                          size="small"
-                          color="success"
+              <AccordionSummary
+                sx={{
+                  bgcolor: Background.PRIMARY,
+                  color: "white",
+                }}
+                expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
+              >
+                <Stack direction="row" alignItems="center" spacing={1.5}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                    {user.name}
+                  </Typography>
+                  {Object.values(userExerciseData[user.id] || {}).some(
+                    (ex) => ex.modified
+                  ) && (
+                    <Chip
+                      icon={<CheckCircleIcon fontSize="small" />}
+                      label="Customized"
+                      size="small"
+                      color="success"
+                      sx={{
+                        bgcolor: "rgba(255, 255, 255, 0.2)",
+                        backdropFilter: "blur(4px)",
+                      }}
+                    />
+                  )}
+                </Stack>
+              </AccordionSummary>
+              <AccordionDetails sx={{ p: 0 }}>
+                <Stack spacing={2} sx={{ p: 2 }}>
+                  {serviceExercises.map((ex) => (
+                    <Accordion
+                      key={ex.name}
+                      sx={{
+                        mb: 2,
+                        borderRadius: "8px !important",
+                        boxShadow: "none",
+                        "&:before": {
+                          display: "none",
+                        },
+                      }}
+                      expanded={expandedExercises[user.id] === ex.name}
+                      onChange={() => toggleExerciseExpand(user.id, ex.name)}
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        sx={{
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          spacing={1.5}
+                        >
+                          <Typography sx={{ fontWeight: 500 }}>
+                            {ex.name}
+                          </Typography>
+                          {userExerciseData[user.id]?.[ex.name]?.modified && (
+                            <Chip
+                              icon={<CheckCircleIcon fontSize="small" />}
+                              label="Customized"
+                              size="small"
+                              color="success"
+                              variant="outlined"
+                            />
+                          )}
+                        </Stack>
+                      </AccordionSummary>
+                      <AccordionDetails sx={{ p: 0 }}>
+                        <TableContainer
+                          component={Paper}
                           variant="outlined"
-                        />
-                      )}
-                    </Stack>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <TableContainer component={Paper} variant="outlined">
-                      <Table size="small">
-                        <TableHead>
-                          <TableRow sx={{ backgroundColor: "grey.100" }}>
-                            <TableCell sx={{ fontWeight: "bold" }}>
-                              Parameter
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                              sx={{ fontWeight: "bold" }}
-                            >
-                              Value
-                            </TableCell>
-                            <TableCell
-                              align="right"
-                              sx={{ fontWeight: "bold" }}
-                            >
-                              Actions
-                            </TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {Object.keys(defaultExerciseFields).map((field) => {
-                            const current =
-                              userExerciseData[user.id]?.[ex.name] || {};
-                            return (
-                              <TableRow key={field}>
-                                <TableCell>
-                                  {normalizeFieldName(field)}
-                                </TableCell>
-                                <TableCell align="right">
-                                  {editing.userId === user.id &&
-                                  editing.exercise === ex.name ? (
-                                    <TextField
-                                      size="small"
-                                      inputProps={{ min: 0 }}
-                                      type="number"
-                                      value={current[field] ?? ""}
-                                      onChange={(e) =>
-                                        handleUserExerciseChange(
-                                          user.id,
-                                          ex.name,
-                                          field,
-                                          e.target.value
-                                        )
-                                      }
-                                      sx={{ width: 100 }}
-                                      autoFocus
-                                    />
-                                  ) : (
-                                    current[field] || "-"
-                                  )}
-                                </TableCell>
-                                <TableCell align="right">
-                                  {editing.userId === user.id &&
-                                  editing.exercise === ex.name ? (
-                                    <Tooltip title="Save">
-                                      <IconButton
-                                        onClick={stopEditing}
-                                        color="primary"
-                                      >
-                                        <SaveIcon fontSize="small" />
-                                      </IconButton>
-                                    </Tooltip>
-                                  ) : (
-                                    <Tooltip title="Edit">
-                                      <IconButton
-                                        onClick={() =>
-                                          setEditing({
-                                            userId: user.id,
-                                            exercise: ex.name,
-                                          })
-                                        }
-                                      >
-                                        <EditIcon fontSize="small" />
-                                      </IconButton>
-                                    </Tooltip>
-                                  )}
-                                </TableCell>
+                          sx={{
+                            border: "none",
+                            borderRadius: "0 0 8px 8px",
+                          }}
+                        >
+                          <Table size="small">
+                            <TableHead>
+                              <TableRow
+                                sx={{
+                                  "& th": {
+                                    fontWeight: 600,
+                                  },
+                                }}
+                              >
+                                <TableCell>Parameter</TableCell>
+                                <TableCell align="right">Value</TableCell>
+                                <TableCell align="right">Actions</TableCell>
                               </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </AccordionDetails>
-                </Accordion>
-              ))}
-            </AccordionDetails>
-          </Accordion>
-        ))}
+                            </TableHead>
+                            <TableBody>
+                              {Object.keys(defaultExerciseFields).map(
+                                (field) => {
+                                  const current =
+                                    userExerciseData[user.id]?.[ex.name] || {};
+                                  return (
+                                    <TableRow
+                                      key={field}
+                                      hover
+                                      sx={{
+                                        "&:last-child td": {
+                                          borderBottom: "none",
+                                        },
+                                      }}
+                                    >
+                                      <TableCell sx={{ fontWeight: 500 }}>
+                                        {normalizeFieldName(field)}
+                                      </TableCell>
+                                      <TableCell align="right">
+                                        {editing.userId === user.id &&
+                                        editing.exercise === ex.name ? (
+                                          <TextField
+                                            size="small"
+                                            inputProps={{ min: 0 }}
+                                            type="number"
+                                            value={current[field] ?? ""}
+                                            onChange={(e) =>
+                                              handleUserExerciseChange(
+                                                user.id,
+                                                ex.name,
+                                                field,
+                                                e.target.value
+                                              )
+                                            }
+                                            sx={{
+                                              width: 100,
+                                              "& .MuiOutlinedInput-root": {
+                                                borderRadius: "6px",
+                                              },
+                                            }}
+                                            autoFocus
+                                          />
+                                        ) : (
+                                          <Typography>
+                                            {current[field] || "-"}
+                                          </Typography>
+                                        )}
+                                      </TableCell>
+                                      <TableCell align="right">
+                                        {editing.userId === user.id &&
+                                        editing.exercise === ex.name ? (
+                                          <Tooltip title="Save">
+                                            <IconButton
+                                              onClick={stopEditing}
+                                              color="primary"
+                                              size="small"
+                                            >
+                                              <SaveIcon fontSize="small" />
+                                            </IconButton>
+                                          </Tooltip>
+                                        ) : (
+                                          <Tooltip title="Edit">
+                                            <IconButton
+                                              onClick={() =>
+                                                setEditing({
+                                                  userId: user.id,
+                                                  exercise: ex.name,
+                                                })
+                                              }
+                                              size="small"
+                                            >
+                                              <EditIcon fontSize="small" />
+                                            </IconButton>
+                                          </Tooltip>
+                                        )}
+                                      </TableCell>
+                                    </TableRow>
+                                  );
+                                }
+                              )}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </AccordionDetails>
+                    </Accordion>
+                  ))}
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </Stack>
 
         <Box
           sx={{
             display: "flex",
             justifyContent: "flex-end",
             mt: 4,
-            p: 2,
-            borderRadius: 1,
+            pt: 3,
           }}
         >
           <Button
@@ -526,7 +664,11 @@ const FinishSessionPage: React.FC = () => {
             size="large"
             onClick={handleSubmit}
             sx={{
-              px: 4,
+              px: 6,
+              py: 1.5,
+              borderRadius: "8px",
+              fontWeight: 600,
+              fontSize: "1rem",
             }}
           >
             Complete Session
