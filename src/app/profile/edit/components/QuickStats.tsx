@@ -57,7 +57,7 @@ export default function QuickStats() {
           <Grid item xs={6}>
             <Paper sx={{ p: 2, borderRadius: 2, height: "100%" }}>
               <Typography variant="subtitle2" color="text.secondary">
-                Favorite Exercise
+                Most Done Exercise
               </Typography>
               <Typography variant="h4">{formattedFavorite}</Typography>
             </Paper>

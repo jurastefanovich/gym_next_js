@@ -3,6 +3,7 @@ import { USER_ROUTES } from "@/app/_features/enums/Routes";
 import { useGet } from "@/app/hooks/useGet";
 import { History } from "@mui/icons-material";
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -24,7 +25,7 @@ type AppointmentDTO = {
 };
 
 export default function RecentSessions() {
-  const getRecent = useGet<AppointmentDTO[]>(`${StatsApi.LAST_NUM}${3}`);
+  const getRecent = useGet<AppointmentDTO[]>(`${StatsApi.LAST_NUM}${7}`);
   const route = useRouter();
   function handleOnClick(id: number) {
     route.push(USER_ROUTES.APPOINTMENTS + id);
@@ -49,18 +50,60 @@ export default function RecentSessions() {
     <Wrapper>
       <Stack spacing={2}>
         {getRecent.data.map((session, index) => (
-          <Paper key={index} sx={{ p: 2, borderRadius: 2 }}>
-            <Stack direction="row" justifyContent="space-between">
-              <Typography fontWeight="bold">{session.date}</Typography>
-              <Chip
-                label={Math.round(Number(session.duration) / 60)}
-                size="small"
-              />
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
-              <Button onClick={() => handleOnClick(session.id)}>
-                View Details
-              </Button>
+          <Paper
+            key={index}
+            sx={{
+              p: 2,
+              borderRadius: 2,
+              boxShadow: 1,
+            }}
+          >
+            <Stack spacing={1.5}>
+              {/* Header Row */}
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={1}
+              >
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {session.date}
+                </Typography>
+                <Chip
+                  label={`${Math.round(Number(session.duration)) / 60} min`}
+                  size="small"
+                  color="primary"
+                  variant="outlined"
+                  sx={{ fontWeight: 500 }}
+                />
+              </Stack>
+
+              {/* Additional session info can go here */}
+              {session?.serviceTitle && (
+                <Typography variant="body2" color="text.secondary">
+                  {session?.serviceTitle}
+                </Typography>
+              )}
+
+              {/* Action Button */}
+              <Box sx={{ pt: 1, display: "flex", justifyContent: "flex-end" }}>
+                <Button
+                  onClick={() => handleOnClick(session.id)}
+                  variant="outlined"
+                  size="small"
+                  sx={{
+                    textTransform: "none",
+                    borderRadius: 1,
+                    px: 2,
+                    "&:hover": {
+                      backgroundColor: "primary.light",
+                      color: "primary.contrastText",
+                    },
+                  }}
+                >
+                  View Details
+                </Button>
+              </Box>
             </Stack>
           </Paper>
         ))}

@@ -71,12 +71,15 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   return (
     <Card sx={{ borderRadius: 3 }}>
       <CardContent>
-        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
           <BarChart color="primary" />
           <Typography variant="h6" fontWeight="bold">
             Top performing exercises
           </Typography>
         </Stack>
+        <Typography variant="caption" sx={{ mb: 4 }}>
+          Number represents the totals number of reps over time
+        </Typography>
         {children}
       </CardContent>
     </Card>

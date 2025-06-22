@@ -22,11 +22,10 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { BarChart, LineChart, PieChart } from "@mui/x-charts";
+import { BarChart, LineChart } from "@mui/x-charts";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
 const timeFrames = ["day", "week", "month", "year", "all"] as const;
-const chartTypes = ["line", "bar", "pie"] as const;
 
 export default function ExerciseChart() {
   const [selectedExercise, setSelectedExercise] = useState("");
@@ -57,7 +56,7 @@ export default function ExerciseChart() {
   useEffect(() => {
     refetchChart();
   }, [chartUrl]);
-
+  console.log(chartData);
   const renderChart = () => {
     if (!chartData) return null;
     const { labels, values } = chartData;
