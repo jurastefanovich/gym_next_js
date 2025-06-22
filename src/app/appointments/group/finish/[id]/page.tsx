@@ -114,10 +114,10 @@ const FinishSessionPage: React.FC = () => {
     const mappedExercises: ExerciseDef[] = data.exercises.map((ex) => ({
       name: ex,
     }));
-
+    console.log(data)
     setSession({
       id: data.id,
-      serviceName: data.serviceName,
+      serviceName: data.serviceTitle,
       date: data.date,
       coach: data.trainer,
       notes: data.notes,
@@ -240,6 +240,9 @@ const FinishSessionPage: React.FC = () => {
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   }
+
+
+  console.log(session)
 
   return (
     <BoxNoMargin
