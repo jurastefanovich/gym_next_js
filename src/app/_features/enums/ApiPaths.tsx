@@ -4,6 +4,7 @@ const AUTH_CONTROLLER = `${BASE_URL}/auth`;
 const SERVICES_CONTROLLER = `${BASE_URL}/gym-services`;
 const APPOINTMENT_CONTROLLER = `${BASE_URL}/appointments`;
 const TRAINER_CONTROLLER = `${BASE_URL}/trainers`;
+const STATS_CONTROLLER = `${BASE_URL}/stats/`;
 
 export enum UserApi {
   PROFILE = `${USER_CONTROLLER}/loggedIn/user/profile`,
@@ -49,4 +50,11 @@ export enum AppointmentApi {
 export enum TrainerApi {
   INTRO = `${TRAINER_CONTROLLER}/introduction/`,
   GET_ALL = `${TRAINER_CONTROLLER}`,
+}
+
+export enum StatsApi {
+  QUICK_STATS = `${STATS_CONTROLLER}quick_stats`,
+  LAST_NUM = `${STATS_CONTROLLER}last/`,
+  BREAK_DOWN = `${STATS_CONTROLLER}breakdown`,
+  CHART = `${STATS_CONTROLLER}chart`,
 }

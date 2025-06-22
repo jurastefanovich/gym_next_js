@@ -152,7 +152,6 @@ const Page = () => {
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
   const appointment = get?.data;
-  console.log(appointment);
 
   const handleOpenCancelDialog = () => {
     setCancelDialogOpen(true);
@@ -449,24 +448,29 @@ const SessionDetailsCard = ({
             flexWrap="wrap"
             useFlexGap
           >
-            <Button
-              startIcon={<Edit />}
-              onClick={onEdit}
-              variant="contained"
-              color="secondary"
-              disabled={isCancelled}
-            >
-              Edit
-            </Button>
-            <Button
-              startIcon={<Done />}
-              onClick={onFinish}
-              variant="contained"
-              color="primary"
-              disabled={isCancelled}
-            >
-              Finish
-            </Button>
+            {String(appointment?.status).toUpperCase() == "FINISHED" ? null : (
+              <Button
+                startIcon={<Edit />}
+                onClick={onEdit}
+                variant="contained"
+                color="secondary"
+                disabled={isCancelled}
+              >
+                Edit
+              </Button>
+            )}
+
+            {String(appointment?.status).toUpperCase() == "FINISHED" ? null : (
+              <Button
+                startIcon={<Done />}
+                onClick={onFinish}
+                variant="contained"
+                color="primary"
+                disabled={isCancelled}
+              >
+                Finish
+              </Button>
+            )}
           </Stack>
           <Button
             startIcon={<Cancel />}
@@ -475,7 +479,9 @@ const SessionDetailsCard = ({
             color="primary"
             disabled={isCancelled}
           >
-            Cancel Session
+            {String(appointment?.status).toUpperCase() == "FINISHED"
+              ? "Remove Session"
+              : "Cancel Session"}
           </Button>
         </Stack>
       </CardContent>

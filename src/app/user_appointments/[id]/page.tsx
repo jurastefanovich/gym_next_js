@@ -347,7 +347,8 @@ const Page = () => {
                   </Box>
                 ) : (
                   <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
-                    {appointment?.included ? (
+                    {appointment?.included &&
+                    String(appointment?.status).toUpperCase() != "FINISHED" ? (
                       <Button
                         onClick={() => handleOpenCancelDialog()}
                         variant="outlined"
