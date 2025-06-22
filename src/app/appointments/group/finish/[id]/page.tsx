@@ -37,7 +37,7 @@ interface Session {
   id: number;
   serviceName: string;
   date: string;
-  coach: string;
+  coach: FinishUser;
   notes: string;
 }
 
@@ -68,7 +68,7 @@ const FinishSessionPage: React.FC = () => {
     id ? `${AppointmentApi.FINISH}${id}` : null
   );
   const put = usePut();
-
+  console.log(data);
   const [session, setSession] = useState<Session | null>(null);
   const [usersInSession, setUsersInSession] = useState<FinishUser[]>([]);
   const [serviceExercises, setServiceExercises] = useState<ExerciseDef[]>([]);
@@ -90,17 +90,17 @@ const FinishSessionPage: React.FC = () => {
   // Load and map data
   useEffect(() => {
     if (!data) return;
-    console.log(data)
-    // const mappedUsers: FinishUser[] = data.users.map((u) => ({
-    //   id: u.id,
-    //   name: `${u.firstName ?? ""} ${u.lastName ?? ""}`,
-    //   firstName: u.firstName, // Add this line
-    //   lastName: u.lastName, // Add this line if needed
-    //   username: u.username,
-    //   phoneNumber: u.phoneNumber,
-    //   initials: u.initials,
-    //   email: u.email
-    // }));
+
+    const mappedUsers: FinishUser[] = data.users.map((u) => ({
+      id: u.id,
+      name: `${u.firstName ?? ""} ${u.lastName ?? ""}`,
+      firstName: u.firstName, // Add this line
+      lastName: u.lastName, // Add this line if needed
+      username: u.username,
+      phoneNumber: u.phoneNumber,
+      initials: u.initials,
+      email: u.email,
+    }));
 
     const mappedExercises: ExerciseDef[] = data.exercises.map((ex) => ({
       name: ex,
@@ -114,7 +114,7 @@ const FinishSessionPage: React.FC = () => {
       notes: data.notes,
     });
 
-    setUsersInSession(new Array());
+    setUsersInSession(mappedUsers);
     setServiceExercises(mappedExercises);
 
     // Initialize default values
@@ -126,12 +126,12 @@ const FinishSessionPage: React.FC = () => {
 
     // Initialize user exercise data
     const userMap: Record<number, Record<string, ExerciseFields>> = {};
-    // mappedUsers.forEach((user) => {
-    //   userMap[user.id] = {};
-    //   mappedExercises.forEach((ex) => {
-    //     userMap[user.id][ex.name] = { ...defaultExerciseFields };
-    //   });
-    // });
+    mappedUsers.forEach((user) => {
+      userMap[user.id] = {};
+      mappedExercises.forEach((ex) => {
+        userMap[user.id][ex.name] = { ...defaultExerciseFields };
+      });
+    });
     setUserExerciseData(userMap);
   }, [data]);
 
@@ -207,6 +207,14 @@ const FinishSessionPage: React.FC = () => {
     );
   }
 
+  function normalizeFieldName(input: string) {
+    const words = input.split(/(?=[A-Z])/);
+
+    return words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
+
   return (
     <BoxNoMargin>
       <Paper sx={{ p: 3, mb: 4 }}>
@@ -219,27 +227,21 @@ const FinishSessionPage: React.FC = () => {
             <Typography>
               <strong>Date:</strong> {session?.date}
             </Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
             <Typography>
-              <strong>Coach:</strong> {session?.coach}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography>
-              <strong>Notes:</strong> {session?.notes}
+              <strong>Coach:</strong>
+              {`${session?.coach.firstName} ${session?.coach.lastName}`}
             </Typography>
           </Grid>
         </Grid>
       </Paper>
 
       {/* Default Exercise Values */}
-      {/* <Paper sx={{ p: 3, mb: 4 }}>
+      <Paper sx={{ p: 3, mb: 4 }}>
         <Typography variant="h5" gutterBottom>
           Default Exercise Values
         </Typography>
         {serviceExercises.map((ex) => (
-          <Accordion key={ex.name} defaultExpanded>
+          <Accordion key={ex.name}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={{ flexGrow: 1 }}>{ex.name}</Typography>
             </AccordionSummary>
@@ -248,9 +250,10 @@ const FinishSessionPage: React.FC = () => {
                 {Object.keys(defaultExerciseFields).map((field) => (
                   <Grid item xs={6} sm={4} md={2} key={field}>
                     <TextField
-                      label={field}
+                      label={normalizeFieldName(field)}
                       type="number"
                       fullWidth
+                      inputProps={{ min: 0 }}
                       value={exerciseDefaults[ex.name]?.[field] ?? ""}
                       onChange={(e) =>
                         handleDefaultChange(ex.name, field, e.target.value)
@@ -262,15 +265,15 @@ const FinishSessionPage: React.FC = () => {
             </AccordionDetails>
           </Accordion>
         ))}
-      </Paper> */}
+      </Paper>
 
       {/* User Exercise Data */}
-      {/* <Paper sx={{ p: 3, mb: 4 }}>
+      <Paper sx={{ p: 3, mb: 4 }}>
         <Typography variant="h5" gutterBottom>
           User Exercise Data
         </Typography>
         {usersInSession.map((user) => (
-          <Accordion key={user.id} defaultExpanded>
+          <Accordion key={user.id}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography>{user.name}</Typography>
             </AccordionSummary>
@@ -303,12 +306,13 @@ const FinishSessionPage: React.FC = () => {
                         <TableBody>
                           {Object.keys(defaultExerciseFields).map((field) => (
                             <TableRow key={field}>
-                              <TableCell>{field}</TableCell>
+                              <TableCell>{normalizeFieldName(field)}</TableCell>
                               <TableCell align="right">
                                 {editing.userId === user.id &&
                                 editing.exercise === ex.name ? (
                                   <TextField
                                     size="small"
+                                    inputProps={{ min: 0 }}
                                     type="number"
                                     value={current[field] ?? ""}
                                     onChange={(e) =>
@@ -364,7 +368,7 @@ const FinishSessionPage: React.FC = () => {
             Submit Session
           </Button>
         </Box>
-      </Paper> */}
+      </Paper>
     </BoxNoMargin>
   );
 };

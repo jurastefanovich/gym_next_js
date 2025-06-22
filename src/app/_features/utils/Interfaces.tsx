@@ -99,13 +99,13 @@ export interface GroupAppointmentTableDto {
 
 // types/FinishSessionDto.ts
 export interface FinishUser extends UserDto {
-  name: string
+  name: string;
 }
 export interface FinishSessionDto {
   id: number;
   serviceName: string;
   date: string;
-  trainer: string;
+  trainer: FinishUser;
   serviceTitle: string;
   notes: string;
   users: FinishUser[];
