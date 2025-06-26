@@ -1,9 +1,16 @@
 "use client";
+import BackButton from "@/app/_features/components/BackButton";
 import { TrainerApi } from "@/app/_features/enums/ApiPaths";
 import { TrainerIntroduction } from "@/app/_features/utils/Interfaces";
 import { getAccessToken } from "@/app/_features/utils/LocalStorageHelpers";
 import { useGet } from "@/app/hooks/useGet";
-import { Email, FitnessCenter, Send } from "@mui/icons-material";
+import {
+  ArrowBack,
+  Email,
+  FitnessCenter,
+  Phone,
+  Send,
+} from "@mui/icons-material";
 import {
   Avatar,
   Box,
@@ -24,7 +31,7 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
@@ -46,6 +53,7 @@ const SkillChip = styled(Chip)(({ theme }) => ({
 
 export default function TrainerPage() {
   const theme = useTheme();
+  const router = useRouter();
   const { trainerId } = useParams();
   const { data: trainerData } = useGet<TrainerIntroduction>(
     TrainerApi.INTRO + trainerId
@@ -127,7 +135,7 @@ export default function TrainerPage() {
                 Certified Personal Trainer
               </Typography>
 
-              <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+              {/* <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -143,62 +151,113 @@ export default function TrainerPage() {
                 >
                   Contact
                 </Button>
-              </Stack>
+              </Stack> */}
             </Grid>
 
             {/* Right Column - Trainer Details */}
             <Grid item xs={12} md={8}>
-              <Box sx={{ p: 4 }}>
-                <Typography
-                  variant="h5"
-                  gutterBottom
-                  sx={{ fontWeight: 600, mb: 3 }}
-                >
-                  About {trainerData?.firstName}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  paragraph
-                  sx={{ mb: 3, lineHeight: 1.8 }}
-                >
-                  {trainerData?.description ||
-                    "Passionate fitness professional with years of experience helping clients achieve their health and wellness goals."}
-                </Typography>
+              <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 1200, mx: "auto" }}>
+                {/* Header Section */}
+                <Stack>
+                  <Stack
+                    direction={"row"}
+                    justifyContent={"space-between"}
+                    alignItems={"center"}
+                  >
+                    <Typography
+                      variant="h4"
+                      component="h1"
+                      sx={{
+                        fontWeight: 700,
+                        mb: 2,
+                        color: "primary.main",
+                      }}
+                    >
+                      About {trainerData?.firstName}
+                    </Typography>
+                    <BackButton />
+                  </Stack>
+                  <Box>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        lineHeight: 1.7,
+                        maxWidth: 800,
+                        color: "text.secondary",
+                      }}
+                    >
+                      {trainerData?.description ||
+                        "Passionate fitness professional with years of experience helping clients achieve their health and wellness goals."}
+                    </Typography>
+                  </Box>
+                </Stack>
 
-                <Divider sx={{ my: 4 }} />
-
-                <Typography
-                  variant="h5"
-                  gutterBottom
-                  sx={{ fontWeight: 600, mb: 3 }}
-                >
-                  Specializations
-                </Typography>
-                <Box sx={{ mb: 4 }}>
-                  {trainerData?.specialization?.map((skill) => (
-                    <SkillChip
-                      key={skill}
-                      label={skill}
-                      icon={<FitnessCenter fontSize="small" />}
-                    />
-                  ))}
+                {/* Specializations Section */}
+                <Box sx={{ my: 6 }}>
+                  <Typography
+                    variant="h5"
+                    component="h2"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 3,
+                      color: "text.primary",
+                    }}
+                  >
+                    Specializations
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 1.5,
+                      mb: 1,
+                    }}
+                  >
+                    {trainerData?.specialization?.length > 0 ? (
+                      trainerData.specialization.map((skill) => (
+                        <SkillChip
+                          key={skill}
+                          label={skill}
+                          icon={<FitnessCenter fontSize="small" />}
+                          sx={{
+                            backgroundColor: "primary.light",
+                            color: "primary.contrastText",
+                          }}
+                        />
+                      ))
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">
+                        No specializations listed
+                      </Typography>
+                    )}
+                  </Box>
                 </Box>
 
-                <Divider sx={{ my: 4 }} />
-
-                <Typography
-                  variant="h5"
-                  gutterBottom
-                  sx={{ fontWeight: 600, mb: 3 }}
-                >
-                  Contact Information
-                </Typography>
-                <Typography variant="body1" paragraph>
-                  <strong>Email:</strong> {trainerData?.email}
-                </Typography>
-                <Typography variant="body1" paragraph>
-                  <strong>Phone:</strong> (555) 123-4567
-                </Typography>
+                {/* Contact Information Section */}
+                <Box sx={{ my: 6 }}>
+                  <Typography
+                    variant="h5"
+                    component="h2"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 3,
+                      color: "text.primary",
+                    }}
+                  >
+                    Contact Information
+                  </Typography>
+                  <Stack spacing={2} sx={{ maxWidth: 600 }}>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Email color="primary" sx={{ mr: 2 }} />
+                      <Typography variant="body1">
+                        <Box component="span" sx={{ fontWeight: 500, mr: 1 }}>
+                          Email:
+                        </Box>
+                        {trainerData?.email || "Not provided"}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Box>
               </Box>
             </Grid>
           </Grid>

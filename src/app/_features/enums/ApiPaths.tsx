@@ -5,7 +5,7 @@ const SERVICES_CONTROLLER = `${BASE_URL}/gym-services`;
 const APPOINTMENT_CONTROLLER = `${BASE_URL}/appointments`;
 const TRAINER_CONTROLLER = `${BASE_URL}/trainers`;
 const STATS_CONTROLLER = `${BASE_URL}/stats/`;
-
+const GYM_CONTROLLER = `${BASE_URL}/gym`;
 export enum UserApi {
   PROFILE = `${USER_CONTROLLER}/loggedIn/user/profile`,
   DELETE_BY_ID = `${USER_CONTROLLER}`,
@@ -48,6 +48,7 @@ export enum AppointmentApi {
 }
 
 export enum TrainerApi {
+  ADD = `${TRAINER_CONTROLLER}`,
   INTRO = `${TRAINER_CONTROLLER}/introduction/`,
   GET_ALL = `${TRAINER_CONTROLLER}`,
 }
@@ -57,4 +58,12 @@ export enum StatsApi {
   LAST_NUM = `${STATS_CONTROLLER}last/`,
   BREAK_DOWN = `${STATS_CONTROLLER}breakdown`,
   CHART = `${STATS_CONTROLLER}chart`,
+}
+
+export enum GymApi {
+  MEMBERS = `${GYM_CONTROLLER}/members`,
+  GYM = `${GYM_CONTROLLER}/gym_info`,
+  SAVE = `${GYM_CONTROLLER}/save`,
+  TRAINERS = `${GYM_CONTROLLER}/trainers`,
+  SPECIALIZATIONS = `${GYM_CONTROLLER}/specializations`,
 }

@@ -1,34 +1,31 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { BoxNoMargin } from "@/app/_features/components/Styled";
+import { ServicesApi } from "@/app/_features/enums/ApiPaths";
+import { ADMIN_ROUTES } from "@/app/_features/enums/Routes";
+import { ServiceCRUD } from "@/app/_features/utils/Interfaces";
+import { useDelete } from "@/app/hooks/useDelete";
+import { useGet } from "@/app/hooks/useGet";
+import { usePut } from "@/app/hooks/usePut";
+import { ConfirmationDialog } from "@/app/user_appointments/[id]/page";
+import { ArrowBack } from "@mui/icons-material";
 import {
+  Autocomplete,
   Box,
   Button,
+  Card,
+  CardContent,
   Checkbox,
   Container,
+  Divider,
   FormControlLabel,
   Grid,
   Stack,
   TextField,
-  Typography,
-  Chip,
-  Divider,
-  Card,
-  CardContent,
-  Autocomplete,
+  Typography
 } from "@mui/material";
 import { useParams, useRouter } from "next/navigation";
-import { useGet } from "@/app/hooks/useGet";
-import { usePostAuth } from "@/app/hooks/usePost";
-import { ServicesApi } from "@/app/_features/enums/ApiPaths";
-import { ServiceCRUD, ServiceDetail } from "@/app/_features/utils/Interfaces";
-import { BoxNoMargin } from "@/app/_features/components/Styled";
-import { ConfirmationDialog } from "@/app/user_appointments/[id]/page";
-import { ArrowBack } from "@mui/icons-material";
-import { usePut } from "@/app/hooks/usePut";
-import { useDelete } from "@/app/hooks/useDelete";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { ADMIN_ROUTES } from "@/app/_features/enums/Routes";
+import React, { useEffect, useState } from "react";
 
 const EditServicePage = () => {
   const { serviceId } = useParams<{ serviceId: string }>();

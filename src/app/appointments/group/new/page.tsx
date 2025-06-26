@@ -116,11 +116,11 @@ const CreateGroupAppointmentPage = () => {
         alignItems="center"
         mb={3}
       >
-        <Typography variant="h4">Create Session</Typography>
+        <Typography variant="h4">Add Session</Typography>
         <Button
           startIcon={<ArrowBack />}
           variant="outlined"
-          onClick={handleCancel}
+          onClick={() => router.back()}
         >
           Back
         </Button>
@@ -224,7 +224,7 @@ const CreateGroupAppointmentPage = () => {
 
             <Stack direction="row" spacing={2} justifyContent="flex-end">
               <Button type="submit" variant="contained">
-                Create Appointment
+                Add Session
               </Button>
             </Stack>
           </Stack>
