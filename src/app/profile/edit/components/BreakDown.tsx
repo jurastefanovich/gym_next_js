@@ -11,6 +11,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useParams } from "next/navigation";
 import React from "react";
 
 interface BreakDown {
@@ -19,7 +20,8 @@ interface BreakDown {
 }
 
 export default function BreakDown() {
-  const getBreakDown = useGet<BreakDown[]>(StatsApi.BREAK_DOWN);
+  const { id } = useParams();
+  const getBreakDown = useGet<BreakDown[]>(StatsApi.BREAK_DOWN + "/" + id);
   const data = getBreakDown.data;
 
   if (getBreakDown.loading) {

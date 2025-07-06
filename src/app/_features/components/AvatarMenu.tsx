@@ -14,13 +14,13 @@ import {
   ListItemText,
   MenuItem,
   Popover,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Background } from "../enums/Colors";
 import { GENERAL } from "../enums/Routes";
-import { logout } from "../utils/LocalStorageHelpers";
+import { getFullname, logout } from "../utils/LocalStorageHelpers";
 
 const AvatarMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -40,16 +40,21 @@ const AvatarMenu: React.FC = () => {
     handleClose();
   };
 
-  const handleSettings = () => {
-    router.push(GENERAL.SETTINGS);
-    handleClose();
-  };
-
   const handleLogout = () => {
     logout();
     router.push(GENERAL.HOME);
     handleClose();
   };
+  const fullName = getFullname();
+  function getInitials() {
+    if (fullName == null || fullName == undefined || fullName == "") {
+      return null;
+    }
+    const nameAndLastName = fullName.split(" ");
+    const nameInit = nameAndLastName[0].charAt(0);
+    const lastInit = nameAndLastName[1].charAt(0);
+    return `${nameInit}${lastInit}`;
+  }
 
   if (get.loading) {
     return <CircularProgress sx={{ color: "white" }} size={"25px"} />;
@@ -77,7 +82,7 @@ const AvatarMenu: React.FC = () => {
             fontWeight: 600,
           }}
         >
-          {get.data?.initials || <PersonIcon fontSize="small" />}
+          {getInitials() || <PersonIcon fontSize="small" />}
         </Avatar>
       </IconButton>
 
@@ -128,9 +133,9 @@ const AvatarMenu: React.FC = () => {
           }}
         >
           <Typography variant="subtitle1" fontWeight={600}>
-            {get.data?.firstName} {get.data?.lastName}
+            {fullName}
           </Typography>
-          <Typography variant="body2">{get.data?.email}</Typography>
+          {/* <Typography variant="body2">{get.data?.email}</Typography> */}
         </Box>
 
         <Box sx={{ p: 1 }}>
@@ -147,21 +152,6 @@ const AvatarMenu: React.FC = () => {
               <PersonIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Profile" />
-          </MenuItem>
-
-          <MenuItem
-            onClick={handleSettings}
-            sx={{
-              borderRadius: 1,
-              "&:hover": {
-                bgcolor: "action.hover",
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: "inherit", minWidth: 36 }}>
-              <SettingsIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
           </MenuItem>
 
           <Divider sx={{ my: 0.5 }} />

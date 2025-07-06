@@ -1,20 +1,27 @@
-import { Box, Card, Grid, Paper, styled, Typography } from "@mui/material";
+"use client";
+import { GymApi } from "@/app/_features/enums/ApiPaths";
+import { useGet } from "@/app/hooks/useGet";
+import {
+  Box,
+  Card,
+  CircularProgress,
+  Grid,
+  LinearProgress,
+  Paper,
+  styled,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import {
-  Edit as EditIcon,
-  Visibility as VisibilityIcon,
-  Delete as DeleteIcon,
-  Add as AddIcon,
-  Schedule as ScheduleIcon,
-  People as PeopleIcon,
-  FitnessCenter as FitnessCenterIcon,
-  BarChart as BarChartIcon,
-  PieChart as PieChartIcon,
-  ShowChart as LineChartIcon,
-  Email as EmailIcon,
-  Phone as PhoneIcon,
-  LocationOn as LocationIcon,
-} from "@mui/icons-material";
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from "recharts";
 export const StyledCard = styled(Card)(({ theme }) => ({
   height: "100%",
   display: "flex",
@@ -39,80 +46,120 @@ export default function Dashboard() {
       </Typography>
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <StyledCard>
-            <Typography color="textSecondary" gutterBottom>
-              Total Active Members
-            </Typography>
-            <Typography variant="h4">210</Typography>
-            <Typography color="success.main">+15% from last month</Typography>
-          </StyledCard>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StyledCard>
-            <Typography color="textSecondary" gutterBottom>
-              Active Sessions Today
-            </Typography>
-            <Typography variant="h4">8</Typography>
-          </StyledCard>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StyledCard>
-            <Typography color="textSecondary" gutterBottom>
-              New Members This Month
-            </Typography>
-            <Typography variant="h4">30</Typography>
-          </StyledCard>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StyledCard>
-            <Typography color="textSecondary" gutterBottom>
-              Average Session Attendance
-            </Typography>
-            <Typography variant="h4">52%</Typography>
-          </StyledCard>
-        </Grid>
+        <Stats />
       </Grid>
 
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <StyledPaper>
-            <Typography variant="h6" gutterBottom>
-              Membership Growth
-            </Typography>
-            <Box
-              sx={{
-                height: 300,
-                bgcolor: "action.hover",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <LineChartIcon sx={{ fontSize: 100, opacity: 0.3 }} />
-              <Typography>Chart would display here</Typography>
-            </Box>
-          </StyledPaper>
+          <GraphMembership />
         </Grid>
         <Grid item xs={12} md={6}>
-          <StyledPaper>
-            <Typography variant="h6" gutterBottom>
-              Weekly Attendance
-            </Typography>
-            <Box
-              sx={{
-                height: 300,
-                bgcolor: "action.hover",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <BarChartIcon sx={{ fontSize: 100, opacity: 0.3 }} />
-              <Typography>Chart would display here</Typography>
-            </Box>
-          </StyledPaper>
+          <GraphWeekly />
         </Grid>
+      </Grid>
+    </>
+  );
+}
+
+function GraphMembership() {
+  const membership = useGet(GymApi.MEMBERSHIP);
+
+  if (membership.loading) {
+    return <CircularProgress />;
+  }
+
+  const rawData = membership.data || {};
+  const formattedMembership = Object.entries(rawData).map(([day, count]) => ({
+    name: day,
+    value: count,
+  }));
+
+  return (
+    <StyledPaper>
+      <Typography variant="h6" gutterBottom>
+        Membership Growth
+      </Typography>
+      <Box sx={{ height: 300 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={formattedMembership}>
+            <XAxis dataKey="name" />
+            <YAxis />
+            {/* <Tooltip /> */}
+            <Line type="monotone" dataKey="value" stroke="#c1121f" />
+          </LineChart>
+        </ResponsiveContainer>
+      </Box>
+    </StyledPaper>
+  );
+}
+
+function GraphWeekly() {
+  const weekly = useGet(GymApi.WEEKLY);
+
+  if (weekly.loading) {
+    return <CircularProgress />;
+  }
+
+  const rawData = weekly.data || {};
+  const formattedWeekly = Object.entries(rawData).map(([month, count]) => ({
+    name: month,
+    value: count,
+  }));
+
+  return (
+    <StyledPaper>
+      <Typography variant="h6" gutterBottom>
+        Weekly Attendance
+      </Typography>
+      <Box sx={{ height: 300 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={formattedWeekly}>
+            <XAxis dataKey="name" />
+            <YAxis />
+            {/* <Tooltip /> */}
+            <CartesianGrid strokeDasharray="3 3" />
+            <Bar dataKey="value" fill="#1976d2" />
+          </BarChart>
+        </ResponsiveContainer>
+      </Box>
+    </StyledPaper>
+  );
+}
+
+function Stats() {
+  const stats = useGet(GymApi.DASH_STATS);
+  const data = stats.data;
+  if (stats.loading) {
+    return <LinearProgress />;
+  }
+  const md = 4;
+  const xs = 12;
+  const sm = 6;
+  return (
+    <>
+      <Grid item xs={xs} sm={sm} md={md}>
+        <StyledCard>
+          <Typography color="textSecondary" gutterBottom>
+            Total Active Members
+          </Typography>
+          <Typography variant="h4">{data?.memebrs}</Typography>
+        </StyledCard>
+      </Grid>
+      <Grid item xs={xs} sm={sm} md={md}>
+        <StyledCard>
+          <Typography color="textSecondary" gutterBottom>
+            Active Sessions Today
+          </Typography>
+          <Typography variant="h4">{data?.active_appointments}</Typography>
+        </StyledCard>
+      </Grid>
+      <Grid item xs={xs} sm={sm} md={md}>
+        <StyledCard>
+          <Typography color="textSecondary" gutterBottom>
+            New Members This Month
+          </Typography>
+          <Typography variant="h4">{data?.new_this_month}</Typography>
+        </StyledCard>
       </Grid>
     </>
   );

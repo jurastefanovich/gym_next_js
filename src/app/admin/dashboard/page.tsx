@@ -47,7 +47,7 @@ const DashboardPage: React.FC = () => {
           value={activeTab}
           onChange={(_, newValue) => handleTab(newValue)}
         >
-          <Tab label="Dashboard" icon={<BarChartIcon />} />
+          <Tab label="Statistics" icon={<BarChartIcon />} />
           <Tab label="Gym Info" icon={<LocationIcon />} />
           <Tab label="Members" icon={<PeopleIcon />} />
           <Tab label="Trainers" icon={<FitnessCenterIcon />} />

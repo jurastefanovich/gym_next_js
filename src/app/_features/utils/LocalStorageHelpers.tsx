@@ -10,17 +10,7 @@ export function removeToken() {
 }
 
 export function logout() {
-  removeToken();
-  removeAccessToken();
-  removeRefreshToken();
-}
-
-function removeAccessToken() {
-  localStorage.removeItem(LSValues.ACCESS_TOKEN);
-}
-
-function removeRefreshToken() {
-  localStorage.removeItem(LSValues.REFRESH_TOKEN);
+  localStorage.clear();
 }
 
 export function setToken(val: string) {
@@ -39,6 +29,24 @@ export function setLoginData(data: LoginData) {
   setAccessToken(data.accessToken);
   setRefreshToken(data.refreshToken);
   setFullName(data.fullName);
+  setRole(data.role);
+  setId(data.id);
+}
+
+export function getRole() {
+  return localStorage.getItem(LSValues.ROLE);
+}
+
+function setRole(val: string) {
+  localStorage.setItem(LSValues.ROLE, String(val).toUpperCase());
+}
+
+export function getId() {
+  return localStorage.getItem(LSValues.ID);
+}
+
+function setId(val: number) {
+  localStorage.setItem(LSValues.ID, String(val));
 }
 
 export function isLoggedIn() {

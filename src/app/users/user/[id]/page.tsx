@@ -1,114 +1,99 @@
 "use client";
+import { BoxNoMargin } from "@/app/_features/components/Styled";
+import BreakDown from "@/app/profile/edit/components/BreakDown";
+import ExerciseChart from "@/app/profile/edit/components/ExerciseChart";
+import Goals from "@/app/profile/edit/components/Goals";
+import ProfileId from "@/app/profile/edit/components/idComponents/ProfileId";
+import Profile from "@/app/profile/edit/components/Profile";
+import QuickStats from "@/app/profile/edit/components/QuickStats";
+import RecentSessions from "@/app/profile/edit/components/RecentSessions";
+import { Box, Container, Grid, Typography, useTheme } from "@mui/material";
 
-import React from "react";
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Divider,
-  Grid,
-  Paper,
-  Typography,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import { useGet } from "@/app/hooks/useGet";
-import { ProfileResponse } from "@/app/_features/utils/Interfaces";
-import { UserApi } from "@/app/_features/enums/ApiPaths";
-import { useParams } from "next/navigation";
-
-export default function Profile() {
-  const { id } = useParams();
-  const get = useGet<ProfileResponse>(UserApi.PROFILE);
-  const user = get.data;
+export default function FitnessDashboard() {
+  const theme = useTheme();
 
   return (
-    <Box
+    <BoxNoMargin
       sx={{
+        background: "linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)",
         minHeight: "100vh",
-        bgcolor: "background.default",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        px: 2,
       }}
     >
-      <Container maxWidth="md">
-        <>
-          <Grid container spacing={4} alignItems="center">
-            {/* Avatar Section */}
-            <Grid item xs={12} md={4} sx={{ textAlign: "center" }}>
-              <Avatar
-                // src={user.avatarUrl}
-                sx={{
-                  width: 150,
-                  height: 150,
-                  bgcolor: "primary.main",
-                  fontSize: 48,
-                  mx: "auto",
-                }}
-              >
-                {user?.initials}
-              </Avatar>
-            </Grid>
+      <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+        {/* Header */}
+        <Box
+          sx={{
+            mb: 6,
+            textAlign: { xs: "center", md: "left" },
+          }}
+        >
+          <Typography
+            variant="h3"
+            fontWeight="bold"
+            sx={{
+              color: theme.palette.primary.main,
+              mb: 1,
+            }}
+          >
+            User Profile
+          </Typography>
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            sx={{
+              fontWeight: 400,
+              maxWidth: "600px",
+              mx: { xs: "auto", md: "unset" },
+            }}
+          >
+            Track users progress
+          </Typography>
+        </Box>
 
-            {/* Info Section */}
-            <Grid item xs={12} md={8}>
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                mb={2}
-              >
-                <Typography variant="h5" fontWeight="bold">
-                  {user?.firstName} {user?.lastName}
-                </Typography>
-                <Button
-                  variant="outlined"
-                  startIcon={<EditIcon />}
-                  size="small"
-                >
-                  Edit
-                </Button>
-              </Box>
-              <Divider sx={{ mb: 2 }} />
-              <Box>
-                <Typography
-                  variant="subtitle1"
-                  color="text.secondary"
-                  gutterBottom
-                >
-                  Username
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  {user?.username}
-                </Typography>
-
-                <Typography
-                  variant="subtitle1"
-                  color="text.secondary"
-                  gutterBottom
-                >
-                  Email
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  {user?.email}
-                </Typography>
-
-                <Typography
-                  variant="subtitle1"
-                  color="text.secondary"
-                  gutterBottom
-                >
-                  Phone
-                </Typography>
-                <Typography variant="body1">{user?.phoneNumber}</Typography>
-              </Box>
-            </Grid>
+        {/* Main Content Grid */}
+        <Grid container spacing={4}>
+          {/* First Row */}
+          <Grid item xs={12} lg={4}>
+            <Box
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: 4,
+              }}
+            >
+              <ProfileId />
+              <RecentSessions />
+            </Box>
           </Grid>
-        </>
-        {/* <UserStats /> */}
+
+          <Grid item xs={12} lg={8}>
+            <Box
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: 4,
+              }}
+            >
+              <Grid container spacing={4}>
+                <Grid item xs={12}>
+                  <QuickStats />
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <Goals />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <BreakDown />
+                </Grid>
+              </Grid>
+
+              <ExerciseChart />
+            </Box>
+          </Grid>
+        </Grid>
       </Container>
-    </Box>
+    </BoxNoMargin>
   );
 }

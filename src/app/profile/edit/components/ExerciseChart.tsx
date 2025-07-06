@@ -23,15 +23,16 @@ import {
   Typography,
 } from "@mui/material";
 import { BarChart, LineChart } from "@mui/x-charts";
+import { useParams } from "next/navigation";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
 const timeFrames = ["day", "week", "month", "year", "all"] as const;
 
 export default function ExerciseChart() {
+  const { id } = useParams();
   const [selectedExercise, setSelectedExercise] = useState("");
   const [timeFrameIndex, setTimeFrameIndex] = useState(1); // Default: week
   const [chartType, setChartType] = useState<"line" | "bar" | "pie">("line");
-
   const {
     data: exercises,
     loading: loadingExercises,
@@ -39,7 +40,7 @@ export default function ExerciseChart() {
   } = useGet<string[]>(ServicesApi.GET_EXERCISES);
 
   const chartUrl = useMemo(() => {
-    return `${StatsApi.CHART}?exercise=${selectedExercise}&timeframe=${timeFrames[timeFrameIndex]}`;
+    return `${StatsApi.CHART}/${id}?exercise=${selectedExercise}&timeframe=${timeFrames[timeFrameIndex]}`;
   }, [selectedExercise, timeFrameIndex]);
 
   const {
@@ -56,7 +57,7 @@ export default function ExerciseChart() {
   useEffect(() => {
     refetchChart();
   }, [chartUrl]);
-  console.log(chartData);
+
   const renderChart = () => {
     if (!chartData) return null;
     const { labels, values } = chartData;
@@ -136,9 +137,6 @@ export default function ExerciseChart() {
               </MenuItem>
               <MenuItem value="bar">
                 <BarChartIcon /> Bar
-              </MenuItem>
-              <MenuItem value="pie">
-                <PieChartIcon /> Pie
               </MenuItem>
             </Select>
           </FormControl>

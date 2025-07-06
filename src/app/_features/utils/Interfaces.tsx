@@ -29,6 +29,8 @@ export interface SingleService extends ServiceProps {}
 export interface LoginData {
   fullName: string;
   accessToken: string;
+  role: string;
+  id: number;
   refreshToken: string;
 }
 

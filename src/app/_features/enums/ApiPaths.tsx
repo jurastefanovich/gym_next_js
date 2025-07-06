@@ -11,6 +11,7 @@ export enum UserApi {
   DELETE_BY_ID = `${USER_CONTROLLER}`,
   UPDATE_BY_ID = `${USER_CONTROLLER}`,
   GET_BY_ID = `${USER_CONTROLLER}`,
+  GET_PROFILE_BY_ID = `${USER_CONTROLLER}/profile/`,
   NEW_USER = `${USER_CONTROLLER}`,
   GET_ALL = `${USER_CONTROLLER}`,
 }
@@ -62,6 +63,9 @@ export enum StatsApi {
 
 export enum GymApi {
   MEMBERS = `${GYM_CONTROLLER}/members`,
+  DASH_STATS = `${GYM_CONTROLLER}/dashboard/stats`,
+  WEEKLY = `${GYM_CONTROLLER}/stats/weekly-attendance`,
+  MEMBERSHIP = `${GYM_CONTROLLER}/stats/membership-growth`,
   GYM = `${GYM_CONTROLLER}/gym_info`,
   SAVE = `${GYM_CONTROLLER}/save`,
   TRAINERS = `${GYM_CONTROLLER}/trainers`,

@@ -22,12 +22,14 @@ import {
   TRAINER_NAV,
   USER_NAV,
 } from "../enums/Routes";
-import { getAccessToken } from "../utils/LocalStorageHelpers";
+import { getAccessToken, getRole } from "../utils/LocalStorageHelpers";
+import { ROLES } from "../enums/Roles";
+import { useAuthToken } from "@/app/hooks/useAuthToken";
 
 export default function Navbar() {
   const path = usePathname();
-  const hasToken = getAccessToken();
-  const user = useAuth();
+  const hasToken = useAuthToken();
+  const role = getRole();
 
   const router = useRouter();
   const isLogin = path.toLowerCase() === GENERAL.LOGIN;
@@ -36,13 +38,13 @@ export default function Navbar() {
 
   const navItems = React.useMemo(() => {
     if (!hasToken) return DEFAULT_NAV;
-    if (user?.data?.role === "ADMIN") return ADMIN_NAV;
-    if (user?.data?.role === "TRAINER") {
+    if (role === ROLES.ADMIN) return ADMIN_NAV;
+    if (role === ROLES.TRAINER) {
       return TRAINER_NAV;
     }
-    if (user?.data?.role === "USER") return USER_NAV;
+    if (role === ROLES.USER) return USER_NAV;
     return DEFAULT_NAV;
-  }, [user?.data?.role, hasToken, user?.loading]);
+  }, [role]);
 
   function redirect(path: string) {
     router.push(path);
@@ -137,11 +139,7 @@ export default function Navbar() {
               borderColor: "divider",
               mb: 2,
             }}
-          >
-            <Typography variant="h6" fontWeight="bold" color="primary">
-              Gym Admin
-            </Typography>
-          </Box>
+          ></Box>
 
           {/* Navigation Items */}
           <Box sx={{ flex: 1, overflow: "auto" }}>

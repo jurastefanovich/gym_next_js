@@ -239,10 +239,11 @@ const FinishSessionPage: React.FC = () => {
   }
 
   function normalizeFieldName(input: string) {
-    const words = input.split(/(?=[A-Z])/);
-    return words
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+    return input
+      .toLowerCase() // convert to "pump_muscle"
+      .split("_") // split into ["pump", "muscle"]
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // capitalize
+      .join(" "); // join with spaces
   }
 
   return (
@@ -415,7 +416,7 @@ const FinishSessionPage: React.FC = () => {
                     fontSize: "1.1rem",
                   }}
                 >
-                  {ex.name}
+                  {normalizeFieldName(ex.name)}
                 </Typography>
               </AccordionSummary>
               <AccordionDetails sx={{ p: 3 }}>

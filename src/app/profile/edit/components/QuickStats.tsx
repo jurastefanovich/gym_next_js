@@ -10,10 +10,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useParams } from "next/navigation";
 import React from "react";
 
 export default function QuickStats() {
-  const getStats = useGet(StatsApi.QUICK_STATS);
+  const { id } = useParams();
+  const getStats = useGet(StatsApi.QUICK_STATS + "/" + id);
   if (getStats.loading) {
     return <LinearProgress />;
   }

@@ -3,4 +3,6 @@ export enum LSValues {
   TOKEN = "token",
   ACCESS_TOKEN = "access-token",
   REFRESH_TOKEN = "refresh-token",
+  ROLE = "user-role",
+  ID = "user_id",
 }

@@ -14,7 +14,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 type AppointmentDTO = {
   id: number;
   status: string;
@@ -25,7 +25,8 @@ type AppointmentDTO = {
 };
 
 export default function RecentSessions() {
-  const getRecent = useGet<AppointmentDTO[]>(`${StatsApi.LAST_NUM}${7}`);
+  const { id } = useParams();
+  const getRecent = useGet<AppointmentDTO[]>(`${StatsApi.LAST_NUM}${7}/${id}`);
   const route = useRouter();
   function handleOnClick(id: number) {
     route.push(USER_ROUTES.APPOINTMENTS + id);
@@ -70,7 +71,7 @@ export default function RecentSessions() {
                   {session.date}
                 </Typography>
                 <Chip
-                  label={`${Math.round(Number(session.duration)) / 60} min`}
+                  label={`${Math.round(Number(session.duration) / 60)} min`}
                   size="small"
                   color="primary"
                   variant="outlined"

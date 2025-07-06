@@ -1,24 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import { LockOutlined } from "@mui/icons-material";
 import {
-  TextField,
   Button,
-  Typography,
-  Link,
-  Container,
   CircularProgress,
+  Container,
+  Link,
+  TextField,
+  Typography,
 } from "@mui/material";
-import { LockOpenOutlined, LockOutlined, LockReset } from "@mui/icons-material";
 import { styled } from "@mui/system";
-import { usePost } from "../hooks/usePost"; // Adjust path based on actual file location
 import { useRouter } from "next/navigation";
-import { Text } from "../_features/enums/Colors";
-import { useRedirectIfAuthenticated } from "../hooks/useRedirectIfAuthenticated";
-import { setLoginData } from "../_features/utils/LocalStorageHelpers";
-import { LoginData } from "../_features/utils/Interfaces";
+import React, { useState } from "react";
 import { AuthApi } from "../_features/enums/ApiPaths";
+import { Text } from "../_features/enums/Colors";
 import { GENERAL } from "../_features/enums/Routes";
+import { LoginData } from "../_features/utils/Interfaces";
+import { setLoginData } from "../_features/utils/LocalStorageHelpers";
+import { usePost } from "../hooks/usePost"; // Adjust path based on actual file location
+import { useRedirectIfAuthenticated } from "../hooks/useRedirectIfAuthenticated";
 const Icon = styled(LockOutlined)({
   fontSize: "4rem",
   color: Text.SECONDARY,

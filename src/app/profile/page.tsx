@@ -34,7 +34,7 @@ export default function FitnessDashboard() {
               mb: 1,
             }}
           >
-            Fitness Dashboard
+            Profile
           </Typography>
           <Typography
             variant="h6"
